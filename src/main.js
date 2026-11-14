@@ -147,6 +147,38 @@ footerIgLink.textContent = `@${CONTACT_CONFIG.instagramHandle}`;
 footerIgLink.href = `https://www.instagram.com/${CONTACT_CONFIG.instagramHandle}/`;
 
 // ============================================================================
+// Warm In-Memory Icon Cache (zero flicker + resilient across dev/offline states)
+// ============================================================================
+const iconBlobCache = new Map();
+
+function resolveIconUrl(url) {
+  return iconBlobCache.get(url) || url;
+}
+
+function warmProjectIcons() {
+  [...TOOLS_ITEMS, ...GAMES_ITEMS].forEach((entry) => {
+    const url = entry?.iconUrl;
+    if (!url || iconBlobCache.has(url)) return;
+    fetch(url)
+      .then((res) => (res.ok ? res.blob() : null))
+      .then((blob) => {
+        if (!blob) return;
+        const blobUrl = URL.createObjectURL(blob);
+        iconBlobCache.set(url, blobUrl);
+        if (p1ItemIcon && p1ItemIcon.getAttribute('data-raw-src') === url) {
+          p1ItemIcon.src = blobUrl;
+        }
+        if (stageIcon && stageIcon.getAttribute('data-raw-src') === url) {
+          stageIcon.src = blobUrl;
+        }
+      })
+      .catch(() => {});
+  });
+}
+
+warmProjectIcons();
+
+// ============================================================================
 // Localization Helpers (16 Languages + Lazy Item Translations)
 // ============================================================================
 function localizeItem(item) {
@@ -523,7 +555,8 @@ function renderHud() {
     }
   }
 
-  p1ItemIcon.src = rawItem.iconUrl;
+  p1ItemIcon.setAttribute('data-raw-src', rawItem.iconUrl);
+  p1ItemIcon.src = resolveIconUrl(rawItem.iconUrl);
   p1ItemIcon.alt = `${item.name} icon`;
   p1ItemBadge.textContent = item.badge;
   p1ItemLoadBadge.textContent = rawItem.bundleSizeLabel;
@@ -663,7 +696,8 @@ function openPlayableStage(rawItem, kind = 'game', initialTab = 'live') {
   playStageShell.dataset.stageTheme = kind;
   stageSpecsPanel.dataset.specsTheme = kind;
   closeStageLabel.textContent = kind === 'game' ? t(currentLang, 'navGames') : t(currentLang, 'navTools');
-  stageIcon.src = rawItem.iconUrl;
+  stageIcon.setAttribute('data-raw-src', rawItem.iconUrl);
+  stageIcon.src = resolveIconUrl(rawItem.iconUrl);
   stageIcon.alt = item.name;
   stageTitle.textContent = item.name;
   stageExternalLink.href = rawItem.playUrl;
@@ -891,7 +925,7 @@ function renderQuickIndexModal() {
               : 'font-family:var(--font-ed-serif);font-weight:700;font-size:15px;letter-spacing:-0.015em';
           return `
             <button type="button" class="tldr-row-btn" data-quick-kind="${kind}" data-quick-idx="${idx}">
-              <img src="${raw.iconUrl}" alt="${it.name}" width="38" height="38" loading="lazy" />
+              <img src="${resolveIconUrl(raw.iconUrl)}" alt="${it.name}" width="38" height="38" loading="lazy" />
               <div style="flex:1;min-width:0">
                 <div style="${titleStyle}">${it.name}</div>
                 <div style="font-family:var(--font-ed-mono);font-size:10.5px;opacity:0.78;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${it.badge} &bull; ${raw.category}</div>
