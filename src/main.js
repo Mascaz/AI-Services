@@ -550,8 +550,8 @@ function renderHud() {
       p1DeckUnitCode.textContent = `STATION ${numStr} — ${(rawItem.stationLabel || 'CARTS, DISCS & RIGS').toUpperCase()}`;
       p1DeckWorldStamp.textContent = 'GARAGE GAME ROOM';
     } else {
-      p1DeckUnitCode.textContent = `FOLIO N° ${numStr} — ${(rawItem.physicalLabel || 'ARCHIVAL EDITION').toUpperCase()}`;
-      p1DeckWorldStamp.textContent = 'PRINT & DESIGN ATELIER';
+      p1DeckUnitCode.textContent = `BENCH ${numStr} — ${(rawItem.stationLabel || rawItem.physicalLabel || 'WORKSHOP RIG').toUpperCase()}`;
+      p1DeckWorldStamp.textContent = 'DESIGN WORKSHOP';
     }
   }
 
@@ -703,7 +703,7 @@ function openPlayableStage(rawItem, kind = 'game', initialTab = 'live') {
   stageExternalLink.href = rawItem.playUrl;
   stageTelemetryTag.textContent = rawItem.category;
   stageLoadingText.textContent =
-    kind === 'game' ? `POWERING ON // ${item.name.toUpperCase()}…` : `OPENING EDITION // ${item.name.toUpperCase()}…`;
+    kind === 'game' ? `POWERING ON // ${item.name.toUpperCase()}…` : `OPENING WORKBENCH // ${item.name.toUpperCase()}…`;
 
   stageSpecsContent.innerHTML = `
     <div class="arch-card" style="padding:20px">

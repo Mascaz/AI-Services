@@ -1,6 +1,6 @@
 /**
  * Centralized Project & Service Catalog for Maxwell — AI Services
- * Left World  = TOOLS (7 Problem-First Business & Creator AI Tools + Before/After Workbench)
+ * Left World  = TOOLS (7 Sunlit 3D Design & AI Workshop Benches — Proofing, Cyclorama, Cinema, Telecine & Brass Rigs)
  * Right World = GAMES (7 Playable Garage Game Room Setups — Carts, Discs, Rigs & Retail Boxes)
  */
 
@@ -24,6 +24,7 @@ export const TOOLS_ITEMS = [
     name: 'Website Makeover Workbench',
     shortName: 'Site Makeover',
     toolShape: 'roller',
+    stationLabel: 'PROOFING PRESS • SPLIT SLIDER',
     physicalLabel: 'Before ↔ After Proof',
     accent: '#38bdf8',
     secondaryAccent: '#fbbf24',
@@ -50,6 +51,7 @@ export const TOOLS_ITEMS = [
     name: 'Product Photo, Copy & Market Lab',
     shortName: 'Product AI Lab',
     toolShape: 'camera-loupe',
+    stationLabel: 'CYCLORAMA STUDIO • SOFTBOX RIG',
     physicalLabel: 'Photo + Copy + Market Suite',
     accent: '#fbbf24',
     secondaryAccent: '#38bdf8',
@@ -76,6 +78,7 @@ export const TOOLS_ITEMS = [
     name: 'Photo & Portrait Relighting',
     shortName: 'AI Airbrush',
     toolShape: 'airbrush',
+    stationLabel: 'ORBITAL LIGHT • RETOUCH EASEL',
     physicalLabel: '3D Light & Retouch Studio',
     accent: '#22d3ee',
     secondaryAccent: '#f59e0b',
@@ -102,6 +105,7 @@ export const TOOLS_ITEMS = [
     name: 'Instant Video Ad Booth',
     shortName: 'Video Ad Booth',
     toolShape: 'clapper',
+    stationLabel: 'DIRECTOR MONITOR • CINEMA RIG',
     physicalLabel: "Director's Storyboard Suite",
     accent: '#f472b6',
     secondaryAccent: '#60a5fa',
@@ -128,6 +132,7 @@ export const TOOLS_ITEMS = [
     name: 'Creator Shorts & Video Pipeline',
     shortName: 'Shorts Pipeline',
     toolShape: 'film-reel',
+    stationLabel: 'TELECINE DECK • 9:16 MONITOR',
     physicalLabel: '1080p Auto-Video Engine',
     accent: '#a78bfa',
     secondaryAccent: '#f472b6',
@@ -154,6 +159,7 @@ export const TOOLS_ITEMS = [
     name: 'Market, Margin & Copy Forge',
     shortName: 'Margin & Market',
     toolShape: 'scale',
+    stationLabel: 'BRASS SCALE • MARGIN TERMINAL',
     physicalLabel: 'Margin & ROAS Ledger',
     accent: '#34d399',
     secondaryAccent: '#fbbf24',
@@ -180,6 +186,7 @@ export const TOOLS_ITEMS = [
     name: 'Global & Bilingual Translator',
     shortName: 'Global Translator',
     toolShape: 'caliper',
+    stationLabel: 'TYPESETTING BENCH • QA CALIPER',
     physicalLabel: 'Multilingual Typesetting QA',
     accent: '#2dd4bf',
     secondaryAccent: '#818cf8',

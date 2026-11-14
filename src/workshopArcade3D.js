@@ -2,9 +2,9 @@ import * as THREE from 'three';
 
 /**
  * Dual-Identity 3D Scene:
- *   LEFT  (x < 0) = Sunlit Swiss Editorial Print & Design Studio (Framed Folios & Proof Table)
+ *   LEFT  (x < 0) = Sunlit Design & Maker's Workshop (7 Bespoke 3D Workbench Rigs & Output Proofs)
  *   RIGHT (x > 0) = Cozy Tactile Garage Game Room (7 Distinct Setups: Mobile, Handhelds, Cab, PC & Consoles)
- *   SEAM  (x = 0) = Architectural Threshold Between Print Atelier & Garage Game Room
+ *   SEAM  (x = 0) = Architectural Threshold Between Sunlit Workshop & Garage Game Room
  */
 
 const ED_PAPER = '#faf6ee';
@@ -26,57 +26,79 @@ function createEditorialSignTexture(title, subtitle) {
   canvas.height = 256;
   const ctx = canvas.getContext('2d');
 
-  // Warm archival cotton-rag masthead stock
+  // Warm archival cotton-rag & brass-pinned workshop masthead plaque
   ctx.fillStyle = ED_PAPER;
   ctx.fillRect(0, 0, 1024, 256);
 
-  // Outer sumi-ink gallery frame + hair-thin inner double rule
+  // Outer sumi-ink architectural frame + brushed-brass inner rule
   ctx.strokeStyle = ED_INK;
   ctx.lineWidth = 10;
   ctx.strokeRect(5, 5, 1014, 246);
 
-  ctx.lineWidth = 2;
-  ctx.strokeRect(22, 22, 980, 212);
+  ctx.strokeStyle = ED_BRASS;
+  ctx.lineWidth = 3;
+  ctx.strokeRect(20, 20, 984, 216);
+
+  ctx.strokeStyle = ED_INK;
+  ctx.lineWidth = 1.5;
   ctx.strokeRect(28, 28, 968, 200);
 
+  // 4 Machined brass corner pins
+  [
+    [40, 40],
+    [984, 40],
+    [40, 216],
+    [984, 216]
+  ].forEach(([px, py]) => {
+    ctx.fillStyle = ED_BRASS;
+    ctx.beginPath();
+    ctx.arc(px, py, 6.5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = ED_INK;
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+  });
+
   // Top editorial colophon rule
+  ctx.strokeStyle = ED_INK;
+  ctx.lineWidth = 2;
   ctx.beginPath();
-  ctx.moveTo(44, 66);
-  ctx.lineTo(980, 66);
+  ctx.moveTo(54, 68);
+  ctx.lineTo(970, 68);
   ctx.stroke();
 
   ctx.fillStyle = ED_INK;
-  ctx.font = '700 17px "Space Mono", ui-monospace, monospace';
+  ctx.font = '700 16px "Space Mono", ui-monospace, monospace';
   ctx.textAlign = 'left';
   ctx.textBaseline = 'middle';
-  ctx.fillText('§ EDITION N° 07 — PRINT & DIGITAL ATELIER', 48, 47);
+  ctx.fillText('§ BENCH 01–07 — SUNLIT MAKER’S STUDIO', 58, 49);
 
-  // Top-right vermilion ink stamp
+  // Top-right vermilion workshop live stamp
   ctx.fillStyle = ED_VERMILION;
-  ctx.fillRect(808, 34, 168, 26);
+  ctx.fillRect(790, 35, 176, 26);
   ctx.fillStyle = '#ffffff';
-  ctx.font = '700 15px "Space Mono", monospace';
+  ctx.font = '700 14px "Space Mono", monospace';
   ctx.textAlign = 'center';
-  ctx.fillText('ARCHIVE LIVE', 892, 48);
+  ctx.fillText('WORKSHOP LIVE', 878, 49);
 
   // Main expressive editorial serif masthead
-  const fontSize = title.length > 12 ? 62 : 76;
+  const fontSize = title.length > 22 ? 44 : title.length > 16 ? 50 : title.length > 12 ? 58 : 70;
   ctx.font = `700 ${fontSize}px "Fraunces", Georgia, serif`;
   ctx.fillStyle = ED_INK;
   ctx.textAlign = 'center';
-  ctx.fillText(title.toUpperCase(), 512, 126);
+  ctx.fillText(title.toUpperCase(), 512, 126, 896);
 
   // Bottom colophon rule + caption
   ctx.strokeStyle = ED_INK;
   ctx.lineWidth = 1.5;
   ctx.beginPath();
-  ctx.moveTo(120, 178);
-  ctx.lineTo(904, 178);
+  ctx.moveTo(104, 178);
+  ctx.lineTo(920, 178);
   ctx.stroke();
 
   ctx.fillStyle = ED_VERMILION;
-  ctx.font = '700 19px "Space Mono", ui-monospace, monospace';
-  ctx.fillText(subtitle.toUpperCase(), 512, 204);
+  ctx.font = '700 18px "Space Mono", ui-monospace, monospace';
+  ctx.fillText(subtitle.toUpperCase(), 512, 203, 880);
 
   const tex = new THREE.CanvasTexture(canvas);
   tex.colorSpace = THREE.SRGBColorSpace;
@@ -170,304 +192,260 @@ function createGarageSignTexture(title, subtitle) {
 }
 
 /**
- * Draws bespoke Swiss Modernist editorial print artwork inside each framed gallery folio
+ * Generates crisp sunlit editorial screen textures for all 7 Left Workshop Displays
+ * ('drafting-split' for Bench 01 widescreen proof press, 'portrait' for Bench 05 9:16 monitor, or 'landscape')
  */
-function drawSwissEditorialMotif(ctx, tool, idx) {
-  const cx = 256;
-  const cy = 224;
-
-  ctx.save();
-  // Subtle archival cream plate background inside passe-partout
-  ctx.fillStyle = '#f1ebe0';
-  ctx.fillRect(42, 92, 428, 252);
-  ctx.strokeStyle = ED_INK;
-  ctx.lineWidth = 2;
-  ctx.strokeRect(42, 92, 428, 252);
-
-  switch (tool.toolShape) {
-    case 'roller': {
-      // 01: Editorial Split Spread (Wireframe Before vs. Black/Gold Luxury After)
-      ctx.fillStyle = '#e5e0d5';
-      ctx.fillRect(44, 94, 212, 248);
-      ctx.strokeStyle = '#8c857b';
-      ctx.lineWidth = 2;
-      ctx.strokeRect(64, 118, 172, 28);
-      ctx.strokeRect(64, 160, 80, 96);
-      ctx.strokeRect(156, 160, 80, 96);
-      ctx.fillStyle = '#6b655c';
-      ctx.font = '700 14px "Space Mono", monospace';
-      ctx.textAlign = 'left';
-      ctx.fillText('BEFORE', 66, 137);
-
-      ctx.fillStyle = ED_INK;
-      ctx.fillRect(256, 94, 212, 248);
-      ctx.fillStyle = ED_PAPER;
-      ctx.font = 'italic 700 26px "Fraunces", Georgia, serif';
-      ctx.textAlign = 'center';
-      ctx.fillText('Relais', 362, 178);
-      ctx.fillText('Palais', 362, 208);
-      ctx.fillStyle = ED_VERMILION;
-      ctx.fillRect(306, 232, 112, 26);
-      ctx.fillStyle = '#ffffff';
-      ctx.font = '700 12px "Space Mono", monospace';
-      ctx.fillText('AFTER →', 362, 249);
-
-      // Vermilion split rule
-      ctx.strokeStyle = ED_VERMILION;
-      ctx.lineWidth = 5;
-      ctx.beginPath();
-      ctx.moveTo(256, 92);
-      ctx.lineTo(256, 344);
-      ctx.stroke();
-      break;
-    }
-
-    case 'camera-loupe': {
-      // 02: Medium-Format Contact Sheet & Exposure Crop Marks
-      ctx.strokeStyle = ED_INK;
-      ctx.lineWidth = 2.5;
-      // Crop L-brackets
-      [
-        [80, 118, 1, 1],
-        [432, 118, -1, 1],
-        [80, 318, 1, -1],
-        [432, 318, -1, -1]
-      ].forEach(([bx, by, sx, sy]) => {
-        ctx.beginPath();
-        ctx.moveTo(bx, by + sy * 26);
-        ctx.lineTo(bx, by);
-        ctx.lineTo(bx + sx * 26, by);
-        ctx.stroke();
-      });
-
-      // Swiss modernist sun/lens study
-      ctx.fillStyle = ED_INK;
-      ctx.beginPath();
-      ctx.arc(cx - 46, cy - 4, 66, 0, Math.PI * 2);
-      ctx.fill();
-
-      ctx.fillStyle = ED_VERMILION;
-      ctx.beginPath();
-      ctx.arc(cx + 28, cy - 18, 42, 0, Math.PI * 2);
-      ctx.fill();
-
-      // Color calibration swatch strip
-      ['#151413', '#c83e2b', '#d97706', '#b08d57', '#faf6ee'].forEach((col, i) => {
-        ctx.fillStyle = col;
-        ctx.fillRect(346, 134 + i * 32, 56, 24);
-        ctx.strokeRect(346, 134 + i * 32, 56, 24);
-      });
-      break;
-    }
-
-    case 'airbrush': {
-      // 03: Chiaroscuro Light & Shadow Sphere Study
-      const grad = ctx.createRadialGradient(cx - 28, cy - 28, 12, cx, cy, 86);
-      grad.addColorStop(0, '#ffffff');
-      grad.addColorStop(0.48, '#d6cec2');
-      grad.addColorStop(1, ED_INK);
-      ctx.fillStyle = grad;
-      ctx.beginPath();
-      ctx.arc(cx, cy, 82, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.strokeStyle = ED_INK;
-      ctx.lineWidth = 2;
-      ctx.stroke();
-
-      // Golden-ratio orbit ring
-      ctx.strokeStyle = ED_VERMILION;
-      ctx.lineWidth = 2.5;
-      ctx.beginPath();
-      ctx.ellipse(cx, cy, 134, 42, -0.28, 0, Math.PI * 2);
-      ctx.stroke();
-
-      ctx.fillStyle = ED_VERMILION;
-      ctx.beginPath();
-      ctx.arc(cx - 116, cy + 34, 10, 0, Math.PI * 2);
-      ctx.fill();
-      break;
-    }
-
-    case 'clapper': {
-      // 04: 35mm Cinema Contact Storyboard Strip (3 Scenes)
-      ctx.fillStyle = ED_INK;
-      ctx.fillRect(58, 126, 396, 184);
-
-      // Sprocket holes top & bottom
-      ctx.fillStyle = ED_PAPER;
-      for (let x = 72; x < 444; x += 28) {
-        ctx.fillRect(x, 134, 14, 10);
-        ctx.fillRect(x, 290, 14, 10);
-      }
-
-      // 3 Storyboard frames
-      ['I', 'II', 'III'].forEach((roman, i) => {
-        const fx = 74 + i * 124;
-        ctx.fillStyle = i === 1 ? ED_VERMILION : '#f5efe4';
-        ctx.fillRect(fx, 154, 112, 124);
-        ctx.fillStyle = i === 1 ? '#ffffff' : ED_INK;
-        ctx.font = 'italic 700 32px "Fraunces", serif';
-        ctx.textAlign = 'center';
-        ctx.fillText(roman, fx + 56, 224);
-      });
-      break;
-    }
-
-    case 'film-reel': {
-      // 05: Vertical 9:16 Editorial Reel + Audio Waveform Spec
-      ctx.fillStyle = ED_INK;
-      ctx.fillRect(92, 108, 126, 218);
-      ctx.fillStyle = ED_VERMILION;
-      ctx.fillRect(102, 118, 106, 152);
-      ctx.fillStyle = '#ffffff';
-      ctx.font = '700 22px "Fraunces", serif';
-      ctx.textAlign = 'center';
-      ctx.fillText('9:16', 155, 200);
-      ctx.fillStyle = ED_PAPER;
-      ctx.fillRect(108, 282, 94, 12);
-      ctx.fillRect(122, 300, 66, 10);
-
-      // Editorial audio waveform bars on right
-      for (let b = 0; b < 14; b++) {
-        const bh = 28 + Math.abs(Math.sin(b * 0.85 + 1)) * 116;
-        ctx.fillStyle = b % 4 === 0 ? ED_VERMILION : ED_INK;
-        ctx.fillRect(250 + b * 14, cy - bh / 2, 8, bh);
-      }
-      break;
-    }
-
-    case 'scale': {
-      // 06: Broadsheet Financial Ledger & Unit-Economics Chart
-      ctx.strokeStyle = 'rgba(21, 20, 19, 0.2)';
-      ctx.lineWidth = 1;
-      for (let y = 124; y <= 316; y += 38) {
-        ctx.beginPath();
-        ctx.moveTo(68, y);
-        ctx.lineTo(444, y);
-        ctx.stroke();
-      }
-
-      const heights = [64, 96, 128, 168, 204];
-      heights.forEach((bh, i) => {
-        const bx = 88 + i * 70;
-        ctx.fillStyle = i === 4 ? ED_VERMILION : i === 3 ? ED_BRASS : ED_INK;
-        ctx.fillRect(bx, 318 - bh, 46, bh);
-      });
-
-      ctx.fillStyle = ED_INK;
-      ctx.font = '700 16px "Space Mono", monospace';
-      ctx.textAlign = 'left';
-      ctx.fillText('ROAS +3.8× // NET MARGIN', 72, 124);
-      break;
-    }
-
-    case 'caliper':
-    default: {
-      // 07: International Typographic Specimen Grid
-      ctx.strokeStyle = ED_INK;
-      ctx.lineWidth = 1.5;
-      ctx.beginPath();
-      ctx.moveTo(256, 104);
-      ctx.lineTo(256, 332);
-      ctx.moveTo(56, 218);
-      ctx.lineTo(456, 218);
-      ctx.stroke();
-
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillStyle = ED_INK;
-      ctx.font = 'italic 700 54px "Fraunces", Georgia, serif';
-      ctx.fillText('Aa', 156, 162);
-      ctx.fillStyle = ED_VERMILION;
-      ctx.font = '700 50px "Fraunces", Georgia, serif';
-      ctx.fillText('Ññ', 356, 162);
-      ctx.fillStyle = ED_INK;
-      ctx.font = '700 48px system-ui, sans-serif';
-      ctx.fillText('あ', 156, 274);
-      ctx.fillText('ع', 356, 274);
-      break;
-    }
-  }
-
-  ctx.restore();
-}
-
-function createEditorialFolioTexture(tool, idx = 0) {
+function createToolScreenTexture(tool, aspectMode = 'landscape', benchIdx = 0) {
   const canvas = document.createElement('canvas');
-  canvas.width = 512;
-  canvas.height = 460;
+  if (aspectMode === 'portrait') {
+    canvas.width = 384;
+    canvas.height = 640;
+  } else if (aspectMode === 'drafting-split') {
+    canvas.width = 560;
+    canvas.height = 384;
+  } else {
+    canvas.width = 512;
+    canvas.height = 384;
+  }
   const ctx = canvas.getContext('2d');
-  let loadedIcon = null;
+  let loadedImg = null;
 
   function draw() {
-    // Museum cotton-rag passe-partout mat
-    ctx.fillStyle = ED_PAPER;
-    ctx.fillRect(0, 0, 512, 460);
+    const W = canvas.width;
+    const H = canvas.height;
+    const cx = W / 2;
+    const benchTag = `BENCH 0${benchIdx + 1}`;
 
-    // Outer double letterpress border
-    ctx.strokeStyle = ED_INK;
-    ctx.lineWidth = 6;
-    ctx.strokeRect(10, 10, 492, 440);
-    ctx.lineWidth = 1.5;
-    ctx.strokeRect(20, 20, 472, 420);
+    // Sunlit cotton-rag ivory display paper stock
+    const bg = ctx.createLinearGradient(0, 0, 0, H);
+    bg.addColorStop(0, '#fdfbf7');
+    bg.addColorStop(1, '#efe7d8');
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, W, H);
 
-    // Top Editorial Masthead Row
-    ctx.fillStyle = ED_INK;
-    ctx.font = 'italic 700 28px "Fraunces", Georgia, serif';
-    ctx.textAlign = 'left';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(`N° 0${idx + 1}`, 42, 54);
-
-    ctx.fillStyle = ED_VERMILION;
-    ctx.fillRect(326, 36, 144, 34);
-    ctx.fillStyle = '#ffffff';
-    ctx.font = '700 15px "Space Mono", monospace';
-    ctx.textAlign = 'center';
-    ctx.fillText(tool.badge.toUpperCase(), 398, 54);
-
-    ctx.strokeStyle = ED_INK;
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.moveTo(42, 78);
-    ctx.lineTo(470, 78);
-    ctx.stroke();
-
-    // Central Swiss Print Artwork
-    drawSwissEditorialMotif(ctx, tool, idx);
-
-    // Small stamped corner icon badge if loaded
-    if (loadedIcon) {
-      ctx.save();
-      ctx.fillStyle = ED_PAPER;
-      ctx.fillRect(408, 282, 52, 52);
-      ctx.strokeStyle = ED_INK;
-      ctx.lineWidth = 2;
-      ctx.strokeRect(408, 282, 52, 52);
-      ctx.drawImage(loadedIcon, 412, 286, 44, 44);
-      ctx.restore();
+    // Subtle architectural pica grid in background
+    ctx.strokeStyle = 'rgba(21, 20, 19, 0.065)';
+    ctx.lineWidth = 1;
+    for (let x = 28; x < W - 16; x += 32) {
+      ctx.beginPath();
+      ctx.moveTo(x, 48);
+      ctx.lineTo(x, H - 18);
+      ctx.stroke();
+    }
+    for (let y = 64; y < H - 18; y += 32) {
+      ctx.beginPath();
+      ctx.moveTo(16, y);
+      ctx.lineTo(W - 16, y);
+      ctx.stroke();
     }
 
-    // Bottom Serif Title & Colophon
+    // Top sumi-ink editorial colophon telemetry strip
     ctx.fillStyle = ED_INK;
-    const titleSize = tool.shortName.length > 14 ? 30 : 35;
-    ctx.font = `700 ${titleSize}px "Fraunces", Georgia, serif`;
+    ctx.fillRect(12, 12, W - 24, 34);
+    ctx.fillStyle = ED_PAPER;
+    ctx.font = '700 13.5px "Space Mono", ui-monospace, monospace';
     ctx.textAlign = 'left';
-    ctx.fillText(tool.shortName, 42, 382);
+    ctx.textBaseline = 'middle';
+    const modeLabel =
+      aspectMode === 'portrait'
+        ? `${benchTag} • 9:16 MASTER`
+        : aspectMode === 'drafting-split'
+          ? `${benchTag} • SPLIT PROOF`
+          : `${benchTag} • STUDIO LIVE`;
+    ctx.fillText(modeLabel, 22, 29);
 
-    ctx.strokeStyle = 'rgba(21, 20, 19, 0.28)';
-    ctx.lineWidth = 1.5;
-    ctx.beginPath();
-    ctx.moveTo(42, 404);
-    ctx.lineTo(470, 404);
-    ctx.stroke();
-
-    ctx.fillStyle = '#57524a';
-    ctx.font = '700 15px "Space Mono", monospace';
-    ctx.fillText(tool.physicalLabel.toUpperCase(), 42, 424);
-
+    // Vermilion badge stamp on top-right
+    const badgeStr = tool.badge.toUpperCase();
+    const badgeW = Math.min(182, Math.max(116, badgeStr.length * 9.5 + 20));
     ctx.fillStyle = ED_VERMILION;
-    ctx.textAlign = 'right';
-    ctx.fillText('OPEN →', 470, 424);
+    ctx.fillRect(W - 16 - badgeW, 15, badgeW, 28);
+    ctx.fillStyle = '#ffffff';
+    ctx.font = '700 12.5px "Space Mono", monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText(badgeStr, W - 16 - badgeW / 2, 29, badgeW - 10);
+
+    if (aspectMode === 'drafting-split') {
+      // =====================================================================
+      // BENCH 01 SPECIAL: Unobstructed Upper Identity + Lower Before/After Split Band
+      // (Physical 3D brass divider bar glides over y = 204..322 without blocking icon/title!)
+      // =====================================================================
+      const iconSize = 118;
+      const ix = 42;
+      const iy = 62;
+
+      ctx.save();
+      ctx.fillStyle = ED_INK;
+      ctx.fillRect(ix - 5, iy - 5, iconSize + 10, iconSize + 10);
+      ctx.strokeStyle = ED_BRASS;
+      ctx.lineWidth = 3;
+      ctx.strokeRect(ix - 8, iy - 8, iconSize + 16, iconSize + 16);
+      if (loadedImg) {
+        ctx.drawImage(loadedImg, ix, iy, iconSize, iconSize);
+      } else {
+        ctx.fillStyle = tool.accent;
+        ctx.fillRect(ix, iy, iconSize, iconSize);
+      }
+      ctx.restore();
+
+      ctx.textAlign = 'left';
+      ctx.fillStyle = ED_INK;
+      ctx.font = '700 33px "Fraunces", Georgia, serif';
+      ctx.fillText(tool.shortName, 184, 98, W - 206);
+
+      ctx.fillStyle = ED_VERMILION;
+      ctx.font = '700 13.5px "Space Mono", monospace';
+      ctx.fillText('BEFORE ↔ AFTER STOREFRONT ENGINE', 184, 132, W - 206);
+
+      // Vermilion CTA button in upper-right clear zone
+      ctx.fillStyle = ED_VERMILION;
+      ctx.fillRect(184, 150, 336, 36);
+      ctx.strokeStyle = ED_INK;
+      ctx.lineWidth = 2;
+      ctx.strokeRect(184, 150, 336, 36);
+      ctx.fillStyle = '#ffffff';
+      ctx.font = '700 14.5px "Space Mono", monospace';
+      ctx.textAlign = 'center';
+      ctx.fillText('▶ COMPARE LIVE BEFORE & AFTER', 352, 169);
+
+      // Dedicated Lower Split-Proof Comparison Band (y = 202..362)
+      const bandY = 202;
+      const bandH = 160;
+      const halfW = (W - 40) / 2;
+
+      // Left Half: Wireframe Generic Template ("BEFORE")
+      ctx.fillStyle = '#ded8cc';
+      ctx.fillRect(20, bandY, halfW, bandH);
+      ctx.fillStyle = '#787166';
+      ctx.fillRect(32, bandY + 12, halfW - 28, 22);
+      ctx.fillStyle = '#ffffff';
+      ctx.font = '700 12px "Space Mono", monospace';
+      ctx.textAlign = 'left';
+      ctx.fillText('BEFORE // GENERIC THEME', 40, bandY + 23);
+      ctx.strokeStyle = '#8b8478';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(32, bandY + 44, 102, 76);
+      ctx.strokeRect(144, bandY + 44, 102, 76);
+      ctx.fillStyle = '#6c665c';
+      ctx.fillRect(32, bandY + 130, 168, 12);
+
+      // Right Half: Luxury Editorial Storefront ("AFTER // RELAIS PALAIS")
+      ctx.fillStyle = ED_INK;
+      ctx.fillRect(20 + halfW, bandY, halfW, bandH);
+      ctx.fillStyle = ED_BRASS;
+      ctx.fillRect(32 + halfW, bandY + 12, halfW - 24, 22);
+      ctx.fillStyle = ED_INK;
+      ctx.font = '700 12px "Space Mono", monospace';
+      ctx.fillText('AFTER // BESPOKE FLAGSHIP', 40 + halfW, bandY + 23);
+
+      ctx.fillStyle = ED_PAPER;
+      ctx.font = 'italic 700 28px "Fraunces", Georgia, serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('Relais Palais', 20 + halfW + halfW / 2, bandY + 78);
+      ctx.fillStyle = ED_VERMILION;
+      ctx.fillRect(20 + halfW + halfW / 2 - 74, bandY + 106, 148, 30);
+      ctx.fillStyle = '#ffffff';
+      ctx.font = '700 12px "Space Mono", monospace';
+      ctx.fillText('HIGH-TRUST UX →', 20 + halfW + halfW / 2, bandY + 121);
+
+      ctx.strokeStyle = ED_INK;
+      ctx.lineWidth = 2.5;
+      ctx.strokeRect(20, bandY, W - 40, bandH);
+
+      // Center vermilion datum line
+      ctx.strokeStyle = ED_VERMILION;
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      ctx.moveTo(cx, bandY);
+      ctx.lineTo(cx, bandY + bandH);
+      ctx.stroke();
+    } else {
+      // =====================================================================
+      // PORTRAIT (9:16) & LANDSCAPE STUDIO REFERENCE SCREENS (256x256 Icon Crisp Bake)
+      // =====================================================================
+      const iconSize = aspectMode === 'portrait' ? 196 : 148;
+      const ix = Math.round((W - iconSize) / 2);
+      const iy = aspectMode === 'portrait' ? 78 : 56;
+
+      ctx.save();
+      // Drop-offset sumi-ink editorial shadow block + brass trim around crisp icon
+      ctx.fillStyle = ED_INK;
+      ctx.fillRect(ix + 6, iy + 6, iconSize + 8, iconSize + 8);
+      ctx.fillStyle = '#12151c';
+      ctx.fillRect(ix - 4, iy - 4, iconSize + 8, iconSize + 8);
+      ctx.strokeStyle = ED_BRASS;
+      ctx.lineWidth = 3.5;
+      ctx.strokeRect(ix - 4, iy - 4, iconSize + 8, iconSize + 8);
+
+      if (loadedImg) {
+        ctx.drawImage(loadedImg, ix, iy, iconSize, iconSize);
+      } else {
+        ctx.fillStyle = tool.accent;
+        ctx.fillRect(ix, iy, iconSize, iconSize);
+      }
+      ctx.restore();
+
+      // Expressive Fraunces serif title below icon
+      const titleY = iy + iconSize + (aspectMode === 'portrait' ? 54 : 38);
+      const titleFont =
+        tool.shortName.length > 14
+          ? aspectMode === 'portrait'
+            ? 29
+            : 27
+          : aspectMode === 'portrait'
+            ? 35
+            : 31;
+      ctx.fillStyle = ED_INK;
+      ctx.font = `700 ${titleFont}px "Fraunces", Georgia, serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(tool.shortName, cx, titleY, W - 44);
+
+      if (aspectMode === 'portrait') {
+        // Subtle EN / ES neural voiceover waveform bars on 9:16 display
+        const waveY = titleY + 58;
+        for (let b = 0; b < 18; b++) {
+          const bh = 12 + Math.abs(Math.sin(b * 0.78 + 1.2)) * 38;
+          ctx.fillStyle = b % 3 === 0 ? ED_VERMILION : ED_INK;
+          ctx.fillRect(cx - 108 + b * 12, waveY - bh / 2, 7, bh);
+        }
+        ctx.fillStyle = '#57524a';
+        ctx.font = '700 13px "Space Mono", monospace';
+        ctx.fillText('EN / ES VOICE + SYNCED CAPTIONS', cx, waveY + 38);
+      } else {
+        // Subtle station spec sub-caption
+        ctx.fillStyle = '#57524a';
+        ctx.font = '700 12.5px "Space Mono", monospace';
+        ctx.fillText((tool.stationLabel || tool.physicalLabel || '').toUpperCase(), cx, titleY + 28, W - 48);
+      }
+
+      // Crisp Vermilion Letterpress Launch CTA Stamp at bottom
+      const pillW = Math.min(W - 52, 344);
+      const pillH = aspectMode === 'portrait' ? 54 : 44;
+      const pillX = Math.round((W - pillW) / 2);
+      const pillY = aspectMode === 'portrait' ? H - 92 : H - 64;
+
+      ctx.fillStyle = ED_INK;
+      ctx.fillRect(pillX + 4, pillY + 4, pillW, pillH);
+      ctx.fillStyle = ED_VERMILION;
+      ctx.fillRect(pillX, pillY, pillW, pillH);
+      ctx.strokeStyle = ED_INK;
+      ctx.lineWidth = 2.5;
+      ctx.strokeRect(pillX, pillY, pillW, pillH);
+
+      ctx.fillStyle = '#fcfaf5';
+      ctx.font = '700 15.5px "Space Mono", monospace';
+      const ctaLabel =
+        aspectMode === 'portrait' ? '▶ WATCH LIVE PIPELINE' : '▶ LAUNCH WORKBENCH • LIVE';
+      ctx.fillText(ctaLabel, cx, pillY + pillH / 2 + 1, pillW - 18);
+    }
+
+    // Outer double editorial border
+    ctx.strokeStyle = ED_INK;
+    ctx.lineWidth = 5;
+    ctx.strokeRect(5, 5, W - 10, H - 10);
+    ctx.strokeStyle = ED_BRASS;
+    ctx.lineWidth = 1.5;
+    ctx.strokeRect(10, 10, W - 20, H - 20);
   }
 
   draw();
@@ -476,10 +454,11 @@ function createEditorialFolioTexture(tool, idx = 0) {
 
   const img = new Image();
   img.crossOrigin = 'anonymous';
-  img.width = 128;
-  img.height = 128;
+  // Explicit 256x256 ensures viewBox-only SVGs rasterize razor-sharp on all browsers
+  img.width = 256;
+  img.height = 256;
   img.onload = () => {
-    loadedIcon = img;
+    loadedImg = img;
     draw();
     tex.needsUpdate = true;
   };
@@ -494,127 +473,382 @@ function createEditorialFolioTexture(tool, idx = 0) {
   return tex;
 }
 
-function createEditorialDeskMatTexture() {
+/**
+ * Generates bespoke printed cover artwork for each Workshop bench's physical 3D output artifact
+ */
+function createWorkshopOutputTexture(tool, artifactFormat = 'lookbook', benchIdx = 0) {
   const canvas = document.createElement('canvas');
-  canvas.width = 1024;
-  canvas.height = 512;
+  if (artifactFormat === 'reel-case') {
+    canvas.width = 420;
+    canvas.height = 420;
+  } else if (artifactFormat === 'storyboard') {
+    canvas.width = 512;
+    canvas.height = 368;
+  } else {
+    canvas.width = 384;
+    canvas.height = 512;
+  }
+  const ctx = canvas.getContext('2d');
+  let loadedImg = null;
+
+  const headers = {
+    lookbook: 'FLAGSHIP LOOKBOOK • EDITION 01',
+    'sku-dossier': 'EN / ES SKU SPEC + PRICE BAND',
+    'portrait-proof': '3D RELIGHT STUDIO PROOF',
+    storyboard: '3-BEAT COMMERCIAL STORYBOARD',
+    'reel-case': '1080P BILINGUAL MASTER REEL',
+    'roas-ledger': 'UNIT ECONOMICS & ROAS LEDGER',
+    'polyglot-booklet': '15+ LANGUAGE TYPESETTING QA'
+  };
+
+  function draw() {
+    const W = canvas.width;
+    const H = canvas.height;
+
+    // Warm museum rag stock base
+    ctx.fillStyle = ED_PAPER;
+    ctx.fillRect(0, 0, W, H);
+
+    // Left bookcloth / archival spine accent band
+    ctx.fillStyle = ED_INK;
+    ctx.fillRect(0, 0, 34, H);
+    ctx.fillStyle = ED_VERMILION;
+    ctx.fillRect(34, 0, 7, H);
+
+    // Top editorial header bar
+    ctx.fillStyle = '#efe8da';
+    ctx.fillRect(41, 0, W - 41, 52);
+    ctx.strokeStyle = ED_INK;
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(41, 52);
+    ctx.lineTo(W, 52);
+    ctx.stroke();
+
+    ctx.fillStyle = ED_INK;
+    ctx.font = '700 13.5px "Space Mono", monospace';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    const contentCx = 41 + (W - 41) / 2;
+    ctx.fillText(headers[artifactFormat] || 'STUDIO PROOF', contentCx, 27, W - 64);
+
+    if (artifactFormat === 'storyboard') {
+      // 3-Scene Cinema Contact Strip + Icon Badge
+      ctx.fillStyle = ED_INK;
+      ctx.fillRect(62, 74, W - 86, 152);
+      ['ACT I', 'ACT II', 'ACT III'].forEach((act, i) => {
+        const fw = (W - 122) / 3;
+        const fx = 74 + i * (fw + 6);
+        ctx.fillStyle = i === 1 ? ED_VERMILION : '#faf6ee';
+        ctx.fillRect(fx, 92, fw, 116);
+        ctx.fillStyle = i === 1 ? '#ffffff' : ED_INK;
+        ctx.font = '700 18px "Fraunces", Georgia, serif';
+        ctx.fillText(act, fx + fw / 2, 134);
+      });
+      if (loadedImg) {
+        ctx.drawImage(loadedImg, Math.round(contentCx - 34), 140, 68, 68);
+      }
+      ctx.fillStyle = ED_INK;
+      ctx.font = '700 26px "Fraunces", Georgia, serif';
+      ctx.fillText(tool.shortName, contentCx, 268, W - 76);
+
+      ctx.fillStyle = ED_VERMILION;
+      ctx.fillRect(72, 300, W - 104, 38);
+      ctx.fillStyle = '#ffffff';
+      ctx.font = '700 14px "Space Mono", monospace';
+      ctx.fillText(tool.badge.toUpperCase(), contentCx, 319);
+    } else {
+      const iconSize = artifactFormat === 'reel-case' ? 156 : 168;
+      const ix = Math.round(contentCx - iconSize / 2);
+      const iy = artifactFormat === 'reel-case' ? 76 : 84;
+
+      ctx.fillStyle = ED_INK;
+      ctx.fillRect(ix + 5, iy + 5, iconSize + 8, iconSize + 8);
+      ctx.fillStyle = '#12151c';
+      ctx.fillRect(ix - 4, iy - 4, iconSize + 8, iconSize + 8);
+      ctx.strokeStyle = ED_BRASS;
+      ctx.lineWidth = 3;
+      ctx.strokeRect(ix - 4, iy - 4, iconSize + 8, iconSize + 8);
+      if (loadedImg) {
+        ctx.drawImage(loadedImg, ix, iy, iconSize, iconSize);
+      } else {
+        ctx.fillStyle = tool.accent;
+        ctx.fillRect(ix, iy, iconSize, iconSize);
+      }
+
+      const titleY = iy + iconSize + (artifactFormat === 'reel-case' ? 40 : 52);
+      ctx.fillStyle = ED_INK;
+      ctx.font = '700 26px "Fraunces", Georgia, serif';
+      ctx.fillText(tool.shortName, contentCx, titleY, W - 70);
+
+      // Specimen detail strip depending on station
+      if (artifactFormat === 'polyglot-booklet') {
+        ctx.fillStyle = ED_VERMILION;
+        ctx.font = '700 20px "Fraunces", serif';
+        ctx.fillText('Aa • Ññ • あ • ع', contentCx, titleY + 38);
+      } else if (artifactFormat === 'roas-ledger') {
+        ctx.fillStyle = '#0f766e';
+        ctx.font = '700 15px "Space Mono", monospace';
+        ctx.fillText('NET MARGIN • +3.8× ROAS', contentCx, titleY + 36);
+      } else if (artifactFormat === 'sku-dossier') {
+        ['#151413', '#c83e2b', '#fbbf24', '#38bdf8', '#b08d57'].forEach((sw, si) => {
+          ctx.fillStyle = sw;
+          ctx.fillRect(contentCx - 95 + si * 40, titleY + 24, 30, 18);
+        });
+      }
+
+      // Bottom archival colophon stamp
+      const stampY = H - 68;
+      ctx.fillStyle = ED_VERMILION;
+      ctx.fillRect(64, stampY, W - 88, 38);
+      ctx.fillStyle = '#ffffff';
+      ctx.font = '700 14px "Space Mono", monospace';
+      ctx.fillText(`BENCH 0${benchIdx + 1} • ${tool.badge.toUpperCase()}`, contentCx, stampY + 19, W - 102);
+    }
+
+    ctx.strokeStyle = ED_INK;
+    ctx.lineWidth = 5;
+    ctx.strokeRect(3, 3, W - 6, H - 6);
+  }
+
+  draw();
+  const tex = new THREE.CanvasTexture(canvas);
+  tex.colorSpace = THREE.SRGBColorSpace;
+
+  const img = new Image();
+  img.crossOrigin = 'anonymous';
+  img.width = 256;
+  img.height = 256;
+  img.onload = () => {
+    loadedImg = img;
+    draw();
+    tex.needsUpdate = true;
+  };
+  img.src = tool.iconUrl;
+
+  tex.userData = {
+    redraw() {
+      draw();
+      tex.needsUpdate = true;
+    }
+  };
+  return tex;
+}
+
+function createStudioCuttingMatTexture(benchIdx = 1) {
+  const canvas = document.createElement('canvas');
+  canvas.width = 512;
+  canvas.height = 256;
   const ctx = canvas.getContext('2d');
 
-  // Warm natural linen / portfolio desk blotter
-  ctx.fillStyle = '#e8e0d2';
-  ctx.fillRect(0, 0, 1024, 512);
+  // Self-healing warm linen/cream architectural drafting mat
+  ctx.fillStyle = '#efe8da';
+  ctx.fillRect(0, 0, 512, 256);
 
-  // Fine architectural column grid
-  ctx.strokeStyle = 'rgba(21, 20, 19, 0.14)';
-  ctx.lineWidth = 1.2;
-  for (let x = 64; x < 1024; x += 64) {
+  ctx.strokeStyle = 'rgba(21, 20, 19, 0.13)';
+  ctx.lineWidth = 1;
+  for (let x = 24; x <= 488; x += 24) {
     ctx.beginPath();
-    ctx.moveTo(x, 28);
-    ctx.lineTo(x, 484);
+    ctx.moveTo(x, 16);
+    ctx.lineTo(x, 240);
+    ctx.stroke();
+  }
+  for (let y = 24; y <= 232; y += 24) {
+    ctx.beginPath();
+    ctx.moveTo(16, y);
+    ctx.lineTo(496, y);
     ctx.stroke();
   }
 
+  // Outer sumi-ink & vermilion pica scale border
   ctx.strokeStyle = ED_INK;
   ctx.lineWidth = 3;
-  ctx.strokeRect(24, 24, 976, 464);
-  ctx.lineWidth = 1;
-  ctx.strokeRect(32, 32, 960, 448);
+  ctx.strokeRect(12, 12, 488, 232);
 
-  // Laid-out editorial contact sheet cards in center of table
-  [330, 512, 694].forEach((cx, i) => {
-    ctx.save();
-    ctx.translate(cx, 224);
-    ctx.rotate((i - 1) * 0.045);
-    ctx.fillStyle = ED_PAPER;
-    ctx.fillRect(-74, -96, 148, 192);
-    ctx.strokeStyle = ED_INK;
-    ctx.lineWidth = 2;
-    ctx.strokeRect(-74, -96, 148, 192);
-
-    ctx.fillStyle = i === 1 ? ED_VERMILION : ED_INK;
-    ctx.fillRect(-58, -78, 116, 104);
-    ctx.fillStyle = ED_INK;
-    ctx.fillRect(-58, 42, 96, 8);
-    ctx.fillRect(-58, 58, 68, 6);
-    ctx.restore();
-  });
-
-  ctx.fillStyle = ED_INK;
-  ctx.font = '700 20px "Space Mono", monospace';
+  ctx.fillStyle = ED_VERMILION;
+  ctx.fillRect(18, 218, 128, 18);
+  ctx.fillStyle = '#ffffff';
+  ctx.font = '700 11px "Space Mono", monospace';
   ctx.textAlign = 'center';
-  ctx.fillText('ATELIER PROOF TABLE — § I: BEFORE/AFTER EDITION   •   § II: COMMISSION BRIEF', 512, 458);
+  ctx.textBaseline = 'middle';
+  ctx.fillText(`BENCH 0${benchIdx} // SPEC`, 82, 227);
 
   const tex = new THREE.CanvasTexture(canvas);
   tex.colorSpace = THREE.SRGBColorSpace;
   return tex;
 }
 
-function createBeforeAfterProofTexture() {
+function createWorkshopRunnerTexture() {
   const canvas = document.createElement('canvas');
-  canvas.width = 640;
-  canvas.height = 360;
+  canvas.width = 1024;
+  canvas.height = 512;
   const ctx = canvas.getContext('2d');
 
-  // Left Half: Dated generic template ("BEFORE")
-  ctx.fillStyle = '#ddd8ce';
-  ctx.fillRect(0, 0, 320, 360);
-  ctx.fillStyle = '#9c9589';
-  ctx.fillRect(22, 22, 276, 32);
-  ctx.fillStyle = '#ffffff';
-  ctx.font = '700 17px "Space Mono", monospace';
-  ctx.fillText('BEFORE // GENERIC', 34, 44);
-  ctx.fillStyle = '#ece8e0';
-  ctx.fillRect(22, 74, 130, 124);
-  ctx.fillRect(166, 74, 132, 124);
-  ctx.fillStyle = '#aba498';
-  ctx.fillRect(22, 216, 236, 16);
-  ctx.fillRect(22, 244, 174, 16);
-  ctx.fillStyle = '#4a4640';
-  ctx.font = '700 18px "Space Mono", monospace';
-  ctx.fillText('PLAIN STARTER SITE', 26, 318);
+  // Sunlit woven Belgian linen & warm travertine runner weave
+  ctx.fillStyle = '#ebe3d3';
+  ctx.fillRect(0, 0, 1024, 512);
 
-  // Right Half: Bespoke Editorial Flagship ("AFTER")
-  ctx.fillStyle = ED_PAPER;
-  ctx.fillRect(320, 0, 320, 360);
+  // Architectural selvedge border bands (sumi ink, vermilion, antique brass)
+  const stripes = [
+    [26, 16, ED_INK],
+    [50, 10, ED_VERMILION],
+    [68, 8, ED_BRASS],
+    [436, 8, ED_BRASS],
+    [446, 10, ED_VERMILION],
+    [464, 16, ED_INK]
+  ];
+  stripes.forEach(([y, h, col]) => {
+    ctx.fillStyle = col;
+    ctx.fillRect(18, y, 988, h);
+  });
 
-  ctx.fillStyle = ED_INK;
-  ctx.fillRect(340, 22, 278, 32);
-  ctx.fillStyle = ED_PAPER;
-  ctx.font = '700 17px "Space Mono", monospace';
-  ctx.fillText('AFTER // EDITORIAL', 354, 44);
+  // Subtle Swiss editorial registration crosses & pica medallions down center
+  for (let x = 96; x < 960; x += 128) {
+    ctx.strokeStyle = 'rgba(21, 20, 19, 0.16)';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(x - 28, 228, 56, 56);
+    ctx.strokeStyle = 'rgba(200, 62, 43, 0.35)';
+    ctx.beginPath();
+    ctx.moveTo(x - 12, 256);
+    ctx.lineTo(x + 12, 256);
+    ctx.moveTo(x, 244);
+    ctx.lineTo(x, 268);
+    ctx.stroke();
+  }
 
-  ctx.fillStyle = ED_INK;
-  ctx.fillRect(340, 74, 278, 156);
-  ctx.fillStyle = ED_PAPER;
-  ctx.font = 'italic 700 32px "Fraunces", Georgia, serif';
-  ctx.fillText('Relais Palais', 362, 140);
-  ctx.font = '400 16px "Space Mono", monospace';
-  ctx.fillStyle = '#d6cfc2';
-  ctx.fillText('BESPOKE + BILINGUAL UX', 362, 176);
+  // Fine woven linen warp lines
+  ctx.fillStyle = 'rgba(21, 20, 19, 0.035)';
+  for (let y = 0; y < 512; y += 4) {
+    ctx.fillRect(0, y, 1024, 1.2);
+  }
 
-  ctx.fillStyle = ED_VERMILION;
-  ctx.fillRect(340, 254, 278, 56);
-  ctx.fillStyle = '#ffffff';
-  ctx.font = '700 18px "Space Mono", monospace';
-  ctx.fillText('▶ DRAG LIVE PROOF', 368, 289);
+  // Heavy bound linen border
+  ctx.strokeStyle = ED_INK;
+  ctx.lineWidth = 14;
+  ctx.strokeRect(8, 8, 1008, 496);
 
-  // Center vermilion proof divider
+  const tex = new THREE.CanvasTexture(canvas);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  return tex;
+}
+
+function createStudioPegboardTexture() {
+  const canvas = document.createElement('canvas');
+  canvas.width = 256;
+  canvas.height = 256;
+  const ctx = canvas.getContext('2d');
+
+  // Warm sunlit birch/cream studio pegboard
+  ctx.fillStyle = '#efe7d8';
+  ctx.fillRect(0, 0, 256, 256);
+
+  ctx.fillStyle = '#756856';
+  for (let y = 16; y < 256; y += 24) {
+    for (let x = 16; x < 256; x += 24) {
+      ctx.beginPath();
+      ctx.arc(x, y, 3.0, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
+  const tex = new THREE.CanvasTexture(canvas);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  tex.wrapS = THREE.RepeatWrapping;
+  tex.wrapT = THREE.RepeatWrapping;
+  tex.repeat.set(4, 2);
+  return tex;
+}
+
+function createGlobeParchmentTexture() {
+  const canvas = document.createElement('canvas');
+  canvas.width = 512;
+  canvas.height = 256;
+  const ctx = canvas.getContext('2d');
+
+  // Warm cartographic parchment ocean
+  ctx.fillStyle = '#f2ead9';
+  ctx.fillRect(0, 0, 512, 256);
+
+  // Stylized architectural continent silhouettes in warm brass/terracotta
+  ctx.fillStyle = '#cbb389';
+  [
+    [82, 62, 68, 54],
+    [122, 128, 44, 68],
+    [232, 52, 56, 48],
+    [244, 106, 52, 74],
+    [306, 56, 112, 68],
+    [392, 148, 54, 42]
+  ].forEach(([rx, ry, rw, rh]) => {
+    ctx.beginPath();
+    ctx.ellipse(rx + rw / 2, ry + rh / 2, rw / 2, rh / 2, 0.18, 0, Math.PI * 2);
+    ctx.fill();
+  });
+
+  // Graticule latitude/longitude lines + vermilion equator
+  ctx.strokeStyle = 'rgba(21, 20, 19, 0.22)';
+  ctx.lineWidth = 1.2;
+  for (let x = 32; x < 512; x += 48) {
+    ctx.beginPath();
+    ctx.moveTo(x, 0);
+    ctx.lineTo(x, 256);
+    ctx.stroke();
+  }
+  for (let y = 32; y < 256; y += 32) {
+    ctx.beginPath();
+    ctx.moveTo(0, y);
+    ctx.lineTo(512, y);
+    ctx.stroke();
+  }
+
   ctx.strokeStyle = ED_VERMILION;
-  ctx.lineWidth = 6;
+  ctx.lineWidth = 2.5;
   ctx.beginPath();
-  ctx.moveTo(320, 0);
-  ctx.lineTo(320, 360);
+  ctx.moveTo(0, 128);
+  ctx.lineTo(512, 128);
   ctx.stroke();
 
-  ctx.fillStyle = ED_PAPER;
-  ctx.fillRect(294, 154, 52, 52);
-  ctx.strokeStyle = ED_INK;
-  ctx.lineWidth = 3;
-  ctx.strokeRect(294, 154, 52, 52);
-  ctx.fillStyle = ED_INK;
-  ctx.font = '700 22px "Space Mono", monospace';
-  ctx.textAlign = 'center';
-  ctx.fillText('↔', 320, 187);
+  const tex = new THREE.CanvasTexture(canvas);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  return tex;
+}
+
+function createTypeTrayTexture() {
+  const canvas = document.createElement('canvas');
+  canvas.width = 512;
+  canvas.height = 256;
+  const ctx = canvas.getContext('2d');
+
+  ctx.fillStyle = '#241e19';
+  ctx.fillRect(0, 0, 512, 256);
+
+  const cells = [
+    ['Aa', '#faf6ee', ED_INK],
+    ['Ññ', ED_VERMILION, '#ffffff'],
+    ['あ', '#efe6d5', ED_INK],
+    ['ع', '#d4b47c', ED_INK]
+  ];
+  cells.forEach(([glyph, bg, fg], i) => {
+    const cx = 18 + i * 121;
+    ctx.fillStyle = bg;
+    ctx.fillRect(cx, 22, 112, 152);
+    ctx.strokeStyle = ED_BRASS;
+    ctx.lineWidth = 3;
+    ctx.strokeRect(cx, 22, 112, 152);
+    ctx.fillStyle = fg;
+    ctx.font = '700 48px "Fraunces", system-ui, serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(glyph, cx + 56, 98);
+  });
+
+  // Lower letterpress compartment matrix
+  for (let c = 0; c < 8; c++) {
+    ctx.fillStyle = c % 2 === 0 ? '#3a3028' : '#2e2620';
+    ctx.fillRect(18 + c * 60, 188, 54, 48);
+    ctx.strokeStyle = ED_BRASS;
+    ctx.lineWidth = 1.5;
+    ctx.strokeRect(18 + c * 60, 188, 54, 48);
+  }
 
   const tex = new THREE.CanvasTexture(canvas);
   tex.colorSpace = THREE.SRGBColorSpace;
@@ -627,41 +861,50 @@ function createCommissionDossierTexture() {
   canvas.height = 512;
   const ctx = canvas.getContext('2d');
 
-  ctx.fillStyle = ED_PAPER;
-  ctx.fillRect(0, 0, 384, 512);
+  function draw() {
+    ctx.fillStyle = ED_PAPER;
+    ctx.fillRect(0, 0, 384, 512);
 
-  ctx.strokeStyle = ED_INK;
-  ctx.lineWidth = 6;
-  ctx.strokeRect(8, 8, 368, 496);
-  ctx.lineWidth = 1.5;
-  ctx.strokeRect(18, 18, 348, 476);
+    ctx.strokeStyle = ED_INK;
+    ctx.lineWidth = 6;
+    ctx.strokeRect(8, 8, 368, 496);
+    ctx.lineWidth = 1.5;
+    ctx.strokeRect(18, 18, 348, 476);
 
-  ctx.fillStyle = ED_INK;
-  ctx.font = 'italic 700 30px "Fraunces", Georgia, serif';
-  ctx.fillText('Commission Brief', 34, 68);
+    ctx.fillStyle = ED_INK;
+    ctx.font = 'italic 700 30px "Fraunces", Georgia, serif';
+    ctx.fillText('Commission Brief', 34, 68);
 
-  ctx.strokeStyle = ED_VERMILION;
-  ctx.lineWidth = 3;
-  ctx.beginPath();
-  ctx.moveTo(34, 88);
-  ctx.lineTo(350, 88);
-  ctx.stroke();
+    ctx.strokeStyle = ED_VERMILION;
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(34, 88);
+    ctx.lineTo(350, 88);
+    ctx.stroke();
 
-  const rows = ['§ Website Makeover', '§ Product Visuals AI', '§ Market Dossier', '§ Interactive Piece'];
-  ctx.fillStyle = ED_INK;
-  ctx.font = '700 22px "Fraunces", Georgia, serif';
-  rows.forEach((line, i) => {
-    ctx.fillText(line, 36, 154 + i * 62);
-  });
+    const rows = ['§ Website Makeover', '§ Product Visuals AI', '§ Market Dossier', '§ Interactive Piece'];
+    ctx.fillStyle = ED_INK;
+    ctx.font = '700 22px "Fraunces", Georgia, serif';
+    rows.forEach((line, i) => {
+      ctx.fillText(line, 36, 154 + i * 62);
+    });
 
-  ctx.fillStyle = ED_VERMILION;
-  ctx.fillRect(34, 404, 316, 66);
-  ctx.fillStyle = '#ffffff';
-  ctx.font = '700 19px "Space Mono", monospace';
-  ctx.fillText('INQUIRE / BRIEF →', 68, 444);
+    ctx.fillStyle = ED_VERMILION;
+    ctx.fillRect(34, 404, 316, 66);
+    ctx.fillStyle = '#ffffff';
+    ctx.font = '700 19px "Space Mono", monospace';
+    ctx.fillText('INQUIRE / BRIEF →', 68, 444);
+  }
 
+  draw();
   const tex = new THREE.CanvasTexture(canvas);
   tex.colorSpace = THREE.SRGBColorSpace;
+  tex.userData = {
+    redraw() {
+      draw();
+      tex.needsUpdate = true;
+    }
+  };
   return tex;
 }
 
@@ -1439,79 +1682,1784 @@ function createPegboardTexture() {
 }
 
 /**
- * Builds a Framed Museum-Grade Editorial Print Folio for the Left Design Studio
+ * Sunlit Design & Maker's Studio Workbench (blackened-ash frame + pale Nordic birch butcher-block top at y = 0.96)
  */
-function buildEditorialFolioNode(tool, idx) {
-  const root = new THREE.Group();
-  const folioW = 1.42;
-  const folioH = 1.26;
+function buildStudioWorkbenchBase(index, accentHex) {
+  const group = new THREE.Group();
+  const benchW = 1.88;
+  const benchD = 1.04;
+  const topH = 0.075;
+  const topCenterY = 0.96 - topH / 2;
 
-  // Matte sumi-black gallery box frame
-  const frameMat = new THREE.MeshStandardMaterial({
-    color: ED_INK,
-    roughness: 0.45,
-    metalness: 0.15
+  const ashFrameMat = new THREE.MeshStandardMaterial({
+    color: 0x1c1a17,
+    roughness: 0.48,
+    metalness: 0.16
+  });
+  const birchTopMat = new THREE.MeshStandardMaterial({
+    color: 0xdcc7a6,
+    roughness: 0.54,
+    metalness: 0.04
   });
   const brassMat = new THREE.MeshStandardMaterial({
     color: ED_BRASS,
-    roughness: 0.32,
-    metalness: 0.78
+    roughness: 0.3,
+    metalness: 0.8
+  });
+  const ragBoxMat = new THREE.MeshStandardMaterial({
+    color: 0xf5efe3,
+    roughness: 0.74,
+    metalness: 0.02
+  });
+  const vermilionMat = new THREE.MeshStandardMaterial({
+    color: ED_VERMILION,
+    roughness: 0.42,
+    metalness: 0.08
   });
 
-  const outerFrame = new THREE.Mesh(new THREE.BoxGeometry(folioW, folioH, 0.065), frameMat);
-  root.add(outerFrame);
+  // Pale Nordic birch butcher-block worktop (top surface sits at exact y = 0.96)
+  const tabletop = new THREE.Mesh(new THREE.BoxGeometry(benchW, topH, benchD), birchTopMat);
+  tabletop.position.set(0, topCenterY, 0);
+  group.add(tabletop);
 
-  // Warm antique-brass inner gallery fillet
-  const brassFillet = new THREE.Mesh(
-    new THREE.BoxGeometry(folioW - 0.05, folioH - 0.05, 0.07),
+  // Brushed-brass front inlay strip along birch tabletop edge
+  const brassFrontInlay = new THREE.Mesh(
+    new THREE.BoxGeometry(benchW + 0.006, 0.018, 0.014),
     brassMat
   );
-  root.add(brassFillet);
+  brassFrontInlay.position.set(0, 0.924, benchD / 2 + 0.004);
+  group.add(brassFrontInlay);
 
-  // High-DPI Editorial Print Poster face
-  const folioTex = createEditorialFolioTexture(tool, idx);
-  const printMat = new THREE.MeshStandardMaterial({
-    map: folioTex,
-    emissiveMap: folioTex,
+  // Self-healing architectural drafting / pica cutting mat on tabletop
+  const cuttingMat = new THREE.Mesh(
+    new THREE.PlaneGeometry(1.74, 0.88),
+    new THREE.MeshStandardMaterial({
+      map: createStudioCuttingMatTexture(index + 1),
+      roughness: 0.78,
+      metalness: 0.02
+    })
+  );
+  cuttingMat.rotation.x = -Math.PI / 2;
+  cuttingMat.position.set(0, 0.962, 0.01);
+  group.add(cuttingMat);
+
+  // Blackened-ash structural apron beneath tabletop
+  const apron = new THREE.Mesh(
+    new THREE.BoxGeometry(benchW - 0.08, 0.07, benchD - 0.08),
+    ashFrameMat
+  );
+  apron.position.set(0, 0.855, 0);
+  group.add(apron);
+
+  // 4 Blackened-ash studio legs + machined brass leveling feet
+  const legPositions = [
+    [-benchW / 2 + 0.09, -benchD / 2 + 0.09],
+    [benchW / 2 - 0.09, -benchD / 2 + 0.09],
+    [-benchW / 2 + 0.09, benchD / 2 - 0.09],
+    [benchW / 2 - 0.09, benchD / 2 - 0.09]
+  ];
+  legPositions.forEach(([lx, lz]) => {
+    const leg = new THREE.Mesh(new THREE.BoxGeometry(0.065, 0.85, 0.065), ashFrameMat);
+    leg.position.set(lx, 0.455, lz);
+    group.add(leg);
+
+    const brassFoot = new THREE.Mesh(new THREE.CylinderGeometry(0.036, 0.04, 0.03, 14), brassMat);
+    brassFoot.position.set(lx, 0.015, lz);
+    group.add(brassFoot);
+  });
+
+  // Lower archival flat-file storage shelf
+  const lowerShelf = new THREE.Mesh(
+    new THREE.BoxGeometry(benchW - 0.2, 0.035, benchD - 0.24),
+    ashFrameMat
+  );
+  lowerShelf.position.set(0, 0.24, -0.02);
+  group.add(lowerShelf);
+
+  // Stacked cotton-rag archival portfolio boxes on left of lower shelf
+  [0, 1].forEach((bi) => {
+    const folioBox = new THREE.Mesh(new THREE.BoxGeometry(0.54, 0.075, 0.42), ragBoxMat);
+    folioBox.position.set(-0.44, 0.295 + bi * 0.082, 0.02);
+    folioBox.rotation.y = bi === 1 ? 0.04 : -0.02;
+    group.add(folioBox);
+
+    const spineTab = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.032, 0.012), vermilionMat);
+    spineTab.position.set(-0.44, 0.295 + bi * 0.082, 0.232);
+    group.add(spineTab);
+  });
+
+  // Rolled architectural blueprint tubes with brass/vermilion caps on right of lower shelf
+  [-0.08, 0.06, 0.0].forEach((tz, ti) => {
+    const tube = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.036, 0.036, 0.56, 14),
+      new THREE.MeshStandardMaterial({
+        color: ti === 1 ? 0xd5be97 : 0xf4eee2,
+        roughness: 0.68
+      })
+    );
+    tube.rotation.z = Math.PI / 2;
+    tube.position.set(0.42, ti === 2 ? 0.355 : 0.295, tz + 0.04);
+    group.add(tube);
+
+    const cap = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.038, 0.038, 0.024, 14),
+      ti === 0 ? vermilionMat : brassMat
+    );
+    cap.rotation.z = Math.PI / 2;
+    cap.position.set(0.705, ti === 2 ? 0.355 : 0.295, tz + 0.04);
+    group.add(cap);
+  });
+
+  // Sumi-ink & brass bench number plate on front edge of birch top
+  const badgePlate = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.046, 0.016), ashFrameMat);
+  badgePlate.position.set(0, 0.924, benchD / 2 + 0.012);
+  group.add(badgePlate);
+
+  const accentPinMat = new THREE.MeshStandardMaterial({
+    color: new THREE.Color(accentHex),
+    emissive: new THREE.Color(accentHex),
+    emissiveIntensity: 0.65,
+    roughness: 0.28
+  });
+  const accentPin = new THREE.Mesh(new THREE.BoxGeometry(0.065, 0.022, 0.022), accentPinMat);
+  accentPin.position.set(-0.095, 0.924, benchD / 2 + 0.016);
+  group.add(accentPin);
+
+  return { group, accentPinMat };
+}
+
+/**
+ * Builds a Sunlit Studio Reference Display ('landscape', 'drafting-split', 'pen-easel', 'broadcast-hood', or 'portrait')
+ */
+function buildStudioDisplayMonitor(
+  tool,
+  benchIdx,
+  { mode = 'landscape', width = 0.82, height = 0.62 } = {}
+) {
+  const group = new THREE.Group();
+  const inkShellMat = new THREE.MeshStandardMaterial({
+    color: 0x181715,
+    roughness: 0.42,
+    metalness: 0.22
+  });
+  const brassMat = new THREE.MeshStandardMaterial({
+    color: ED_BRASS,
+    roughness: 0.3,
+    metalness: 0.82
+  });
+  const bezelMaskMat = new THREE.MeshStandardMaterial({
+    color: 0x0e0d0c,
+    roughness: 0.35,
+    metalness: 0.18
+  });
+
+  const texAspect =
+    mode === 'portrait' ? 'portrait' : mode === 'drafting-split' ? 'drafting-split' : 'landscape';
+  const screenTex = createToolScreenTexture(tool, texAspect, benchIdx);
+  const screenMat = new THREE.MeshStandardMaterial({
+    map: screenTex,
+    emissiveMap: screenTex,
     emissive: new THREE.Color('#fffaf0'),
-    emissiveIntensity: 0.22,
-    roughness: 0.58,
+    emissiveIntensity: 0.3,
+    roughness: 0.22,
+    metalness: 0.05
+  });
+
+  const framePivot = new THREE.Group();
+  let screenW = width - 0.09;
+  let screenH = height - 0.09;
+  let tallyMat = null;
+
+  if (mode === 'drafting-split') {
+    // Weighted blackened-ash press plinth + twin machined-brass side trunnion uprights
+    const plinth = new THREE.Mesh(new THREE.BoxGeometry(width + 0.08, 0.036, 0.3), inkShellMat);
+    plinth.position.set(0, 0.018, 0.0);
+    group.add(plinth);
+
+    [-width / 2 - 0.035, width / 2 + 0.035].forEach((tx) => {
+      const trunnionPost = new THREE.Mesh(new THREE.BoxGeometry(0.038, 0.44, 0.055), brassMat);
+      trunnionPost.position.set(tx, 0.23, -0.02);
+      group.add(trunnionPost);
+
+      const knob = new THREE.Mesh(new THREE.CylinderGeometry(0.028, 0.028, 0.026, 16), brassMat);
+      knob.rotation.z = Math.PI / 2;
+      knob.position.set(tx + (tx < 0 ? -0.024 : 0.024), 0.41, -0.02);
+      group.add(knob);
+    });
+
+    framePivot.position.set(0, 0.42, 0.0);
+    framePivot.rotation.x = -0.11;
+  } else if (mode === 'pen-easel') {
+    // Articulated retouching easel base + angled pen-display chassis + docked stylus
+    const easelFoot = new THREE.Mesh(new THREE.BoxGeometry(0.52, 0.028, 0.34), inkShellMat);
+    easelFoot.position.set(0, 0.014, 0.02);
+    group.add(easelFoot);
+
+    const easelRearStrut = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.34, 0.04), brassMat);
+    easelRearStrut.position.set(0, 0.17, -0.08);
+    easelRearStrut.rotation.x = 0.28;
+    group.add(easelRearStrut);
+
+    framePivot.position.set(0, 0.33, 0.03);
+    framePivot.rotation.x = -0.32;
+
+    // Docked precision retouching stylus on right side of tablet bezel
+    const penBody = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.009, 0.007, 0.19, 12),
+      inkShellMat
+    );
+    penBody.position.set(width / 2 + 0.025, 0.02, 0.02);
+    penBody.rotation.z = -0.08;
+    framePivot.add(penBody);
+
+    const penBrassFerrule = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.0095, 0.006, 0.038, 12),
+      brassMat
+    );
+    penBrassFerrule.position.set(width / 2 + 0.018, -0.075, 0.02);
+    penBrassFerrule.rotation.z = -0.08;
+    framePivot.add(penBrassFerrule);
+  } else if (mode === 'portrait') {
+    // Weighted circular brass-ringed swivel base + vertical column for 9:16 Shorts Monitor
+    const baseDisc = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.22, 0.03, 24), inkShellMat);
+    baseDisc.position.set(0, 0.015, 0);
+    group.add(baseDisc);
+
+    const brassTrimRing = new THREE.Mesh(new THREE.TorusGeometry(0.205, 0.009, 10, 28), brassMat);
+    brassTrimRing.rotation.x = Math.PI / 2;
+    brassTrimRing.position.set(0, 0.028, 0);
+    group.add(brassTrimRing);
+
+    const neckCol = new THREE.Mesh(new THREE.CylinderGeometry(0.032, 0.038, 0.44, 16), brassMat);
+    neckCol.position.set(0, 0.23, -0.05);
+    group.add(neckCol);
+
+    framePivot.position.set(0, 0.46, 0.01);
+    framePivot.rotation.x = -0.06;
+  } else {
+    // Classic studio reference pedestal (ash + brass inlay + cylindrical brass column)
+    const basePlate = new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.032, 0.28), inkShellMat);
+    basePlate.position.set(0, 0.016, 0.01);
+    group.add(basePlate);
+
+    const baseBrassLip = new THREE.Mesh(new THREE.BoxGeometry(0.425, 0.012, 0.012), brassMat);
+    baseBrassLip.position.set(0, 0.016, 0.152);
+    group.add(baseBrassLip);
+
+    const neck = new THREE.Mesh(new THREE.CylinderGeometry(0.034, 0.042, 0.16, 16), brassMat);
+    neck.position.set(0, 0.1, -0.04);
+    group.add(neck);
+
+    framePivot.position.set(0, 0.13 + height / 2, 0.02);
+    framePivot.rotation.x = -0.08;
+  }
+
+  group.add(framePivot);
+
+  // Outer brushed-brass architectural fillet + matte sumi-ink display housing
+  const brassRim = new THREE.Mesh(
+    new THREE.BoxGeometry(width + 0.024, height + 0.024, 0.042),
+    brassMat
+  );
+  brassRim.position.set(0, 0, -0.004);
+  framePivot.add(brassRim);
+
+  const housing = new THREE.Mesh(new THREE.BoxGeometry(width, height, 0.052), inkShellMat);
+  framePivot.add(housing);
+
+  const maskPlane = new THREE.Mesh(
+    new THREE.PlaneGeometry(screenW + 0.022, screenH + 0.022),
+    bezelMaskMat
+  );
+  maskPlane.position.set(0, 0, 0.027);
+  framePivot.add(maskPlane);
+
+  const screenMesh = new THREE.Mesh(new THREE.PlaneGeometry(screenW, screenH), screenMat);
+  screenMesh.position.set(0, 0, 0.031);
+  framePivot.add(screenMesh);
+
+  if (mode === 'broadcast-hood') {
+    // 3-sided anti-glare director's sun hood + top glowing ON-AIR tally bar
+    const hoodDepth = 0.17;
+    const hoodMat = new THREE.MeshStandardMaterial({
+      color: 0x141312,
+      roughness: 0.72,
+      metalness: 0.12
+    });
+    const topBaffle = new THREE.Mesh(new THREE.BoxGeometry(width + 0.03, 0.018, hoodDepth), hoodMat);
+    topBaffle.position.set(0, height / 2 + 0.008, hoodDepth / 2 + 0.01);
+    framePivot.add(topBaffle);
+
+    [-width / 2 - 0.008, width / 2 + 0.008].forEach((hx) => {
+      const sideBaffle = new THREE.Mesh(
+        new THREE.BoxGeometry(0.018, height + 0.02, hoodDepth),
+        hoodMat
+      );
+      sideBaffle.position.set(hx, 0, hoodDepth / 2 + 0.01);
+      framePivot.add(sideBaffle);
+    });
+
+    tallyMat = new THREE.MeshStandardMaterial({
+      color: ED_VERMILION,
+      emissive: ED_VERMILION,
+      emissiveIntensity: 1.25,
+      roughness: 0.25
+    });
+    const tallyBar = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.03, 0.034), tallyMat);
+    tallyBar.position.set(0, height / 2 + 0.028, hoodDepth - 0.01);
+    framePivot.add(tallyBar);
+  }
+
+  return {
+    group,
+    framePivot,
+    screenMesh,
+    screenMat,
+    screenW,
+    screenH,
+    tallyMat
+  };
+}
+
+/**
+ * Builds a Propped Physical 3D Studio Output Artifact (Lookbook, SKU Dossier, Storyboard, Reel Case, Ledger, or Polyglot Booklet)
+ */
+function buildProppedStudioArtifact(tool, artifactFormat = 'lookbook', benchIdx = 0) {
+  const group = new THREE.Group();
+  let bw = 0.34;
+  let bh = 0.44;
+  let bd = 0.048;
+
+  if (artifactFormat === 'storyboard') {
+    bw = 0.45;
+    bh = 0.33;
+    bd = 0.038;
+  } else if (artifactFormat === 'reel-case') {
+    bw = 0.36;
+    bh = 0.36;
+    bd = 0.046;
+  }
+
+  const spineMat = new THREE.MeshStandardMaterial({
+    color: artifactFormat === 'reel-case' ? 0xcbd5e1 : 0x181715,
+    roughness: artifactFormat === 'reel-case' ? 0.32 : 0.55,
+    metalness: artifactFormat === 'reel-case' ? 0.72 : 0.12
+  });
+  const pageBlockMat = new THREE.MeshStandardMaterial({
+    color: 0xf7f1e5,
+    roughness: 0.78,
+    metalness: 0.02
+  });
+  const brassMat = new THREE.MeshStandardMaterial({
+    color: ED_BRASS,
+    roughness: 0.3,
+    metalness: 0.82
+  });
+
+  // Outer clothbound / aluminum folio shell
+  const body = new THREE.Mesh(new THREE.BoxGeometry(bw, bh, bd), spineMat);
+  body.position.set(0, bh / 2 + 0.016, 0);
+  group.add(body);
+
+  // Cream cotton-rag page block visible along top & right fore-edge
+  if (artifactFormat !== 'reel-case') {
+    const pageEdge = new THREE.Mesh(
+      new THREE.BoxGeometry(bw - 0.024, bh - 0.022, bd + 0.004),
+      pageBlockMat
+    );
+    pageEdge.position.set(0.01, bh / 2 + 0.016, 0);
+    group.add(pageEdge);
+  }
+
+  // Printed high-contrast cover artwork
+  const coverTex = createWorkshopOutputTexture(tool, artifactFormat, benchIdx);
+  const coverMat = new THREE.MeshStandardMaterial({
+    map: coverTex,
+    emissiveMap: coverTex,
+    emissive: new THREE.Color('#fffaf0'),
+    emissiveIntensity: 0.26,
+    roughness: 0.36,
     metalness: 0.04
   });
-  const printFace = new THREE.Mesh(
-    new THREE.PlaneGeometry(folioW - 0.09, folioH - 0.09),
-    printMat
-  );
-  printFace.position.z = 0.038;
-  root.add(printFace);
+  const coverPlane = new THREE.Mesh(new THREE.PlaneGeometry(bw - 0.012, bh - 0.012), coverMat);
+  coverPlane.position.set(0, bh / 2 + 0.016, bd / 2 + 0.005);
+  group.add(coverPlane);
 
-  // Overhead Brass Museum Picture Light above each Folio
-  const lampStem = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.04, 0.18), brassMat);
-  lampStem.position.set(0, folioH / 2 + 0.05, 0.06);
-  root.add(lampStem);
+  // Brushed-brass tabletop book easel stand
+  const easelBase = new THREE.Mesh(new THREE.BoxGeometry(bw * 0.76, 0.016, bd + 0.09), brassMat);
+  easelBase.position.set(0, 0.008, 0.01);
+  group.add(easelBase);
 
-  const lampHood = new THREE.Mesh(new THREE.CylinderGeometry(0.028, 0.036, 0.46, 14), brassMat);
-  lampHood.rotation.z = Math.PI / 2;
-  lampHood.position.set(0, folioH / 2 + 0.05, 0.15);
-  root.add(lampHood);
+  const easelFrontLip = new THREE.Mesh(new THREE.BoxGeometry(bw * 0.76, 0.032, 0.012), brassMat);
+  easelFrontLip.position.set(0, 0.022, bd / 2 + 0.048);
+  group.add(easelFrontLip);
 
-  // Selection Vermilion Gallery Backing Mat Outline
-  const highlightPlane = new THREE.Mesh(
-    new THREE.PlaneGeometry(folioW + 0.1, folioH + 0.1),
+  group.rotation.x = -0.11;
+  return { group, coverMat, bw, bh };
+}
+
+/**
+ * Builds each of the 7 Bespoke Sunlit Workshop Stations (Bench + Live Studio Display + Bespoke 3D Tool Rig + Output Proof)
+ */
+function buildWorkshopToolStation(tool, index) {
+  const root = new THREE.Group();
+  const extraTexMats = [];
+  const deskY = 0.96;
+
+  const benchBuilt = buildStudioWorkbenchBase(index, tool.accent);
+  root.add(benchBuilt.group);
+
+  const brassMat = new THREE.MeshStandardMaterial({
+    color: ED_BRASS,
+    roughness: 0.28,
+    metalness: 0.82
+  });
+  const inkMat = new THREE.MeshStandardMaterial({
+    color: 0x181715,
+    roughness: 0.44,
+    metalness: 0.2
+  });
+  const chromeMat = new THREE.MeshStandardMaterial({
+    color: 0xe2e8f0,
+    roughness: 0.18,
+    metalness: 0.9
+  });
+  const paperMat = new THREE.MeshStandardMaterial({
+    color: 0xfaf6ee,
+    roughness: 0.72,
+    metalness: 0.02
+  });
+  const vermilionMat = new THREE.MeshStandardMaterial({
+    color: ED_VERMILION,
+    roughness: 0.4,
+    metalness: 0.1
+  });
+
+  let screenMesh = null;
+  let screenMat = null;
+  let animateIdle = null;
+
+  let camFocus = {
+    distDesktop: 2.66,
+    distPortrait: 3.62,
+    camYDesktop: 1.63,
+    camYPortrait: 1.54,
+    lookYDesktop: 1.13,
+    lookYPortrait: 0.9,
+    offsetX: 0
+  };
+
+  if (tool.id === 'website-makeover') {
+    // =======================================================================
+    // BENCH 01: Split-Screen Drafting & Proofing Press
+    // =======================================================================
+    const mon = buildStudioDisplayMonitor(tool, index, {
+      mode: 'drafting-split',
+      width: 0.94,
+      height: 0.67
+    });
+    mon.group.position.set(-0.28, deskY, -0.06);
+    mon.group.rotation.y = 0.09;
+    root.add(mon.group);
+    screenMesh = mon.screenMesh;
+    screenMat = mon.screenMat;
+
+    // Physical brass guide rails + sliding Before/After divider bar across ONLY the lower split-proof band!
+    const railSpanW = mon.screenW - 0.04;
+    const bandCenterY = -0.234 * mon.screenH;
+    const bandBarH = 0.42 * mon.screenH;
+
+    [-bandBarH / 2 - 0.012, bandBarH / 2 + 0.012].forEach((ry) => {
+      const guideRod = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.0055, 0.0055, railSpanW + 0.03, 10),
+        brassMat
+      );
+      guideRod.rotation.z = Math.PI / 2;
+      guideRod.position.set(0, bandCenterY + ry, 0.042);
+      mon.framePivot.add(guideRod);
+    });
+
+    const sliderCarriage = new THREE.Group();
+    sliderCarriage.position.set(0, bandCenterY, 0.046);
+    mon.framePivot.add(sliderCarriage);
+
+    const brassDividerBar = new THREE.Mesh(
+      new THREE.BoxGeometry(0.016, bandBarH + 0.034, 0.016),
+      brassMat
+    );
+    sliderCarriage.add(brassDividerBar);
+
+    // Optical glass inspection loupe ring centered on the sliding brass bar
+    const loupeRing = new THREE.Mesh(new THREE.TorusGeometry(0.046, 0.008, 12, 24), brassMat);
+    loupeRing.position.set(0, 0, 0.008);
+    sliderCarriage.add(loupeRing);
+
+    const loupeGlass = new THREE.Mesh(
+      new THREE.CircleGeometry(0.042, 20),
+      new THREE.MeshStandardMaterial({
+        color: 0xe0f2fe,
+        transparent: true,
+        opacity: 0.28,
+        roughness: 0.08,
+        metalness: 0.1
+      })
+    );
+    loupeGlass.position.set(0, 0, 0.01);
+    sliderCarriage.add(loupeGlass);
+
+    const knurledKnob = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.016, 0.016, 0.022, 14),
+      vermilionMat
+    );
+    knurledKnob.rotation.x = Math.PI / 2;
+    knurledKnob.position.set(0, -bandBarH / 2 - 0.014, 0.012);
+    sliderCarriage.add(knurledKnob);
+
+    // Stepped Proofing Ink-Slab Cradle + Brass & Vermilion Proofing Brayer (roller)
+    const slabPlinth = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.045, 0.18), inkMat);
+    slabPlinth.position.set(0.28, deskY + 0.022, 0.12);
+    slabPlinth.rotation.y = -0.18;
+    root.add(slabPlinth);
+
+    const brayerGroup = new THREE.Group();
+    brayerGroup.position.set(0.28, deskY + 0.082, 0.12);
+    brayerGroup.rotation.set(0.25, -0.32, 0);
+    root.add(brayerGroup);
+
+    const rollerDrum = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.034, 0.034, 0.19, 18),
+      vermilionMat
+    );
+    rollerDrum.rotation.z = Math.PI / 2;
+    brayerGroup.add(rollerDrum);
+
+    const rollerYoke = new THREE.Mesh(new THREE.BoxGeometry(0.21, 0.014, 0.055), brassMat);
+    rollerYoke.position.set(0, 0.012, -0.028);
+    brayerGroup.add(rollerYoke);
+
+    const rollerHandle = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.015, 0.019, 0.13, 14),
+      inkMat
+    );
+    rollerHandle.rotation.x = Math.PI / 2;
+    rollerHandle.position.set(0, 0.012, -0.095);
+    brayerGroup.add(rollerHandle);
+
+    // Upright Fanned Brand Color Swatch Deck standing between press & lookbook
+    const swatchStand = new THREE.Group();
+    swatchStand.position.set(0.28, deskY + 0.12, -0.08);
+    swatchStand.rotation.x = -0.18;
+    root.add(swatchStand);
+
+    const swatchColors = [0x151413, 0xc83e2b, 0x38bdf8, 0xfbbf24, 0xfaf6ee];
+    swatchColors.forEach((sc, si) => {
+      const card = new THREE.Mesh(
+        new THREE.BoxGeometry(0.058, 0.19, 0.006),
+        new THREE.MeshStandardMaterial({ color: sc, roughness: 0.45 })
+      );
+      card.position.set((si - 2) * 0.024, 0.04, si * 0.007);
+      card.rotation.z = -(si - 2) * 0.17;
+      swatchStand.add(card);
+    });
+
+    // Propped Luxury Storefront Lookbook Folio on right
+    const folio = buildProppedStudioArtifact(tool, 'lookbook', index);
+    folio.group.position.set(0.65, deskY, -0.02);
+    folio.group.rotation.y = -0.25;
+    extraTexMats.push(folio.coverMat);
+    root.add(folio.group);
+
+    animateIdle = (elapsed, isSelected) => {
+      const amp = isSelected ? 0.28 : 0.21;
+      sliderCarriage.position.x = Math.sin(elapsed * 1.15) * amp;
+    };
+  } else if (tool.id === 'product-to-launch') {
+    // =======================================================================
+    // BENCH 02: Tabletop Cyclorama Photo Lightbox Studio
+    // =======================================================================
+    const mon = buildStudioDisplayMonitor(tool, index, {
+      mode: 'landscape',
+      width: 0.76,
+      height: 0.58
+    });
+    mon.group.position.set(-0.46, deskY, -0.05);
+    mon.group.rotation.y = 0.15;
+    root.add(mon.group);
+    screenMesh = mon.screenMesh;
+    screenMat = mon.screenMat;
+
+    // Mini Curved White Infinity Photo-Sweep Stage at center
+    const cycGroup = new THREE.Group();
+    cycGroup.position.set(0.12, deskY, 0.0);
+    root.add(cycGroup);
+
+    const stageCradle = new THREE.Mesh(new THREE.BoxGeometry(0.54, 0.028, 0.44), inkMat);
+    stageCradle.position.y = 0.014;
+    cycGroup.add(stageCradle);
+
+    const sweepWhiteMat = new THREE.MeshStandardMaterial({
+      color: 0xfdfbf7,
+      emissive: 0xfff8eb,
+      emissiveIntensity: 0.18,
+      roughness: 0.65
+    });
+    const sweepFloor = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.012, 0.34), sweepWhiteMat);
+    sweepFloor.position.set(0, 0.032, 0.03);
+    cycGroup.add(sweepFloor);
+
+    const sweepBackWall = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.38, 0.016), sweepWhiteMat);
+    sweepBackWall.position.set(0, 0.22, -0.185);
+    cycGroup.add(sweepBackWall);
+
+    // Seamless cyclorama quarter-pipe cove joining floor to rear backdrop
+    const sweepCove = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.08, 0.08, 0.5, 16, 1, true, Math.PI, Math.PI / 2),
+      new THREE.MeshStandardMaterial({
+        color: 0xfdfbf7,
+        emissive: 0xfff8eb,
+        emissiveIntensity: 0.18,
+        roughness: 0.65,
+        side: THREE.DoubleSide
+      })
+    );
+    sweepCove.rotation.z = Math.PI / 2;
+    sweepCove.position.set(0, 0.112, -0.105);
+    cycGroup.add(sweepCove);
+
+    // Rotating machined-brass product turntable + amber botanical serum bottle SKU
+    const turntable = new THREE.Group();
+    turntable.position.set(0, 0.048, 0.01);
+    cycGroup.add(turntable);
+
+    const platter = new THREE.Mesh(new THREE.CylinderGeometry(0.095, 0.105, 0.022, 24), brassMat);
+    turntable.add(platter);
+
+    const bottleGlass = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.042, 0.044, 0.145, 20),
+      new THREE.MeshStandardMaterial({
+        color: 0xd97706,
+        emissive: 0xf59e0b,
+        emissiveIntensity: 0.22,
+        roughness: 0.16,
+        metalness: 0.15
+      })
+    );
+    bottleGlass.position.y = 0.084;
+    turntable.add(bottleGlass);
+
+    const bottleLabel = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.045, 0.045, 0.068, 20, 1, true, -0.9, 1.8),
+      paperMat
+    );
+    bottleLabel.position.y = 0.08;
+    turntable.add(bottleLabel);
+
+    const atomizerCollar = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.02, 0.022, 0.036, 16),
+      brassMat
+    );
+    atomizerCollar.position.y = 0.172;
+    turntable.add(atomizerCollar);
+
+    // Twin Articulated Studio Softbox Lamps on Brass Arms flanking the cyclorama
+    const softboxFaceMat = new THREE.MeshStandardMaterial({
+      color: 0xfffef7,
+      emissive: 0xfff3d1,
+      emissiveIntensity: 1.05,
+      roughness: 0.25
+    });
+    [-0.31, 0.31].forEach((sx) => {
+      const armPost = new THREE.Mesh(new THREE.CylinderGeometry(0.011, 0.014, 0.42, 12), brassMat);
+      armPost.position.set(sx, 0.21, 0.08);
+      armPost.rotation.z = sx < 0 ? -0.14 : 0.14;
+      cycGroup.add(armPost);
+
+      const softboxHead = new THREE.Group();
+      softboxHead.position.set(sx * 0.86, 0.41, 0.08);
+      softboxHead.rotation.y = sx < 0 ? 0.58 : -0.58;
+      softboxHead.rotation.x = 0.28;
+      cycGroup.add(softboxHead);
+
+      const hood = new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.12, 0.08), inkMat);
+      softboxHead.add(hood);
+
+      const diffuser = new THREE.Mesh(new THREE.PlaneGeometry(0.142, 0.102), softboxFaceMat);
+      diffuser.position.z = 0.042;
+      softboxHead.add(diffuser);
+    });
+
+    // Foreground Brass 8x Photographer's Inspection Loupe + Tether Cable
+    const loupeBody = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.038, 0.046, 0.055, 20),
+      brassMat
+    );
+    loupeBody.position.set(-0.14, deskY + 0.028, 0.29);
+    root.add(loupeBody);
+
+    root.add(
+      buildCableTube(
+        [
+          [-0.14, deskY + 0.02, 0.06],
+          [-0.24, deskY + 0.015, 0.18],
+          [-0.38, deskY + 0.02, 0.06]
+        ],
+        0.008,
+        0xc83e2b
+      )
+    );
+
+    // Propped Bilingual EN/ES SKU Spec Dossier on right
+    const skuDossier = buildProppedStudioArtifact(tool, 'sku-dossier', index);
+    skuDossier.group.position.set(0.65, deskY, -0.02);
+    skuDossier.group.rotation.y = -0.25;
+    extraTexMats.push(skuDossier.coverMat);
+    root.add(skuDossier.group);
+
+    animateIdle = (elapsed, isSelected) => {
+      turntable.rotation.y = elapsed * (isSelected ? 0.85 : 0.5);
+      softboxFaceMat.emissiveIntensity = (isSelected ? 1.25 : 0.95) + Math.sin(elapsed * 2.2) * 0.08;
+    };
+  } else if (tool.id === 'ai-airbrush') {
+    // =======================================================================
+    // BENCH 03: 3D Orbital Ring-Light & Retouching Easel
+    // =======================================================================
+    const mon = buildStudioDisplayMonitor(tool, index, {
+      mode: 'pen-easel',
+      width: 0.78,
+      height: 0.58
+    });
+    mon.group.position.set(-0.43, deskY, 0.02);
+    mon.group.rotation.y = 0.13;
+    root.add(mon.group);
+    screenMesh = mon.screenMesh;
+    screenMat = mon.screenMat;
+
+    // Sculpted Matte-Alabaster Portrait Bust inside a 360° Brass Gimbal Ring + Orbiting Light Orb
+    const rigGroup = new THREE.Group();
+    rigGroup.position.set(0.16, deskY, -0.03);
+    root.add(rigGroup);
+
+    const plinth = new THREE.Mesh(new THREE.CylinderGeometry(0.11, 0.13, 0.045, 24), inkMat);
+    plinth.position.y = 0.022;
+    rigGroup.add(plinth);
+
+    const bustMat = new THREE.MeshStandardMaterial({
+      color: 0xf5efe4,
+      roughness: 0.52,
+      metalness: 0.03
+    });
+    const shoulders = new THREE.Mesh(new THREE.CylinderGeometry(0.055, 0.088, 0.09, 20), bustMat);
+    shoulders.position.y = 0.09;
+    rigGroup.add(shoulders);
+
+    const neckCol = new THREE.Mesh(new THREE.CylinderGeometry(0.032, 0.038, 0.06, 16), bustMat);
+    neckCol.position.y = 0.155;
+    rigGroup.add(neckCol);
+
+    const portraitHead = new THREE.Mesh(new THREE.SphereGeometry(0.078, 24, 24), bustMat);
+    portraitHead.scale.set(0.88, 1.12, 0.94);
+    portraitHead.position.y = 0.245;
+    rigGroup.add(portraitHead);
+
+    // Outer calibrated brass gimbal ring
+    const gimbalRing = new THREE.Mesh(new THREE.TorusGeometry(0.21, 0.01, 14, 42), brassMat);
+    gimbalRing.position.y = 0.245;
+    gimbalRing.rotation.y = 0.25;
+    rigGroup.add(gimbalRing);
+
+    const horizonRing = new THREE.Mesh(new THREE.TorusGeometry(0.225, 0.008, 12, 42), brassMat);
+    horizonRing.position.y = 0.245;
+    horizonRing.rotation.x = Math.PI / 2 - 0.24;
+    rigGroup.add(horizonRing);
+
+    // Orbiting 3D Directional Key-Light Orb
+    const orbPivot = new THREE.Group();
+    orbPivot.position.y = 0.245;
+    orbPivot.rotation.z = 0.24;
+    rigGroup.add(orbPivot);
+
+    const orbMat = new THREE.MeshStandardMaterial({
+      color: 0xe0faff,
+      emissive: 0x22d3ee,
+      emissiveIntensity: 1.65,
+      roughness: 0.12
+    });
+    const lightOrb = new THREE.Mesh(new THREE.SphereGeometry(0.032, 18, 18), orbMat);
+    lightOrb.position.set(0.225, 0, 0);
+    orbPivot.add(lightOrb);
+
+    const orbBrassCollar = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.022, 0.028, 0.022, 14),
+      brassMat
+    );
+    orbBrassCollar.rotation.z = Math.PI / 2;
+    orbBrassCollar.position.set(0.242, 0, 0);
+    orbPivot.add(orbBrassCollar);
+
+    // Chrome Gravity-Feed Precision Airbrush in Elevated Brass Gooseneck Stand + Braided Hose
+    const airbrushStand = new THREE.Mesh(new THREE.CylinderGeometry(0.042, 0.052, 0.04, 16), inkMat);
+    airbrushStand.position.set(-0.04, deskY + 0.02, 0.16);
+    root.add(airbrushStand);
+
+    const standStem = new THREE.Mesh(new THREE.CylinderGeometry(0.008, 0.01, 0.13, 12), brassMat);
+    standStem.position.set(-0.04, deskY + 0.095, 0.16);
+    root.add(standStem);
+
+    const airbrushGroup = new THREE.Group();
+    airbrushGroup.position.set(-0.04, deskY + 0.165, 0.16);
+    airbrushGroup.rotation.set(0.12, -0.28, 0.26);
+    root.add(airbrushGroup);
+
+    const abBarrel = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.01, 0.014, 0.22, 14),
+      chromeMat
+    );
+    abBarrel.rotation.z = Math.PI / 2;
+    airbrushGroup.add(abBarrel);
+
+    const gravityCup = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.024, 0.01, 0.046, 14),
+      chromeMat
+    );
+    gravityCup.position.set(0.03, 0.03, 0);
+    airbrushGroup.add(gravityCup);
+
+    root.add(
+      buildCableTube(
+        [
+          [-0.04, deskY + 0.13, 0.16],
+          [-0.08, deskY + 0.018, 0.24],
+          [-0.22, deskY + 0.02, 0.18]
+        ],
+        0.007,
+        0x1e293b
+      )
+    );
+
+    // Propped Portrait Relight Proof Portfolio on right
+    const proofFolio = buildProppedStudioArtifact(tool, 'portrait-proof', index);
+    proofFolio.group.position.set(0.65, deskY, -0.02);
+    proofFolio.group.rotation.y = -0.25;
+    extraTexMats.push(proofFolio.coverMat);
+    root.add(proofFolio.group);
+
+    animateIdle = (elapsed, isSelected) => {
+      orbPivot.rotation.y = elapsed * (isSelected ? 1.15 : 0.72);
+      gimbalRing.rotation.y = 0.25 + Math.sin(elapsed * 0.6) * 0.18;
+    };
+  } else if (tool.id === 'fototecateca') {
+    // =======================================================================
+    // BENCH 04: Broadcast Director's Monitor & Cinema Rig
+    // =======================================================================
+    const mon = buildStudioDisplayMonitor(tool, index, {
+      mode: 'broadcast-hood',
+      width: 0.8,
+      height: 0.6
+    });
+    mon.group.position.set(-0.42, deskY, -0.05);
+    mon.group.rotation.y = 0.13;
+    root.add(mon.group);
+    screenMesh = mon.screenMesh;
+    screenMat = mon.screenMat;
+
+    // Compact Cinema Camera & Matte-Box Lens Rig on Elevated Brass Studio Riser
+    const camRiser = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.045, 0.24), inkMat);
+    camRiser.position.set(0.18, deskY + 0.022, -0.06);
+    root.add(camRiser);
+
+    const camRig = new THREE.Group();
+    camRig.position.set(0.18, deskY + 0.045, -0.06);
+    camRig.rotation.y = -0.24;
+    root.add(camRig);
+
+    [-0.042, 0.042].forEach((rx) => {
+      const rod = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.008, 0.008, 0.34, 10),
+        brassMat
+      );
+      rod.rotation.x = Math.PI / 2;
+      rod.position.set(rx, 0.032, 0);
+      camRig.add(rod);
+    });
+
+    const camBody = new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.15, 0.18), inkMat);
+    camBody.position.set(0, 0.115, -0.04);
+    camRig.add(camBody);
+
+    const topHandle = new THREE.Mesh(new THREE.BoxGeometry(0.032, 0.036, 0.16), brassMat);
+    topHandle.position.set(0, 0.205, -0.04);
+    camRig.add(topHandle);
+
+    const primeLens = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.052, 0.056, 0.11, 20),
+      inkMat
+    );
+    primeLens.rotation.x = Math.PI / 2;
+    primeLens.position.set(0, 0.115, 0.09);
+    camRig.add(primeLens);
+
+    const focusGearRing = new THREE.Mesh(new THREE.TorusGeometry(0.055, 0.007, 10, 24), brassMat);
+    focusGearRing.position.set(0, 0.115, 0.085);
+    camRig.add(focusGearRing);
+
+    const matteBox = new THREE.Mesh(new THREE.BoxGeometry(0.17, 0.13, 0.055), inkMat);
+    matteBox.position.set(0, 0.115, 0.165);
+    camRig.add(matteBox);
+
+    const lensGlass = new THREE.Mesh(
+      new THREE.CircleGeometry(0.046, 20),
+      new THREE.MeshStandardMaterial({
+        color: 0x38bdf8,
+        emissive: 0x1d4ed8,
+        emissiveIntensity: 0.35,
+        roughness: 0.08,
+        metalness: 0.65
+      })
+    );
+    lensGlass.position.set(0, 0.115, 0.194);
+    camRig.add(lensGlass);
+
+    // Open Striped Cinema Clapperboard + 3-Dial Director Control Console in foreground
+    const clapperGroup = new THREE.Group();
+    clapperGroup.position.set(0.02, deskY + 0.125, 0.17);
+    clapperGroup.rotation.set(-0.2, 0.22, 0);
+    root.add(clapperGroup);
+
+    const slateBoard = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.17, 0.016), inkMat);
+    clapperGroup.add(slateBoard);
+
+    const slateStripeBottom = new THREE.Mesh(new THREE.BoxGeometry(0.242, 0.022, 0.018), paperMat);
+    slateStripeBottom.position.y = 0.072;
+    clapperGroup.add(slateStripeBottom);
+
+    const clapStickPivot = new THREE.Group();
+    clapStickPivot.position.set(-0.12, 0.088, 0);
+    clapStickPivot.rotation.z = 0.26;
+    clapperGroup.add(clapStickPivot);
+
+    const clapStick = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.026, 0.018), inkMat);
+    clapStick.position.set(0.12, 0.012, 0);
+    clapStickPivot.add(clapStick);
+
+    for (let si = 0; si < 4; si++) {
+      const chev = new THREE.Mesh(new THREE.BoxGeometry(0.032, 0.027, 0.02), paperMat);
+      chev.position.set(0.04 + si * 0.056, 0.012, 0);
+      clapStickPivot.add(chev);
+    }
+
+    // 3-Dial Tactile Director Control Puck
+    const dialDeck = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.026, 0.11), inkMat);
+    dialDeck.position.set(-0.24, deskY + 0.013, 0.29);
+    root.add(dialDeck);
+    [-0.065, 0, 0.065].forEach((dx) => {
+      const dial = new THREE.Mesh(new THREE.CylinderGeometry(0.022, 0.024, 0.022, 16), brassMat);
+      dial.position.set(-0.24 + dx, deskY + 0.034, 0.29);
+      root.add(dial);
+    });
+
+    // Propped 3-Beat Commercial Storyboard Slate on right
+    const storyboard = buildProppedStudioArtifact(tool, 'storyboard', index);
+    storyboard.group.position.set(0.62, deskY, 0.01);
+    storyboard.group.rotation.y = -0.26;
+    extraTexMats.push(storyboard.coverMat);
+    root.add(storyboard.group);
+
+    animateIdle = (elapsed, isSelected) => {
+      if (mon.tallyMat) {
+        mon.tallyMat.emissiveIntensity = (isSelected ? 1.65 : 1.1) + Math.sin(elapsed * 3.2) * 0.35;
+      }
+      clapStickPivot.rotation.z = 0.22 + Math.abs(Math.sin(elapsed * 1.1)) * (isSelected ? 0.14 : 0.06);
+    };
+  } else if (tool.id === 'creator-video-pipeline') {
+    // =======================================================================
+    // BENCH 05: Dual-Reel Telecine Mastering Deck & 9:16 Monitor
+    // =======================================================================
+    camFocus = {
+      distDesktop: 2.74,
+      distPortrait: 3.74,
+      camYDesktop: 1.65,
+      camYPortrait: 1.56,
+      lookYDesktop: 1.17,
+      lookYPortrait: 0.94,
+      offsetX: 0
+    };
+
+    const mon = buildStudioDisplayMonitor(tool, index, {
+      mode: 'portrait',
+      width: 0.5,
+      height: 0.82
+    });
+    mon.group.position.set(-0.5, deskY, -0.02);
+    mon.group.rotation.y = 0.16;
+    root.add(mon.group);
+    screenMesh = mon.screenMesh;
+    screenMat = mon.screenMat;
+
+    // Sloped Brushed-Metal & Walnut Dual-Spool Telecine Mastering Deck
+    const deckGroup = new THREE.Group();
+    deckGroup.position.set(0.08, deskY, -0.01);
+    root.add(deckGroup);
+
+    const walnutMat = new THREE.MeshStandardMaterial({
+      color: 0x5c3a21,
+      roughness: 0.52,
+      metalness: 0.06
+    });
+    const brushedSilverMat = new THREE.MeshStandardMaterial({
+      color: 0xd6d3cd,
+      roughness: 0.28,
+      metalness: 0.72
+    });
+
+    const deckChassis = new THREE.Mesh(new THREE.BoxGeometry(0.56, 0.14, 0.42), walnutMat);
+    deckChassis.position.y = 0.07;
+    deckChassis.rotation.x = 0.22;
+    deckGroup.add(deckChassis);
+
+    const deckFaceplate = new THREE.Mesh(
+      new THREE.BoxGeometry(0.52, 0.02, 0.4),
+      brushedSilverMat
+    );
+    deckFaceplate.position.set(0, 0.142, 0.004);
+    deckFaceplate.rotation.x = 0.22;
+    deckGroup.add(deckFaceplate);
+
+    // Twin turning metallic mastering reels on the sloped deck faceplate
+    const reelSpools = [];
+    [-0.135, 0.135].forEach((rx) => {
+      const spool = new THREE.Group();
+      spool.position.set(rx, 0.164, -0.045);
+      spool.rotation.x = 0.22;
+      deckGroup.add(spool);
+
+      const flangeBottom = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.105, 0.105, 0.006, 24),
+        chromeMat
+      );
+      spool.add(flangeBottom);
+
+      const tapePack = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.078, 0.078, 0.018, 20),
+        inkMat
+      );
+      tapePack.position.y = 0.011;
+      spool.add(tapePack);
+
+      const flangeTop = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.105, 0.105, 0.005, 24),
+        chromeMat
+      );
+      flangeTop.position.y = 0.022;
+      spool.add(flangeTop);
+
+      // 3 visual spokes across top flange so gentle reel rotation is unmistakably readable!
+      [0, (Math.PI * 2) / 3, (Math.PI * 4) / 3].forEach((ang) => {
+        const spoke = new THREE.Mesh(new THREE.BoxGeometry(0.19, 0.007, 0.018), brassMat);
+        spoke.position.y = 0.025;
+        spoke.rotation.y = ang;
+        spool.add(spoke);
+      });
+
+      const centerCap = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.022, 0.022, 0.032, 16),
+        vermilionMat
+      );
+      centerCap.position.y = 0.02;
+      spool.add(centerCap);
+
+      reelSpools.push(spool);
+    });
+
+    // Warm backlit dual VU meters + tactile transport keys along front of deck
+    [-0.12, 0.0].forEach((vx) => {
+      const vuMeter = new THREE.Mesh(
+        new THREE.BoxGeometry(0.095, 0.014, 0.048),
+        new THREE.MeshStandardMaterial({
+          color: 0xfef3c7,
+          emissive: 0xf59e0b,
+          emissiveIntensity: 0.75,
+          roughness: 0.2
+        })
+      );
+      vuMeter.position.set(vx, 0.122, 0.135);
+      vuMeter.rotation.x = 0.22;
+      deckGroup.add(vuMeter);
+    });
+
+    for (let k = 0; k < 4; k++) {
+      const key = new THREE.Mesh(
+        new THREE.BoxGeometry(0.028, 0.018, 0.042),
+        k === 1 ? vermilionMat : inkMat
+      );
+      key.position.set(0.1 + k * 0.038, 0.122, 0.14);
+      key.rotation.x = 0.22;
+      deckGroup.add(key);
+    }
+
+    // Studio Broadcast Voiceover Mic + Pop Filter on Brass Boom Arm (clear of 9:16 screen!)
+    const boomBase = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.055, 0.035, 16), inkMat);
+    boomBase.position.set(-0.2, deskY + 0.018, -0.26);
+    root.add(boomBase);
+
+    const boomLower = new THREE.Mesh(new THREE.CylinderGeometry(0.01, 0.012, 0.42, 10), brassMat);
+    boomLower.position.set(-0.2, deskY + 0.22, -0.24);
+    boomLower.rotation.z = -0.18;
+    root.add(boomLower);
+
+    const boomUpper = new THREE.Mesh(new THREE.CylinderGeometry(0.009, 0.01, 0.3, 10), brassMat);
+    boomUpper.position.set(-0.11, deskY + 0.44, -0.14);
+    boomUpper.rotation.x = 0.72;
+    root.add(boomUpper);
+
+    const micBody = new THREE.Mesh(new THREE.CylinderGeometry(0.026, 0.026, 0.13, 16), inkMat);
+    micBody.position.set(-0.11, deskY + 0.4, -0.02);
+    root.add(micBody);
+
+    const micGrille = new THREE.Mesh(new THREE.SphereGeometry(0.028, 16, 16), brassMat);
+    micGrille.position.set(-0.11, deskY + 0.33, -0.02);
+    root.add(micGrille);
+
+    const popFilter = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.052, 0.052, 0.008, 20),
+      inkMat
+    );
+    popFilter.rotation.x = Math.PI / 2;
+    popFilter.position.set(-0.11, deskY + 0.35, 0.045);
+    root.add(popFilter);
+
+    // Propped Anodized 1080p Master Reel Tin on right
+    const reelCase = buildProppedStudioArtifact(tool, 'reel-case', index);
+    reelCase.group.position.set(0.64, deskY, 0.02);
+    reelCase.group.rotation.y = -0.24;
+    extraTexMats.push(reelCase.coverMat);
+    root.add(reelCase.group);
+
+    animateIdle = (elapsed, isSelected) => {
+      const speed = isSelected ? 1.15 : 0.65;
+      reelSpools.forEach((sp) => {
+        sp.rotation.y = -elapsed * speed;
+      });
+    };
+  } else if (tool.id === 'dropshipping-made-easy') {
+    // =======================================================================
+    // BENCH 06: Precision Brass Balance Scale & Margin Terminal
+    // =======================================================================
+    const mon = buildStudioDisplayMonitor(tool, index, {
+      mode: 'landscape',
+      width: 0.78,
+      height: 0.6
+    });
+    mon.group.position.set(-0.43, deskY, -0.05);
+    mon.group.rotation.y = 0.13;
+    root.add(mon.group);
+    screenMesh = mon.screenMesh;
+    screenMat = mon.screenMat;
+
+    // Sculpted Twin-Pan Precision Brass Balance Scale
+    const scaleGroup = new THREE.Group();
+    scaleGroup.position.set(0.14, deskY, -0.01);
+    root.add(scaleGroup);
+
+    const scalePlinth = new THREE.Mesh(new THREE.BoxGeometry(0.32, 0.042, 0.18), inkMat);
+    scalePlinth.position.y = 0.021;
+    scaleGroup.add(scalePlinth);
+
+    const scaleBrassStep = new THREE.Mesh(new THREE.BoxGeometry(0.26, 0.022, 0.14), brassMat);
+    scaleBrassStep.position.y = 0.052;
+    scaleGroup.add(scaleBrassStep);
+
+    const scalePillar = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.016, 0.024, 0.38, 16),
+      brassMat
+    );
+    scalePillar.position.y = 0.25;
+    scaleGroup.add(scalePillar);
+
+    const scaleFinial = new THREE.Mesh(new THREE.SphereGeometry(0.024, 16, 16), brassMat);
+    scaleFinial.position.y = 0.455;
+    scaleGroup.add(scaleFinial);
+
+    // Pivoting weigh-beam + counter-rotating plumb pans
+    const beamPivot = new THREE.Group();
+    beamPivot.position.y = 0.42;
+    scaleGroup.add(beamPivot);
+
+    const beamBar = new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.016, 0.018), brassMat);
+    beamPivot.add(beamBar);
+
+    const pointerNeedle = new THREE.Mesh(
+      new THREE.ConeGeometry(0.012, 0.1, 10),
+      vermilionMat
+    );
+    pointerNeedle.rotation.x = Math.PI;
+    pointerNeedle.position.y = -0.055;
+    beamPivot.add(pointerNeedle);
+
+    const panGroups = [];
+    [-0.195, 0.195].forEach((px, pi) => {
+      const panHanger = new THREE.Group();
+      panHanger.position.set(px, 0, 0);
+      beamPivot.add(panHanger);
+
+      // 3 suspension chains down to brass pan
+      [-0.04, 0.04].forEach((cz) => {
+        const chain = new THREE.Mesh(
+          new THREE.CylinderGeometry(0.0025, 0.0025, 0.19, 8),
+          brassMat
+        );
+        chain.position.set(0, -0.095, cz);
+        chain.rotation.x = cz < 0 ? -0.2 : 0.2;
+        panHanger.add(chain);
+      });
+
+      const dish = new THREE.Mesh(new THREE.CylinderGeometry(0.082, 0.068, 0.016, 22), brassMat);
+      dish.position.y = -0.19;
+      panHanger.add(dish);
+
+      if (pi === 0) {
+        // Left Pan: Miniature Kraft Corrugated SKU Parcel Box
+        const skuBox = new THREE.Mesh(
+          new THREE.BoxGeometry(0.092, 0.082, 0.092),
+          new THREE.MeshStandardMaterial({ color: 0xc59b6d, roughness: 0.78 })
+        );
+        skuBox.position.y = -0.142;
+        skuBox.rotation.y = 0.25;
+        panHanger.add(skuBox);
+
+        const tapeStrip = new THREE.Mesh(
+          new THREE.BoxGeometry(0.094, 0.084, 0.022),
+          vermilionMat
+        );
+        tapeStrip.position.y = -0.142;
+        tapeStrip.rotation.y = 0.25;
+        panHanger.add(tapeStrip);
+      } else {
+        // Right Pan: 3 Graduated Cylindrical Brass Margin Weights
+        [
+          [-0.026, 0.024, 0.054],
+          [0.024, 0.019, 0.042],
+          [0.004, 0.014, 0.03]
+        ].forEach(([wx, wr, wh], wi) => {
+          const weight = new THREE.Mesh(new THREE.CylinderGeometry(wr, wr, wh, 16), brassMat);
+          weight.position.set(wx, -0.182 + wh / 2, wi === 2 ? 0.026 : -0.01);
+          panHanger.add(weight);
+        });
+      }
+
+      panGroups.push(panHanger);
+    });
+
+    // Angled Tactile Mechanical Profit Keypad + Upright ROAS Ledger Tape Dispenser
+    const keypadGroup = new THREE.Group();
+    keypadGroup.position.set(-0.04, deskY + 0.055, 0.16);
+    keypadGroup.rotation.set(0.42, 0.12, 0);
+    root.add(keypadGroup);
+
+    const keypadCase = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.032, 0.15), inkMat);
+    keypadGroup.add(keypadCase);
+
+    for (let kr = 0; kr < 3; kr++) {
+      for (let kc = 0; kc < 3; kc++) {
+        const keycap = new THREE.Mesh(
+          new THREE.BoxGeometry(0.038, 0.018, 0.034),
+          kr === 2 && kc === 2 ? vermilionMat : paperMat
+        );
+        keycap.position.set(-0.046 + kc * 0.046, 0.022, -0.04 + kr * 0.04);
+        keypadGroup.add(keycap);
+      }
+    }
+
+    const tapeStand = new THREE.Mesh(new THREE.BoxGeometry(0.11, 0.04, 0.09), brassMat);
+    tapeStand.position.set(0.32, deskY + 0.02, 0.15);
+    root.add(tapeStand);
+
+    const tapeRoll = new THREE.Mesh(new THREE.CylinderGeometry(0.042, 0.042, 0.075, 18), paperMat);
+    tapeRoll.rotation.z = Math.PI / 2;
+    tapeRoll.position.set(0.32, deskY + 0.072, 0.15);
+    root.add(tapeRoll);
+
+    // Propped Unit-Economics & ROAS Hardcover Ledger on right
+    const ledger = buildProppedStudioArtifact(tool, 'roas-ledger', index);
+    ledger.group.position.set(0.65, deskY, -0.02);
+    ledger.group.rotation.y = -0.25;
+    extraTexMats.push(ledger.coverMat);
+    root.add(ledger.group);
+
+    animateIdle = (elapsed, isSelected) => {
+      const tilt = Math.sin(elapsed * 1.05) * (isSelected ? 0.075 : 0.042);
+      beamPivot.rotation.z = tilt;
+      panGroups.forEach((pg) => {
+        pg.rotation.z = -tilt;
+      });
+    };
+  } else {
+    // =======================================================================
+    // BENCH 07: Multilingual Typesetting Bench & Brass Caliper
+    // =======================================================================
+    const mon = buildStudioDisplayMonitor(tool, index, {
+      mode: 'landscape',
+      width: 0.78,
+      height: 0.6
+    });
+    mon.group.position.set(-0.43, deskY, -0.05);
+    mon.group.rotation.y = 0.13;
+    root.add(mon.group);
+    screenMesh = mon.screenMesh;
+    screenMat = mon.screenMat;
+
+    // Tabletop Cartographic Parchment & Brass-Meridian Architectural Globe
+    const globeGroup = new THREE.Group();
+    globeGroup.position.set(0.12, deskY, -0.11);
+    root.add(globeGroup);
+
+    const globeBase = new THREE.Mesh(new THREE.CylinderGeometry(0.085, 0.105, 0.038, 22), inkMat);
+    globeBase.position.y = 0.019;
+    globeGroup.add(globeBase);
+
+    const globeStem = new THREE.Mesh(new THREE.CylinderGeometry(0.016, 0.022, 0.08, 14), brassMat);
+    globeStem.position.y = 0.072;
+    globeGroup.add(globeStem);
+
+    const meridianRing = new THREE.Mesh(
+      new THREE.TorusGeometry(0.158, 0.009, 12, 36, Math.PI * 1.18),
+      brassMat
+    );
+    meridianRing.position.y = 0.255;
+    meridianRing.rotation.z = -Math.PI * 0.58;
+    globeGroup.add(meridianRing);
+
+    const globeAxis = new THREE.Group();
+    globeAxis.position.y = 0.255;
+    globeAxis.rotation.z = 0.38;
+    globeGroup.add(globeAxis);
+
+    const globeSphere = new THREE.Mesh(
+      new THREE.SphereGeometry(0.14, 28, 24),
+      new THREE.MeshStandardMaterial({
+        map: createGlobeParchmentTexture(),
+        roughness: 0.58,
+        metalness: 0.05
+      })
+    );
+    globeAxis.add(globeSphere);
+
+    // Angled Wooden Letterpress Movable-Type Composing Tray ('Aa / Ññ / あ / ع') + Brass Caliper
+    const trayGroup = new THREE.Group();
+    trayGroup.position.set(0.15, deskY + 0.095, 0.14);
+    trayGroup.rotation.set(0.58, -0.08, 0);
+    root.add(trayGroup);
+
+    const trayBox = new THREE.Mesh(
+      new THREE.BoxGeometry(0.4, 0.032, 0.2),
+      new THREE.MeshStandardMaterial({ color: 0x3b2a1e, roughness: 0.62 })
+    );
+    trayGroup.add(trayBox);
+
+    const trayTop = new THREE.Mesh(
+      new THREE.PlaneGeometry(0.38, 0.18),
+      new THREE.MeshStandardMaterial({
+        map: createTypeTrayTexture(),
+        roughness: 0.48
+      })
+    );
+    trayTop.rotation.x = -Math.PI / 2;
+    trayTop.position.set(0, 0.018, 0);
+    trayGroup.add(trayTop);
+
+    // Machined Brass Vernier Caliper gauging UI string-width expansion across top of type tray
+    const caliperGroup = new THREE.Group();
+    caliperGroup.position.set(0, 0.024, -0.085);
+    trayGroup.add(caliperGroup);
+
+    const caliperBeam = new THREE.Mesh(new THREE.BoxGeometry(0.34, 0.01, 0.022), brassMat);
+    caliperGroup.add(caliperBeam);
+
+    const fixedJaw = new THREE.Mesh(new THREE.BoxGeometry(0.018, 0.014, 0.078), brassMat);
+    fixedJaw.position.set(-0.145, 0, 0.028);
+    caliperGroup.add(fixedJaw);
+
+    const slidingJaw = new THREE.Mesh(new THREE.BoxGeometry(0.028, 0.018, 0.078), brassMat);
+    slidingJaw.position.set(0.02, 0.002, 0.028);
+    caliperGroup.add(slidingJaw);
+
+    // Propped Multilingual Proof Compendium on right
+    const polyBook = buildProppedStudioArtifact(tool, 'polyglot-booklet', index);
+    polyBook.group.position.set(0.65, deskY, -0.02);
+    polyBook.group.rotation.y = -0.25;
+    extraTexMats.push(polyBook.coverMat);
+    root.add(polyBook.group);
+
+    animateIdle = (elapsed, isSelected) => {
+      globeSphere.rotation.y = elapsed * (isSelected ? 0.55 : 0.28);
+      slidingJaw.position.x = 0.015 + Math.sin(elapsed * 1.1) * 0.036;
+    };
+  }
+
+  // Subtle sunlit vermilion-brass registration floor mat beneath each Workshop station
+  const glowRing = new THREE.Mesh(
+    new THREE.PlaneGeometry(2.04, 1.46),
     new THREE.MeshBasicMaterial({
       color: new THREE.Color(ED_VERMILION),
       transparent: true,
-      opacity: 0.0
+      opacity: 0.1
     })
   );
-  highlightPlane.position.z = -0.025;
-  root.add(highlightPlane);
+  glowRing.rotation.x = -Math.PI / 2;
+  glowRing.position.set(0, 0.014, 0.06);
+  root.add(glowRing);
+
+  // Unified raycast hit volume covering workbench, live screen, 3D tool hardware, and propped output proof
+  const hitMesh = new THREE.Mesh(
+    new THREE.BoxGeometry(2.08, 2.15, 1.32),
+    new THREE.MeshBasicMaterial({ visible: false })
+  );
+  hitMesh.position.set(0, 1.15, 0.05);
+  hitMesh.userData = {
+    hitType: 'tool',
+    index,
+    id: tool.id
+  };
+  root.add(hitMesh);
+
+  screenMesh.userData = {
+    hitType: 'tool-screen',
+    index,
+    id: tool.id
+  };
 
   return {
     root,
-    printMat,
-    highlightPlane
+    screenMesh,
+    hitMesh,
+    glowRing,
+    trimMat: benchBuilt.accentPinMat,
+    screenMat,
+    extraTexMats,
+    camFocus,
+    animateIdle
   };
+}
+
+/**
+ * Populates the Sunlit Design & Maker's Workshop Environment (x < 0):
+ * Woven Belgian linen studio runner, pale Nordic birch vertical slat & warm plaster wall,
+ * studio tool/swatch pegboards & shelves, sunlit north-light return wall at x = -21.5,
+ * overhead track lighting + skylight shafts, and Hub-visible Entry Drafting Table with Commission Brief!
+ */
+function buildWorkshopEnvironment(workshopGroup, interactiveObjects) {
+  const ashMat = new THREE.MeshStandardMaterial({
+    color: 0x1b1917,
+    roughness: 0.48,
+    metalness: 0.16
+  });
+  const birchMatA = new THREE.MeshStandardMaterial({
+    color: 0xe3d1b4,
+    roughness: 0.58,
+    metalness: 0.04
+  });
+  const birchMatB = new THREE.MeshStandardMaterial({
+    color: 0xd6c09d,
+    roughness: 0.62,
+    metalness: 0.04
+  });
+  const brassMat = new THREE.MeshStandardMaterial({
+    color: ED_BRASS,
+    roughness: 0.3,
+    metalness: 0.8
+  });
+  const plasterWallMat = new THREE.MeshStandardMaterial({
+    color: 0xf4eee2,
+    roughness: 0.85,
+    metalness: 0.02
+  });
+
+  // 1. Woven Belgian Linen & Vermilion-Bordered Studio Runner spanning the Workshop
+  const runnerMesh = new THREE.Mesh(
+    new THREE.PlaneGeometry(20.4, 4.4),
+    new THREE.MeshStandardMaterial({
+      map: createWorkshopRunnerTexture(),
+      roughness: 0.88,
+      metalness: 0.02
+    })
+  );
+  runnerMesh.rotation.x = -Math.PI / 2;
+  runnerMesh.position.set(-10.85, 0.008, -0.35);
+  workshopGroup.add(runnerMesh);
+
+  // 2. Warm Cotton-Plaster Backing + Pale Nordic Birch Vertical Architectural Slat Wall (z = -3.82)
+  const plasterBacking = new THREE.Mesh(
+    new THREE.BoxGeometry(20.6, 4.5, 0.08),
+    plasterWallMat
+  );
+  plasterBacking.position.set(-10.9, 2.35, -3.88);
+  workshopGroup.add(plasterBacking);
+
+  for (let sx = -0.8; sx >= -21.0; sx -= 0.24) {
+    const slat = new THREE.Mesh(
+      new THREE.BoxGeometry(0.135, 4.42, 0.05),
+      Math.round(Math.abs(sx) * 10) % 2 === 0 ? birchMatA : birchMatB
+    );
+    slat.position.set(sx, 2.35, -3.82);
+    workshopGroup.add(slat);
+  }
+
+  // Top & Bottom blackened-ash + brushed-brass datum trim rails
+  [0.14, 4.58].forEach((ty) => {
+    const rail = new THREE.Mesh(new THREE.BoxGeometry(20.7, 0.085, 0.14), ashMat);
+    rail.position.set(-10.9, ty, -3.82);
+    workshopGroup.add(rail);
+
+    const brassFillet = new THREE.Mesh(new THREE.BoxGeometry(20.72, 0.02, 0.15), brassMat);
+    brassFillet.position.set(-10.9, ty + (ty > 2 ? -0.045 : 0.045), -3.82);
+    workshopGroup.add(brassFillet);
+  });
+
+  // Sunlit Studio End Return Wall with Glowing Frosted North-Light Clerestory Windows at x = -21.5
+  const returnWall = new THREE.Mesh(new THREE.BoxGeometry(0.14, 6.2, 8.6), plasterWallMat);
+  returnWall.position.set(-21.5, 3.1, -0.6);
+  workshopGroup.add(returnWall);
+
+  const skylightGlassMat = new THREE.MeshStandardMaterial({
+    color: 0xfffcf5,
+    emissive: 0xfff5dc,
+    emissiveIntensity: 0.72,
+    roughness: 0.22
+  });
+  [-2.2, 0.2].forEach((wz) => {
+    const windowFrame = new THREE.Mesh(new THREE.BoxGeometry(0.18, 2.6, 1.9), ashMat);
+    windowFrame.position.set(-21.44, 3.35, wz);
+    workshopGroup.add(windowFrame);
+
+    const frostedPane = new THREE.Mesh(new THREE.PlaneGeometry(1.74, 2.42), skylightGlassMat);
+    frostedPane.rotation.y = Math.PI / 2;
+    frostedPane.position.set(-21.34, 3.35, wz);
+    workshopGroup.add(frostedPane);
+  });
+
+  // 3. Studio Tool & Swatch Pegboards + Floating Birch Folio Shelves
+  const pegMat = new THREE.MeshStandardMaterial({
+    map: createStudioPegboardTexture(),
+    roughness: 0.68,
+    metalness: 0.08
+  });
+  const slipcaseColors = [0xfaf6ee, 0xc83e2b, 0x181715, 0xd4b47c, 0x38bdf8, 0xe7dfd1];
+  const shelfCenters = [-2.45, -7.6, -13.1, -18.0];
+
+  shelfCenters.forEach((scx, si) => {
+    const pegFrame = new THREE.Mesh(new THREE.BoxGeometry(2.86, 1.4, 0.04), ashMat);
+    pegFrame.position.set(scx, 2.85, -3.75);
+    workshopGroup.add(pegFrame);
+
+    const pegBoard = new THREE.Mesh(new THREE.BoxGeometry(2.78, 1.32, 0.05), pegMat);
+    pegBoard.position.set(scx, 2.85, -3.73);
+    workshopGroup.add(pegBoard);
+
+    // Floating Nordic birch shelf above pegboard holding linen archival slipcases & color binders
+    const shelfPlank = new THREE.Mesh(new THREE.BoxGeometry(2.9, 0.065, 0.36), birchMatA);
+    shelfPlank.position.set(scx, 3.62, -3.62);
+    workshopGroup.add(shelfPlank);
+
+    for (let bi = 0; bi < 5; bi++) {
+      const col = slipcaseColors[(si * 2 + bi) % slipcaseColors.length];
+      const slipcase = new THREE.Mesh(
+        new THREE.BoxGeometry(0.22, 0.35 + (bi % 2) * 0.05, 0.18),
+        new THREE.MeshStandardMaterial({ color: col, roughness: 0.58 })
+      );
+      slipcase.position.set(scx - 1.0 + bi * 0.48, 3.83, -3.6);
+      slipcase.rotation.y = (bi - 2) * 0.05;
+      workshopGroup.add(slipcase);
+    }
+
+    // Hung Brass T-Square Ruler & Color Swatch Ring on each Studio Pegboard
+    const tSquareBlade = new THREE.Mesh(new THREE.BoxGeometry(0.045, 0.62, 0.016), brassMat);
+    tSquareBlade.position.set(scx - 0.76, 2.84, -3.68);
+    workshopGroup.add(tSquareBlade);
+
+    const tSquareHead = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.052, 0.024), ashMat);
+    tSquareHead.position.set(scx - 0.76, 3.14, -3.67);
+    workshopGroup.add(tSquareHead);
+
+    const swatchRing = new THREE.Mesh(new THREE.TorusGeometry(0.11, 0.018, 10, 24), brassMat);
+    swatchRing.position.set(scx + 0.72, 2.94, -3.68);
+    workshopGroup.add(swatchRing);
+
+    const hungCard = new THREE.Mesh(
+      new THREE.BoxGeometry(0.22, 0.16, 0.02),
+      new THREE.MeshStandardMaterial({ color: ED_VERMILION, roughness: 0.45 })
+    );
+    hungCard.position.set(scx + 0.04, 2.86, -3.68);
+    workshopGroup.add(hungCard);
+  });
+
+  // 4. Hub-Visible Workshop Entry Drafting Table & Commission Brief Stand (at x = -2.45, z = -1.65)
+  const entryDrafting = new THREE.Group();
+  entryDrafting.position.set(-2.45, 0, -1.65);
+  entryDrafting.rotation.y = 0.14;
+  workshopGroup.add(entryDrafting);
+
+  const draftBase = new THREE.Mesh(new THREE.BoxGeometry(2.1, 0.86, 0.78), ashMat);
+  draftBase.position.y = 0.43;
+  entryDrafting.add(draftBase);
+
+  const draftTop = new THREE.Mesh(new THREE.BoxGeometry(2.18, 0.07, 0.84), birchMatA);
+  draftTop.position.y = 0.895;
+  entryDrafting.add(draftTop);
+
+  const draftBrassEdge = new THREE.Mesh(new THREE.BoxGeometry(2.19, 0.02, 0.016), brassMat);
+  draftBrassEdge.position.set(0, 0.895, 0.422);
+  entryDrafting.add(draftBrassEdge);
+
+  const draftMat = new THREE.Mesh(
+    new THREE.PlaneGeometry(1.94, 0.68),
+    new THREE.MeshStandardMaterial({
+      map: createStudioCuttingMatTexture(0),
+      roughness: 0.78
+    })
+  );
+  draftMat.rotation.x = -Math.PI / 2;
+  draftMat.position.set(0, 0.932, 0.01);
+  entryDrafting.add(draftMat);
+
+  // Articulated Brushed-Brass Architect's Swing-Arm Daylight Lamp on right of Entry Table
+  const lampFoot = new THREE.Mesh(new THREE.CylinderGeometry(0.11, 0.13, 0.036, 18), brassMat);
+  lampFoot.position.set(0.72, 0.948, -0.08);
+  entryDrafting.add(lampFoot);
+
+  const lampLowerArm = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.014, 0.38, 10), brassMat);
+  lampLowerArm.position.set(0.76, 1.13, -0.1);
+  lampLowerArm.rotation.z = -0.22;
+  entryDrafting.add(lampLowerArm);
+
+  const lampUpperArm = new THREE.Mesh(new THREE.CylinderGeometry(0.011, 0.012, 0.34, 10), brassMat);
+  lampUpperArm.position.set(0.66, 1.34, -0.02);
+  lampUpperArm.rotation.z = 0.56;
+  entryDrafting.add(lampUpperArm);
+
+  const lampShade = new THREE.Mesh(
+    new THREE.ConeGeometry(0.12, 0.14, 18, 1, true),
+    new THREE.MeshStandardMaterial({
+      color: 0xfaf6ee,
+      roughness: 0.42,
+      side: THREE.DoubleSide
+    })
+  );
+  lampShade.position.set(0.52, 1.38, 0.04);
+  lampShade.rotation.z = 0.25;
+  entryDrafting.add(lampShade);
+
+  const daylightBulb = new THREE.Mesh(
+    new THREE.SphereGeometry(0.052, 14, 14),
+    new THREE.MeshStandardMaterial({
+      color: 0xfffef8,
+      emissive: 0xfff5d6,
+      emissiveIntensity: 1.9,
+      roughness: 0.15
+    })
+  );
+  daylightBulb.position.set(0.52, 1.33, 0.04);
+  entryDrafting.add(daylightBulb);
+
+  // Stacked lookbook folios + vermilion swatch deck at center of Entry Drafting Table
+  [0xfaf6ee, 0x181715, 0xc83e2b].forEach((fc, fi) => {
+    const book = new THREE.Mesh(
+      new THREE.BoxGeometry(0.36, 0.042, 0.26),
+      new THREE.MeshStandardMaterial({ color: fc, roughness: 0.52 })
+    );
+    book.position.set(0.14, 0.955 + fi * 0.044, 0.04);
+    book.rotation.y = (fi - 1) * 0.09;
+    entryDrafting.add(book);
+  });
+
+  // Clickable Archival Cream Commission Brief Clipboard on left of Entry Drafting Table
+  const clipboardGroup = new THREE.Group();
+  clipboardGroup.position.set(-0.56, 1.18, 0.04);
+  clipboardGroup.rotation.set(-0.58, 0.18, 0.04);
+  entryDrafting.add(clipboardGroup);
+
+  const clipBoardBack = new THREE.Mesh(new THREE.BoxGeometry(0.56, 0.74, 0.03), ashMat);
+  clipboardGroup.add(clipBoardBack);
+
+  const clipSheetTex = createCommissionDossierTexture();
+  const briefSheetMat = new THREE.MeshStandardMaterial({
+    map: clipSheetTex,
+    emissiveMap: clipSheetTex,
+    emissive: new THREE.Color('#fffaf0'),
+    emissiveIntensity: 0.42,
+    roughness: 0.36
+  });
+  const clipSheet = new THREE.Mesh(new THREE.PlaneGeometry(0.5, 0.66), briefSheetMat);
+  clipSheet.position.z = 0.018;
+  clipboardGroup.add(clipSheet);
+
+  const clipMetal = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.06, 0.048), brassMat);
+  clipMetal.position.set(0, 0.32, 0.026);
+  clipboardGroup.add(clipMetal);
+
+  const clipboardHit = new THREE.Mesh(
+    new THREE.BoxGeometry(0.76, 0.9, 0.32),
+    new THREE.MeshBasicMaterial({ visible: false })
+  );
+  clipboardHit.userData = { hitType: 'clipboard-brief' };
+  clipboardGroup.add(clipboardHit);
+  interactiveObjects.unshift(clipboardHit);
+
+  const entryWingHit = new THREE.Mesh(
+    new THREE.BoxGeometry(2.6, 2.4, 1.3),
+    new THREE.MeshBasicMaterial({ visible: false })
+  );
+  entryWingHit.position.set(0, 1.2, 0);
+  entryWingHit.userData = { hitType: 'wing-tools' };
+  entryDrafting.add(entryWingHit);
+  interactiveObjects.push(entryWingHit);
+
+  // 5. Overhead Studio Track-Lighting Rail & Translucent Sunlit Skylight Beams (x = -1.6..-19.4)
+  const trackRail = new THREE.Mesh(new THREE.BoxGeometry(19.6, 0.048, 0.055), ashMat);
+  trackRail.position.set(-10.5, 5.65, -2.1);
+  workshopGroup.add(trackRail);
+
+  const spotBulbMat = new THREE.MeshStandardMaterial({
+    color: 0xfffef8,
+    emissive: 0xfff4d6,
+    emissiveIntensity: 1.85,
+    roughness: 0.16
+  });
+
+  for (let lx = -2.0; lx >= -19.2; lx -= 2.45) {
+    const stem = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.012, 0.34, 8), brassMat);
+    stem.position.set(lx, 5.47, -2.1);
+    workshopGroup.add(stem);
+
+    const spotCan = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.075, 0.095, 0.22, 16),
+      new THREE.MeshStandardMaterial({ color: 0xfaf6ee, roughness: 0.42 })
+    );
+    spotCan.position.set(lx, 5.24, -2.06);
+    spotCan.rotation.x = 0.28;
+    workshopGroup.add(spotCan);
+
+    const spotLens = new THREE.Mesh(new THREE.CircleGeometry(0.082, 16), spotBulbMat);
+    spotLens.position.set(lx, 5.13, -2.02);
+    spotLens.rotation.x = Math.PI / 2 + 0.28;
+    workshopGroup.add(spotLens);
+  }
+
+  // Soft diagonal sunlit north-skylight shafts in the upper studio air
+  const sunBeamMat = new THREE.MeshBasicMaterial({
+    color: 0xfffbf0,
+    transparent: true,
+    opacity: 0.042,
+    depthWrite: false,
+    side: THREE.DoubleSide
+  });
+  [-4.8, -10.8, -16.8].forEach((bx) => {
+    const beam = new THREE.Mesh(new THREE.PlaneGeometry(2.6, 5.4), sunBeamMat);
+    beam.position.set(bx, 4.35, -2.25);
+    beam.rotation.z = -0.22;
+    beam.rotation.y = 0.18;
+    workshopGroup.add(beam);
+  });
+
+  return { briefSheetMat };
 }
 
 function buildCableTube(points, radius = 0.011, color = 0x181b22) {
@@ -3119,7 +5067,7 @@ export function createWorkshopArcade3D({
   const hemiLight = new THREE.HemisphereLight('#f5efe4', '#161922', 0.78);
   scene.add(hemiLight);
 
-  // Sunlit museum gallery skylight on Left Atelier (x < 0)
+  // Sunlit Design & Maker's Workshop lighting along the full Left Rail (x < 0, clamped so zero light spills past x = 0)
   const atelierSunlight = new THREE.SpotLight('#fffaf0', 54, 32, Math.PI * 0.48, 0.42, 1.0);
   atelierSunlight.position.set(-5.2, 8.2, 6.8);
   atelierSunlight.target.position.set(-4.8, 2.3, -1.2);
@@ -3129,6 +5077,22 @@ export function createWorkshopArcade3D({
   const galleryWarmBounce = new THREE.PointLight('#ffeed6', 7.5, 16);
   galleryWarmBounce.position.set(-3.2, 2.2, 3.0);
   scene.add(galleryWarmBounce);
+
+  const workshopMidLight = new THREE.PointLight('#fffaf0', 23, 14);
+  workshopMidLight.position.set(-10.8, 4.8, 2.5);
+  scene.add(workshopMidLight);
+
+  const workshopFarLight = new THREE.PointLight('#fffaf0', 25, 15);
+  workshopFarLight.position.set(-17.4, 4.8, 2.5);
+  scene.add(workshopFarLight);
+
+  const workshopBenchFill = new THREE.PointLight('#fff5e4', 12.5, 15);
+  workshopBenchFill.position.set(-13.2, 2.6, 4.1);
+  scene.add(workshopBenchFill);
+
+  const workshopEndSkylight = new THREE.PointLight('#fffaf0', 14, 12);
+  workshopEndSkylight.position.set(-19.6, 3.3, 1.4);
+  scene.add(workshopEndSkylight);
 
   // Warm Overhead Edison / Shop Lights in the Right Garage Game Room (x > 0)
   const garageEntryLight = new THREE.PointLight('#ffdfaa', 18, 13);
@@ -3248,229 +5212,51 @@ export function createWorkshopArcade3D({
   scene.add(pillarRightHalf);
 
   // =========================================================================
-  // LEFT WING: SWISS EDITORIAL PRINT & DESIGN STUDIO (7 FRAMED PRINT FOLIOS)
+  // LEFT WING: SUNLIT DESIGN & MAKER'S WORKSHOP (7 BESPOKE 3D WORKBENCH SETUPS)
   // =========================================================================
-  const atelierGroup = new THREE.Group();
-  atelierGroup.position.set(-4.7, 0, -1.2);
-  atelierGroup.rotation.y = 0.16;
-  scene.add(atelierGroup);
-
-  const wallW = 7.9;
-  const wallH = 3.86;
-  const wallCenterY = 2.7;
-
-  // Blackened-Walnut / Sumi Architectural Gallery Frame
-  const galleryMolding = new THREE.Mesh(
-    new THREE.BoxGeometry(wallW + 0.26, wallH + 0.26, 0.14),
-    new THREE.MeshStandardMaterial({
-      color: ED_INK,
-      roughness: 0.55,
-      metalness: 0.12
-    })
-  );
-  galleryMolding.position.set(0, wallCenterY, -0.06);
-  atelierGroup.add(galleryMolding);
-
-  // Warm Cotton-Plaster Museum Exhibition Wall
-  const galleryWallFace = new THREE.Mesh(
-    new THREE.BoxGeometry(wallW, wallH, 0.08),
-    new THREE.MeshStandardMaterial({
-      color: ED_WALL,
-      roughness: 0.82,
-      metalness: 0.04
-    })
-  );
-  galleryWallFace.position.set(0, wallCenterY, 0);
-  atelierGroup.add(galleryWallFace);
-
-  // Two Brushed-Brass Architectural Gallery Hanging Rails
-  const railMat = new THREE.MeshStandardMaterial({
-    color: ED_BRASS,
-    roughness: 0.32,
-    metalness: 0.78
-  });
-  [4.18, 2.66].forEach((ry) => {
-    const rail = new THREE.Mesh(new THREE.BoxGeometry(wallW - 0.36, 0.032, 0.045), railMat);
-    rail.position.set(0, ry, 0.055);
-    atelierGroup.add(rail);
-  });
-
   let currentSignTexts = {
-    signTools: 'DESIGN STUDIO',
-    signToolsSub: 'TAP ANY FRAMED FOLIO OR PROOF TABLE',
+    signTools: 'DESIGN & AI WORKSHOP',
+    signToolsSub: 'TAP OR SWIPE WORKBENCHES TO TRY LIVE',
     signGames: 'GARAGE GAME ROOM',
     signGamesSub: 'TAP OR SWIPE SETUPS TO PLAY'
   };
 
+  const interactiveObjects = [];
+  const workshopGroup = new THREE.Group();
+  scene.add(workshopGroup);
+
+  const workshopEnv = buildWorkshopEnvironment(workshopGroup, interactiveObjects);
+
   const toolsSignMesh = new THREE.Mesh(
-    new THREE.PlaneGeometry(4.3, 1.04),
+    new THREE.PlaneGeometry(4.4, 1.04),
     new THREE.MeshBasicMaterial({
       map: createEditorialSignTexture(currentSignTexts.signTools, currentSignTexts.signToolsSub)
     })
   );
-  toolsSignMesh.position.set(0, 5.18, 0.12);
+  toolsSignMesh.position.set(-4.68, 5.06, -0.92);
+  toolsSignMesh.rotation.y = 0.15;
   toolsSignMesh.userData = { hitType: 'wing-tools' };
-  atelierGroup.add(toolsSignMesh);
+  workshopGroup.add(toolsSignMesh);
+  interactiveObjects.push(toolsSignMesh);
 
-  // Blackened-Ash & Warm-Linen Editorial Proof Table below the Gallery Wall
-  const benchTop = new THREE.Mesh(
-    new THREE.BoxGeometry(wallW + 0.34, 0.14, 1.46),
-    new THREE.MeshStandardMaterial({ color: '#1b1917', roughness: 0.48, metalness: 0.14 })
-  );
-  benchTop.position.set(0, 0.68, 0.62);
-  atelierGroup.add(benchTop);
-
-  const brassTableEdge = new THREE.Mesh(
-    new THREE.BoxGeometry(wallW + 0.36, 0.035, 0.03),
-    railMat
-  );
-  brassTableEdge.position.set(0, 0.69, 1.34);
-  atelierGroup.add(brassTableEdge);
-
-  const deskBlotter = new THREE.Mesh(
-    new THREE.PlaneGeometry(wallW - 0.36, 1.14),
-    new THREE.MeshBasicMaterial({ map: createEditorialDeskMatTexture() })
-  );
-  deskBlotter.rotation.x = -Math.PI / 2;
-  deskBlotter.position.set(0, 0.755, 0.64);
-  atelierGroup.add(deskBlotter);
-
-  // Left Table Stand: Tilted Before ↔ After Editorial Proof Display
-  const monitorGroup = new THREE.Group();
-  monitorGroup.position.set(-2.45, 0.75, 0.66);
-  monitorGroup.rotation.y = 0.22;
-  atelierGroup.add(monitorGroup);
-
-  const monitorStand = new THREE.Mesh(
-    new THREE.BoxGeometry(0.5, 0.05, 0.36),
-    new THREE.MeshStandardMaterial({ color: ED_INK, roughness: 0.45 })
-  );
-  monitorStand.position.y = 0.025;
-  monitorGroup.add(monitorStand);
-
-  const monitorNeck = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.28, 0.07), railMat);
-  monitorNeck.position.set(0, 0.16, -0.05);
-  monitorGroup.add(monitorNeck);
-
-  const monitorBezel = new THREE.Mesh(
-    new THREE.BoxGeometry(1.52, 0.92, 0.06),
-    new THREE.MeshStandardMaterial({
-      color: ED_INK,
-      emissive: ED_VERMILION,
-      emissiveIntensity: 0.12,
-      roughness: 0.42
-    })
-  );
-  monitorBezel.position.set(0, 0.56, 0);
-  monitorBezel.rotation.x = -0.16;
-  monitorGroup.add(monitorBezel);
-
-  const monitorScreenTex = createBeforeAfterProofTexture();
-  const monitorScreen = new THREE.Mesh(
-    new THREE.PlaneGeometry(1.4, 0.8),
-    new THREE.MeshStandardMaterial({
-      map: monitorScreenTex,
-      emissiveMap: monitorScreenTex,
-      emissive: new THREE.Color('#fffaf0'),
-      emissiveIntensity: 0.75,
-      roughness: 0.25
-    })
-  );
-  monitorScreen.position.set(0, 0.56, 0.035);
-  monitorScreen.rotation.x = -0.16;
-  monitorScreen.userData = { hitType: 'workbench-makeover' };
-  monitorGroup.add(monitorScreen);
-
-  const monitorHit = new THREE.Mesh(
-    new THREE.BoxGeometry(1.62, 1.05, 0.42),
-    new THREE.MeshBasicMaterial({ visible: false })
-  );
-  monitorHit.position.set(0, 0.54, 0.04);
-  monitorHit.userData = { hitType: 'workbench-makeover' };
-  monitorGroup.add(monitorHit);
-
-  // Right Table Stand: Archival Cream Commission Dossier
-  const clipboardGroup = new THREE.Group();
-  clipboardGroup.position.set(2.6, 0.76, 0.72);
-  clipboardGroup.rotation.set(-1.18, -0.18, -0.08);
-  atelierGroup.add(clipboardGroup);
-
-  const clipBoardBack = new THREE.Mesh(
-    new THREE.BoxGeometry(0.68, 0.9, 0.035),
-    new THREE.MeshStandardMaterial({ color: ED_INK, roughness: 0.45 })
-  );
-  clipboardGroup.add(clipBoardBack);
-
-  const clipSheetTex = createCommissionDossierTexture();
-  const clipSheet = new THREE.Mesh(
-    new THREE.PlaneGeometry(0.62, 0.82),
-    new THREE.MeshStandardMaterial({
-      map: clipSheetTex,
-      emissiveMap: clipSheetTex,
-      emissive: new THREE.Color('#fffaf0'),
-      emissiveIntensity: 0.52,
-      roughness: 0.35
-    })
-  );
-  clipSheet.position.z = 0.022;
-  clipboardGroup.add(clipSheet);
-
-  const clipMetal = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.07, 0.055), railMat);
-  clipMetal.position.set(0, 0.39, 0.03);
-  clipboardGroup.add(clipMetal);
-
-  const clipboardHit = new THREE.Mesh(
-    new THREE.BoxGeometry(0.9, 1.05, 0.35),
-    new THREE.MeshBasicMaterial({ visible: false })
-  );
-  clipboardHit.userData = { hitType: 'clipboard-brief' };
-  clipboardGroup.add(clipboardHit);
-
-  const workshopWingHit = new THREE.Mesh(
-    new THREE.BoxGeometry(wallW + 0.6, 5.5, 1.6),
-    new THREE.MeshBasicMaterial({ visible: false })
-  );
-  workshopWingHit.position.set(0, 2.75, 0.1);
-  workshopWingHit.userData = { hitType: 'wing-tools' };
-  atelierGroup.add(workshopWingHit);
-
-  // 7 Framed Editorial Print Folios (4 upper gallery plates, 3 lower plates)
-  const interactiveObjects = [monitorHit, monitorScreen, clipboardHit, toolsSignMesh, workshopWingHit];
   const toolNodes = [];
-
   tools.forEach((tool, idx) => {
-    const isTopRow = idx < 4;
-    const localX = isTopRow ? (idx - 1.5) * 1.84 : (idx - 5) * 1.96;
-    const localY = isTopRow ? 3.46 : 1.92;
+    const cx = -5.4 - idx * 2.2;
+    const cz = -1.12;
+    const built = buildWorkshopToolStation(tool, idx);
+    built.root.position.set(cx, 0, cz);
+    built.root.rotation.y = 0.09;
+    workshopGroup.add(built.root);
 
-    const slotGroup = new THREE.Group();
-    slotGroup.position.set(localX, localY, 0.06);
-    atelierGroup.add(slotGroup);
-
-    const folioBuilt = buildEditorialFolioNode(tool, idx);
-    slotGroup.add(folioBuilt.root);
-
-    const hitBox = new THREE.Mesh(
-      new THREE.BoxGeometry(1.62, 1.42, 0.55),
-      new THREE.MeshBasicMaterial({ visible: false })
-    );
-    hitBox.position.set(0, 0, 0.12);
-    hitBox.userData = {
-      hitType: 'tool',
-      index: idx,
-      id: tool.id
-    };
-    slotGroup.add(hitBox);
-    interactiveObjects.unshift(hitBox);
+    interactiveObjects.unshift(built.hitMesh);
+    interactiveObjects.unshift(built.screenMesh);
 
     toolNodes.push({
       item: tool,
       index: idx,
-      slotGroup,
-      folioRoot: folioBuilt.root,
-      printMat: folioBuilt.printMat,
-      highlightPlane: folioBuilt.highlightPlane,
-      currentLift: 0,
+      baseZ: cz,
+      ...built,
+      currentPop: 0,
       audienceMatch: true
     });
   });
@@ -3559,20 +5345,31 @@ export function createWorkshopArcade3D({
     }
 
     if (currentMode === 'tools') {
-      const node = toolNodes[activeToolIndex] || toolNodes[0];
-      node.slotGroup.getWorldPosition(tmpWorldPos);
-      atelierGroup.getWorldQuaternion(tmpQuat);
-      tmpForward.set(0, 0, 1).applyQuaternion(tmpQuat);
-
+      const station = toolNodes[activeToolIndex] || toolNodes[0];
       if (isZoomedIntoScreen) {
-        targetCamPos.copy(tmpWorldPos).addScaledVector(tmpForward, 0.95);
+        station.screenMesh.getWorldPosition(tmpWorldPos);
+        station.root.getWorldQuaternion(tmpQuat);
+        tmpForward.set(0, 0, 1).applyQuaternion(tmpQuat);
+        targetCamPos.copy(tmpWorldPos).addScaledVector(tmpForward, 0.68);
         targetLookAt.copy(tmpWorldPos);
       } else {
-        const dist = isPortrait ? 4.35 : 3.28;
-        targetCamPos.copy(tmpWorldPos).addScaledVector(tmpForward, dist);
-        targetCamPos.y = tmpWorldPos.y - (isPortrait ? 0.34 : 0.22);
-        targetLookAt.copy(tmpWorldPos);
-        targetLookAt.y -= isPortrait ? 0.42 : 0.28;
+        station.root.getWorldPosition(tmpWorldPos);
+        station.root.getWorldQuaternion(tmpQuat);
+        tmpForward.set(0, 0, 1).applyQuaternion(tmpQuat);
+        tmpRight.set(1, 0, 0).applyQuaternion(tmpQuat);
+
+        const cf = station.camFocus;
+        const dist = isPortrait ? cf.distPortrait : cf.distDesktop;
+        const shiftX = cf.offsetX || 0;
+
+        targetCamPos
+          .copy(tmpWorldPos)
+          .addScaledVector(tmpRight, shiftX)
+          .addScaledVector(tmpForward, dist);
+        targetCamPos.y = isPortrait ? cf.camYPortrait : cf.camYDesktop;
+
+        targetLookAt.copy(tmpWorldPos).addScaledVector(tmpRight, shiftX);
+        targetLookAt.y = isPortrait ? cf.lookYPortrait : cf.lookYDesktop;
       }
       return;
     }
@@ -3627,7 +5424,7 @@ export function createWorkshopArcade3D({
   let isPointerDown = false;
   let hoveredToolIdx = -1;
   let hoveredCabIdx = -1;
-  let hoveredMonitor = false;
+  let hoveredBrief = false;
   let lastHubLean = 'center';
 
   function getRaycastHit(clientX, clientY) {
@@ -3636,7 +5433,11 @@ export function createWorkshopArcade3D({
     const ny = -((clientY - rect.top) / rect.height) * 2 + 1;
     raycaster.setFromCamera({ x: nx, y: ny }, camera);
     const hits = raycaster.intersectObjects(interactiveObjects, false);
-    return hits.length > 0 ? hits[0].object.userData : null;
+    if (hits.length === 0) return null;
+    // Prefer specific station/prop hitboxes over broad wing catchers when overlapping along the ray
+    const primaryHit =
+      hits.find((h) => !String(h.object.userData?.hitType || '').startsWith('wing-')) || hits[0];
+    return primaryHit.object.userData || null;
   }
 
   function onPointerDown(e) {
@@ -3671,22 +5472,21 @@ export function createWorkshopArcade3D({
     }
 
     const hit = getRaycastHit(e.clientX, e.clientY);
-    const nextToolIdx = hit?.hitType === 'tool' ? hit.index : -1;
+    const nextToolIdx =
+      hit?.hitType === 'tool' || hit?.hitType === 'tool-screen' ? hit.index : -1;
     const nextCabIdx =
       hit?.hitType === 'cabinet' || hit?.hitType === 'cabinet-screen' ? hit.index : -1;
-    const nextMonitor = hit?.hitType === 'workbench-makeover';
+    const nextBrief = hit?.hitType === 'clipboard-brief';
 
     if (nextToolIdx !== -1 && nextToolIdx !== hoveredToolIdx) {
       onHoverItem?.('tool', nextToolIdx);
     } else if (nextCabIdx !== -1 && nextCabIdx !== hoveredCabIdx) {
       onHoverItem?.('arcade', nextCabIdx);
-    } else if (nextMonitor && !hoveredMonitor) {
-      onHoverItem?.('tool', 0);
     }
 
     hoveredToolIdx = nextToolIdx;
     hoveredCabIdx = nextCabIdx;
-    hoveredMonitor = nextMonitor;
+    hoveredBrief = nextBrief;
     renderer.domElement.style.cursor = hit ? 'pointer' : currentMode === 'hub' ? 'pointer' : 'grab';
   }
 
@@ -3702,15 +5502,17 @@ export function createWorkshopArcade3D({
     const absY = Math.abs(dy);
 
     if (absX > 38 && absX > absY * 1.15 && dt < 900) {
-      const dir = dx < 0 ? 1 : -1;
       if (currentMode === 'games') {
+        const dir = dx < 0 ? 1 : -1;
         const nextIdx = THREE.MathUtils.clamp(activeGameIndex + dir, 0, games.length - 1);
         if (nextIdx !== activeGameIndex) onSelectGame(nextIdx);
       } else if (currentMode === 'tools') {
-        const nextIdx = THREE.MathUtils.clamp(activeToolIndex + dir, 0, tools.length - 1);
+        // Benches run from x = -5.4 (01) leftward to x = -18.6 (07), matching dragPreviewOffset direction
+        const toolDir = dx > 0 ? 1 : -1;
+        const nextIdx = THREE.MathUtils.clamp(activeToolIndex + toolDir, 0, tools.length - 1);
         if (nextIdx !== activeToolIndex) onSelectTool(nextIdx);
       } else if (currentMode === 'hub') {
-        onSelectMode(dir > 0 ? 'games' : 'tools');
+        onSelectMode(dx < 0 ? 'games' : 'tools');
       }
       return;
     }
@@ -3723,16 +5525,8 @@ export function createWorkshopArcade3D({
         return;
       }
 
-      if (hit?.hitType === 'workbench-makeover') {
-        if (currentMode !== 'tools') {
-          onSelectMode('tools', 0);
-        }
-        onLaunchTool(0);
-        return;
-      }
-
       if (currentMode === 'hub') {
-        if (hit?.hitType === 'tool') {
+        if (hit?.hitType === 'tool' || hit?.hitType === 'tool-screen') {
           onSelectMode('tools', hit.index);
         } else if (hit?.hitType === 'cabinet' || hit?.hitType === 'cabinet-screen') {
           onSelectMode('games', hit.index);
@@ -3749,7 +5543,9 @@ export function createWorkshopArcade3D({
       }
 
       if (currentMode === 'tools') {
-        if (hit?.hitType === 'tool') {
+        if (hit?.hitType === 'tool-screen' && hit.index === activeToolIndex) {
+          onLaunchTool(activeToolIndex);
+        } else if (hit?.hitType === 'tool' || hit?.hitType === 'tool-screen') {
           if (hit.index === activeToolIndex) {
             onLaunchTool(activeToolIndex);
           } else {
@@ -3774,7 +5570,11 @@ export function createWorkshopArcade3D({
           } else {
             onSelectGame(hit.index);
           }
-        } else if (hit?.hitType === 'tool' || hit?.hitType === 'wing-tools') {
+        } else if (
+          hit?.hitType === 'tool' ||
+          hit?.hitType === 'tool-screen' ||
+          hit?.hitType === 'wing-tools'
+        ) {
           onSelectMode('tools', hit.index ?? activeToolIndex);
         }
       }
@@ -3835,26 +5635,33 @@ export function createWorkshopArcade3D({
     currentLookAt.z = THREE.MathUtils.lerp(currentLookAt.z, targetLookAt.z, damp);
     camera.lookAt(currentLookAt);
 
-    monitorBezel.material.emissiveIntensity = hoveredMonitor
-      ? 0.55
-      : 0.12 + Math.sin(elapsed * 2.4) * 0.04;
+    if (workshopEnv.briefSheetMat) {
+      workshopEnv.briefSheetMat.emissiveIntensity = hoveredBrief
+        ? 0.62
+        : 0.38 + Math.sin(elapsed * 2.0) * 0.04;
+    }
 
-    // Animate 7 Framed Editorial Print Folios on Left Gallery Wall
+    // Animate 7 Bespoke Sunlit Workshop Benches on Left
     toolNodes.forEach((node, idx) => {
       const isSelected = currentMode === 'tools' && idx === activeToolIndex;
       const isHovered = idx === hoveredToolIdx;
       const matchBoost = node.audienceMatch ? 1 : 0.38;
-      const targetLift = isSelected ? 0.26 : isHovered ? 0.12 : node.audienceMatch ? 0 : -0.03;
-      node.currentLift = THREE.MathUtils.lerp(node.currentLift, targetLift, damp);
+      const targetPop = isSelected ? 0.16 : isHovered ? 0.07 : 0;
+      node.currentPop = THREE.MathUtils.lerp(node.currentPop, targetPop, damp);
 
-      node.folioRoot.position.z = node.currentLift;
-      node.folioRoot.rotation.y = isSelected ? Math.sin(elapsed * 1.4) * 0.035 : 0;
-      node.highlightPlane.material.opacity = isSelected ? 0.95 : isHovered ? 0.55 : 0.0;
-      node.printMat.emissiveIntensity = isSelected
-        ? 0.42
+      node.root.position.z = node.baseZ + node.currentPop;
+      node.glowRing.material.opacity = isSelected
+        ? 0.28 + Math.sin(elapsed * 3.0) * 0.05
         : isHovered
-          ? 0.3
-          : 0.18 * matchBoost;
+          ? 0.18
+          : 0.09 * matchBoost;
+      node.trimMat.emissiveIntensity = isSelected ? 0.85 : 0.42 * matchBoost;
+      node.screenMat.emissiveIntensity = isSelected
+        ? 0.38
+        : isHovered
+          ? 0.32
+          : 0.24 * matchBoost;
+      node.animateIdle?.(elapsed, isSelected, isHovered);
     });
 
     // Animate 7 Garage Game Room Hardware Setups on Right
@@ -3920,8 +5727,12 @@ export function createWorkshopArcade3D({
     },
     refreshTypographyTextures() {
       rebuildSigns();
+      workshopEnv.briefSheetMat?.map?.userData?.redraw?.();
       toolNodes.forEach((node) => {
-        node.printMat.map?.userData?.redraw?.();
+        node.screenMat.map?.userData?.redraw?.();
+        node.extraTexMats?.forEach((mat) => {
+          mat.map?.userData?.redraw?.();
+        });
       });
       cabinetNodes.forEach((cab) => {
         if (cab.marqueeMat) {
