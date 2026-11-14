@@ -99,7 +99,7 @@ export const ITEM_TRANSLATIONS = {
     'wild-peak': {
       name: 'Wild Peak 3D — Mundo Procedural',
       badge: '3D Ultraligero',
-      tldr: 'Una montaña 3D generada 100% con código—igual que este arcade—demostrando que el 3D web puede cargar rápido en celular.',
+      tldr: 'Una montaña 3D generada 100% con código—igual que este cuarto de juegos—demostrando que el 3D web puede cargar rápido en celular.',
       ideaBiz: 'Exhibidores 3D interactivos de productos o showrooms virtuales sin descargas pesadas.',
       ideaCreator: 'Un mundo 3D explorable o tienda pop-up virtual ambientada en el universo de tu marca.'
     }

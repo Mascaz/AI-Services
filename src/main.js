@@ -368,7 +368,7 @@ function setAudienceFilter(nextFilter) {
 });
 
 // ============================================================================
-// 3. 3D Hardware Pegboard (Left) & 1986 Shibuya Arcade (Right) Initialization
+// 3. 3D Editorial Print Studio (Left) & Garage Game Room (Right) Initialization
 // ============================================================================
 let prevLean = 'center';
 
@@ -511,12 +511,12 @@ function renderHud() {
 
   p1InspectorCard.style.setProperty('--active-accent', rawItem.accent);
 
-  // World-specific top colophon / CRT telemetry bar
+  // World-specific top colophon / Garage console slot telemetry bar
   if (p1DeckUnitCode && p1DeckWorldStamp) {
     const numStr = `0${activeIdx + 1} / 0${list.length}`;
     if (isGames) {
-      p1DeckUnitCode.textContent = `CAB ${numStr} // 1UP FREE PLAY`;
-      p1DeckWorldStamp.textContent = 'SHIBUYA 1986 • 60HZ CRT';
+      p1DeckUnitCode.textContent = `STATION ${numStr} — ${(rawItem.stationLabel || 'CARTS, DISCS & RIGS').toUpperCase()}`;
+      p1DeckWorldStamp.textContent = 'GARAGE GAME ROOM';
     } else {
       p1DeckUnitCode.textContent = `FOLIO N° ${numStr} — ${(rawItem.physicalLabel || 'ARCHIVAL EDITION').toUpperCase()}`;
       p1DeckWorldStamp.textContent = 'PRINT & DESIGN ATELIER';
@@ -544,7 +544,7 @@ function renderHud() {
   }
 
   const actionText = isGames ? t(currentLang, 'playLive') : t(currentLang, 'tryLive');
-  p1LaunchBtn.innerHTML = isGames ? `&#9733; ${actionText}` : `&#9654; ${actionText}`;
+  p1LaunchBtn.innerHTML = `&#9654; ${actionText}`;
 
   p1SwipeHint.textContent = isGames ? t(currentLang, 'swipeGames') : t(currentLang, 'swipeTools');
 
@@ -632,7 +632,7 @@ p1InfoBtn.addEventListener('click', () => {
 });
 
 // ============================================================================
-// 4. Zero-Lag Playable Stage (Hardware Bench <-> 1986 CRT Monitor Housing)
+// 4. Zero-Lag Playable Stage (Editorial Folio <-> Garage Game Room Display)
 // ============================================================================
 function setStageTab(tabName) {
   const isLive = tabName === 'live';
@@ -669,7 +669,7 @@ function openPlayableStage(rawItem, kind = 'game', initialTab = 'live') {
   stageExternalLink.href = rawItem.playUrl;
   stageTelemetryTag.textContent = rawItem.category;
   stageLoadingText.textContent =
-    kind === 'game' ? `BOOTING 60HZ ROM // ${item.name.toUpperCase()}…` : `OPENING EDITION // ${item.name.toUpperCase()}…`;
+    kind === 'game' ? `POWERING ON // ${item.name.toUpperCase()}…` : `OPENING EDITION // ${item.name.toUpperCase()}…`;
 
   stageSpecsContent.innerHTML = `
     <div class="arch-card" style="padding:20px">
@@ -887,7 +887,7 @@ function renderQuickIndexModal() {
           const it = localizeItem(raw);
           const titleStyle =
             kind === 'game'
-              ? 'font-family:var(--font-arc-display);font-weight:800;font-size:13px;text-transform:uppercase'
+              ? 'font-family:var(--font-game-display);font-weight:700;font-size:14.5px;letter-spacing:-0.01em'
               : 'font-family:var(--font-ed-serif);font-weight:700;font-size:15px;letter-spacing:-0.015em';
           return `
             <button type="button" class="tldr-row-btn" data-quick-kind="${kind}" data-quick-idx="${idx}">
@@ -907,12 +907,12 @@ function renderQuickIndexModal() {
   quickIndexBody.innerHTML = `
     <div class="tldr-columns">
       ${renderCol(TOOLS_ITEMS, 'tool', `← ${t(currentLang, 'leftTitle')} (07)`, 'tldr-col-tools', '#c83e2b', 'var(--font-ed-serif)')}
-      ${renderCol(GAMES_ITEMS, 'game', `${t(currentLang, 'rightTitle')} [07] →`, 'tldr-col-games', '#00f0ff', 'var(--font-arc-pixel)')}
+      ${renderCol(GAMES_ITEMS, 'game', `${t(currentLang, 'rightTitle')} [07] →`, 'tldr-col-games', '#f59e0b', 'var(--font-game-label)')}
     </div>
     <div style="padding-top:12px;border-top:1px solid rgba(255,255,255,0.16);display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;font-family:var(--font-ed-mono);font-size:12px;color:#e2e8f0">
       <div style="display:flex;gap:14px;flex-wrap:wrap">
         <a href="${CONTACT_CONFIG.portfolioUrl}" target="_blank" rel="noopener" style="color:#f6f1e7;font-weight:700">mascaz.github.io &#8599;</a>
-        <a href="https://www.instagram.com/${CONTACT_CONFIG.instagramHandle}/" target="_blank" rel="noopener" style="color:#00f0ff;font-weight:700">@${CONTACT_CONFIG.instagramHandle} &#8599;</a>
+        <a href="https://www.instagram.com/${CONTACT_CONFIG.instagramHandle}/" target="_blank" rel="noopener" style="color:#fbbf24;font-weight:700">@${CONTACT_CONFIG.instagramHandle} &#8599;</a>
       </div>
       <button type="button" id="quickStartProjectBtn" class="send-channel-btn send-ig-btn" style="padding:8px 14px">
         ${t(currentLang, 'buildSimilar')}
@@ -952,7 +952,7 @@ openQuickIndexBtn.addEventListener('click', () => {
   quickIndexDialog.showModal();
 });
 
-// Keyboard Arrow Navigation for Arcade Cabinets & Pegboard Tools
+// Keyboard Arrow Navigation for Garage Game Room Setups & Studio Folios
 window.addEventListener('keydown', (e) => {
   if (playStageDialog.open || quickIndexDialog.open || projectBriefDialog.open) return;
 
