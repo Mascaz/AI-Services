@@ -1,0 +1,16 @@
+<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="cvp-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1e1b4b"/>
+      <stop offset="100%" stop-color="#4c1d95"/>
+    </linearGradient>
+  </defs>
+  <rect x="4" y="4" width="112" height="112" rx="26" fill="url(#cvp-bg)" stroke="#a78bfa" stroke-width="3"/>
+  <!-- 9:16 Creator Reel Frame -->
+  <rect x="34" y="18" width="52" height="84" rx="10" fill="#0f172a" stroke="#f472b6" stroke-width="3"/>
+  <!-- Play Triangle -->
+  <polygon points="53,43 53,67 73,55" fill="#38bdf8"/>
+  <!-- Bilingual Waveform / Captions -->
+  <rect x="42" y="76" width="36" height="6" rx="3" fill="#fbbf24"/>
+  <rect x="47" y="86" width="26" height="5" rx="2.5" fill="#a78bfa"/>
+</svg>

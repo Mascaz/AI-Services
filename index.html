@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Maxwell — AI Services, Website Makeovers &amp; Interactive Experiences</title>
+  <meta
+    name="description"
+    content="Website makeovers, AI product photo &amp; description tools, market research dashboards, and playable interactive experiences for small businesses and content creators — by Maxwell Montes Diaz."
+  />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700;800&display=swap"
+    rel="stylesheet"
+  />
+  <script type="module" crossorigin src="./assets/index-Cu16qD1o.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-nvfiwgz1.css">
+</head>
+<body data-mode="hub">
+  <!-- =====================================================================
+       CLEAN FLOATING TOP NAVIGATION BAR + AUDIENCE LENS + DISCREET FLAG
+       ===================================================================== -->
+  <header class="top-lab-bar" aria-label="Site Navigation">
+    <div class="lab-brand-group">
+      <button type="button" id="brandHomeBtn" class="brand-home-btn" title="Return to Center Split View">
+        <span class="brand-split-dot" aria-hidden="true"></span>
+        <span class="brand-text">MAXWELL <span class="brand-slash">//</span> AI SERVICES</span>
+      </button>
+    </div>
+
+    <!-- Audience Lens Toggle ("Who Are You?") -->
+    <div id="audienceFilterGroup" class="audience-filter-group" role="group" aria-label="Filter by visitor type">
+      <button type="button" class="audience-pill active" data-audience="all" id="audAllBtn">
+        All Visitors
+      </button>
+      <button type="button" class="audience-pill" data-audience="business" id="audBizBtn">
+        Small Business
+      </button>
+      <button type="button" class="audience-pill" data-audience="creator" id="audCreatorBtn">
+        Creators
+      </button>
+    </div>
+
+    <div class="lab-actions-group">
+      <button type="button" id="navToolsBtn" class="lab-ActionPill pill-tools-quick">
+        &larr; <span id="navToolsLabel">Tools</span>
+      </button>
+      <button type="button" id="navGamesBtn" class="lab-ActionPill pill-games-quick">
+        <span id="navGamesLabel">Arcade</span> &rarr;
+      </button>
+      <button type="button" id="openBriefBtn" class="lab-ActionPill pill-start-cta">
+        &#10022; <span id="navStartLabel" class="hide-xs">Build With Me</span>
+      </button>
+      <button type="button" id="openQuickIndexBtn" class="lab-ActionPill" title="Plain-text quick launcher (All Projects)">
+        &#128196; <span id="navAllLabel" class="hide-md">All</span>
+      </button>
+      <button type="button" id="sfxToggleBtn" class="lab-ActionPill icon-only-pill" aria-label="Toggle tactile UI sound effects" title="Toggle UI Sound">
+        &#128266;
+      </button>
+
+      <!-- Discreet Flag Switcher (Unadvertised 16-Language Easter Egg) -->
+      <div class="lang-flag-wrap">
+        <button
+          type="button"
+          id="langFlagBtn"
+          class="lab-ActionPill flag-only-pill"
+          aria-haspopup="true"
+          aria-expanded="false"
+          aria-label="Language"
+        >
+          <span id="currentFlagEmoji">&#127482;&#127480;</span>
+        </button>
+
+        <div id="langPopover" class="lang-popover" hidden>
+          <div id="langGrid" class="lang-grid" role="listbox" aria-label="Select Language"></div>
+          <p id="langEasterNote" class="lang-easter-note">
+            16 languages live — ask me about making your site or content multilingual.
+          </p>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- =====================================================================
+       3D MAKER'S PEGBOARD (LEFT) & PLAYABLE NEON ARCADE (RIGHT)
+       Procedural Three.js Camera-on-Rails Simulation (Tap & Swipe Only)
+       ===================================================================== -->
+  <main id="protoWorkshopView" class="proto-view proto-workshop" aria-label="3D Tool Pegboard and Playable Neon Arcade">
+    <div id="threeCanvasHost" class="three-canvas-host" aria-hidden="true"></div>
+
+    <!-- Center Split Hub Overlay (Shown when mode === 'hub') -->
+    <div id="p1HubOverlay" class="p1-hub-overlay">
+      <div class="p1-hub-headline">
+        <span id="hubEyebrow" class="eyebrow-chip">WEBSITES &bull; PRODUCT PHOTOS &amp; COPY &bull; CUSTOM AI &amp; GAMES</span>
+        <h1 id="hubTitle">Practical Tools on the Left. Pure Craft on the Right.</h1>
+        <p id="hubSub">
+          Tap the tool wall for websites, product visuals &amp; market research—or step into the arcade to spark bigger ideas.
+        </p>
+      </div>
+
+      <div class="p1-hub-split-cta">
+        <button type="button" id="p1GoToolsBtn" class="world-entry-card entry-tools">
+          <span id="leftDirLabel" class="entry-dir">&larr; LEFT WALL</span>
+          <strong id="leftTitleLabel">Business &amp; Creator Tools</strong>
+          <span id="leftSubLabel" class="entry-sub">7 Live Tools + Before/After Workbench</span>
+        </button>
+
+        <button type="button" id="p1GoGamesBtn" class="world-entry-card entry-games">
+          <span id="rightDirLabel" class="entry-dir">RIGHT HALL &rarr;</span>
+          <strong id="rightTitleLabel">The Playable Arcade</strong>
+          <span id="rightSubLabel" class="entry-sub">7 Custom Cabinets &bull; Tap or Swipe</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Wing Navigation Breadcrumb Bar (Shown when in 'tools' or 'games') -->
+    <div id="p1WingNav" class="p1-wing-nav" hidden>
+      <button type="button" id="p1BackHubBtn" class="glass-nav-pill">
+        &larr; Center Split
+      </button>
+      <button type="button" id="p1CrossSwitchBtn" class="glass-nav-pill accent-cross-pill">
+        Go to Neon Arcade &rarr;
+      </button>
+    </div>
+
+    <!-- Bottom Tactile Inspector / Service Spark Deck (Shown when in 'tools' or 'games') -->
+    <section id="p1InspectorBar" class="p1-inspector-bar" aria-live="polite" hidden>
+      <div class="inspector-card" id="p1InspectorCard">
+        <div class="inspector-top-row">
+          <button type="button" id="p1PrevBtn" class="rail-step-btn" aria-label="Previous item">&#9664;</button>
+
+          <div class="inspector-identity">
+            <img id="p1ItemIcon" src="" alt="" width="46" height="46" class="inspector-icon" />
+            <div class="inspector-titles">
+              <div class="inspector-badges">
+                <span id="p1ItemBadge" class="mini-badge">Live Tool</span>
+                <span id="p1ItemLoadBadge" class="mini-badge badge-load">Instant</span>
+                <span id="p1PrefetchIndicator" class="prefetch-dot" hidden>&#10003; Ready</span>
+              </div>
+              <h2 id="p1ItemTitle">Project Title</h2>
+            </div>
+          </div>
+
+          <button type="button" id="p1NextBtn" class="rail-step-btn" aria-label="Next item">&#9654;</button>
+        </div>
+
+        <p id="p1ItemSummary" class="inspector-summary"></p>
+
+        <!-- "What I Could Build Like This For You" Spark Callout -->
+        <div id="p1IdeaBox" class="idea-spark-box">
+          <strong id="p1IdeaPrefix">&#128161; What I could build for you:</strong>
+          <span id="p1IdeaText"></span>
+        </div>
+
+        <div class="inspector-actions-row">
+          <button type="button" id="p1LaunchBtn" class="primary-launch-btn">
+            &#9654; Try Live Demo
+          </button>
+          <button type="button" id="p1BuildSimilarBtn" class="build-similar-btn">
+            &#10022; Build Similar For Me
+          </button>
+          <button type="button" id="p1InfoBtn" class="secondary-specs-btn">
+            Details
+          </button>
+        </div>
+
+        <div class="inspector-dots-row" id="p1DotsStrip" role="tablist" aria-label="Quick item selector"></div>
+        <div class="swipe-hint-caption" id="p1SwipeHint">
+          Swipe left/right or tap any hanging 3D tool
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- =====================================================================
+       UNIFIED ZERO-LAG PLAYABLE STAGE (CRT ARCADE BEZEL / WORKBENCH SCREEN)
+       Mounts iframe ONLY on launch & resets to about:blank on close
+       ===================================================================== -->
+  <dialog id="playStageDialog" class="play-stage-dialog" aria-labelledby="stageTitle">
+    <div id="playStageShell" class="play-stage-shell" data-stage-theme="game">
+      <header class="stage-topbar">
+        <div class="stage-left-controls">
+          <button type="button" id="closeStageBtn" class="stage-back-btn">
+            &larr; <span id="closeStageLabel">Back</span>
+          </button>
+          <div class="stage-title-wrap">
+            <img id="stageIcon" src="" alt="" width="28" height="28" class="stage-mini-icon" />
+            <div>
+              <h2 id="stageTitle" class="stage-title">Project</h2>
+              <span id="stageTelemetryTag" class="stage-telemetry-tag">Live Interactive Demo</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="stage-right-controls">
+          <button type="button" id="stageBuildSimilarBtn" class="stage-cta-btn">
+            &#10022; <span id="stageBuildLabel">Build Similar</span>
+          </button>
+          <div class="stage-mode-tabs" role="tablist">
+            <button type="button" role="tab" id="stageTabLive" class="stage-tab active" aria-selected="true">
+              &#9654; Live
+            </button>
+            <button type="button" role="tab" id="stageTabSpecs" class="stage-tab" aria-selected="false">
+              Details
+            </button>
+          </div>
+          <button type="button" id="stageFullscreenBtn" class="stage-util-btn" title="Toggle Fullscreen">
+            &#10530;
+          </button>
+          <a id="stageExternalLink" href="#" target="_blank" rel="noopener noreferrer" class="stage-util-btn" title="Open standalone in new tab">
+            &#8599;
+          </a>
+        </div>
+      </header>
+
+      <div class="stage-viewport-wrap">
+        <div id="stageLivePanel" class="stage-panel stage-live-panel">
+          <div id="stageLoadingCurtain" class="stage-loading-curtain">
+            <div class="crt-power-line"></div>
+            <p id="stageLoadingText">Launching interactive build&hellip;</p>
+          </div>
+          <iframe
+            id="liveProjectIframe"
+            title="Interactive Tool or Playable Game"
+            class="live-project-iframe"
+            allow="autoplay; fullscreen; gamepad"
+          ></iframe>
+        </div>
+
+        <div id="stageSpecsPanel" class="stage-panel stage-specs-panel" hidden>
+          <div id="stageSpecsContent" class="stage-specs-content"></div>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- =====================================================================
+       MODAL: "BUILD WITH ME" PROJECT BRIEF BUILDER (IG DM + WHATSAPP + EMAIL)
+       ===================================================================== -->
+  <dialog id="projectBriefDialog" class="info-modal-dialog brief-modal-dialog" closedby="any" aria-labelledby="briefModalTitle">
+    <div class="info-modal-card">
+      <header class="info-modal-header">
+        <div>
+          <span class="eyebrow-chip">MAXWELL MONTES DIAZ // CUSTOM AI &amp; WEB SERVICES</span>
+          <h2 id="briefModalTitle">Let’s Build Something Unfairly Good</h2>
+          <p id="briefModalSub" class="brief-sub-text">
+            Pick a starting point below and send a pre-filled brief via Instagram, WhatsApp, or Email.
+          </p>
+        </div>
+        <form method="dialog">
+          <button type="submit" class="modal-close-btn" aria-label="Close project brief modal">&#10005;</button>
+        </form>
+      </header>
+
+      <div class="info-modal-body brief-modal-body">
+        <div class="brief-step-block">
+          <label class="brief-step-label" id="briefWhoLabel">1. Who is this for?</label>
+          <div class="brief-chip-row" id="briefWhoChoices">
+            <button type="button" class="brief-choice-chip active" data-who="whoBiz" id="whoBizChip">
+              Small Business / Brand
+            </button>
+            <button type="button" class="brief-choice-chip" data-who="whoCreator" id="whoCreatorChip">
+              Content Creator
+            </button>
+            <button type="button" class="brief-choice-chip" data-who="whoOther" id="whoOtherChip">
+              Custom / Other
+            </button>
+          </div>
+        </div>
+
+        <div class="brief-step-block">
+          <label class="brief-step-label" id="briefNeedLabel">2. What do you want help with?</label>
+          <div class="brief-chip-grid" id="briefNeedChoices">
+            <button type="button" class="brief-choice-chip active" data-need="needWeb" id="needWebChip">
+              Website Makeover (Before &rarr; After)
+            </button>
+            <button type="button" class="brief-choice-chip" data-need="needProd" id="needProdChip">
+              Product Photos &amp; Descriptions Tool
+            </button>
+            <button type="button" class="brief-choice-chip" data-need="needMarket" id="needMarketChip">
+              Market &amp; Competitor Research Tool
+            </button>
+            <button type="button" class="brief-choice-chip" data-need="needGame" id="needGameChip">
+              Viral Quiz / Branded Mini-Game
+            </button>
+            <button type="button" class="brief-choice-chip" data-need="needVideo" id="needVideoChip">
+              Automated Video / Shorts Pipeline
+            </button>
+          </div>
+        </div>
+
+        <div class="brief-step-block">
+          <input
+            type="text"
+            id="briefNoteInput"
+            class="brief-note-input"
+            placeholder="Optional: your website, @handle, or a quick idea..."
+          />
+        </div>
+
+        <pre id="briefPreviewBox" class="brief-preview-box"></pre>
+
+        <div class="brief-send-grid">
+          <button type="button" id="sendIgBtn" class="send-channel-btn send-ig-btn">
+            &#128247; <span id="sendIgLabel">Copy &amp; DM @maxalwayswell</span>
+          </button>
+          <a id="sendWaBtn" href="#" target="_blank" rel="noopener noreferrer" class="send-channel-btn send-wa-btn">
+            &#128172; <span id="sendWaLabel">Send via WhatsApp</span>
+          </a>
+          <a id="sendMailBtn" href="#" class="send-channel-btn send-mail-btn">
+            &#9993; <span id="sendMailLabel">Send via Email</span>
+          </a>
+        </div>
+
+        <div class="brief-direct-footer">
+          <span>&#128222; 619-634-7772</span>
+          <span>&bull;</span>
+          <a href="mailto:maxwell_montes@yahoo.com">maxwell_montes@yahoo.com</a>
+          <span>&bull;</span>
+          <a id="footerIgLink" href="https://www.instagram.com/maxalwayswell/" target="_blank" rel="noopener noreferrer">@maxalwayswell</a>
+          <span>&bull;</span>
+          <a href="https://mascaz.github.io/" target="_blank" rel="noopener noreferrer">mascaz.github.io &#8599;</a>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- =====================================================================
+       MODAL: PLAIN-TEXT QUICK LAUNCHER ("ALL PROJECTS / TLDR")
+       ===================================================================== -->
+  <dialog id="quickIndexDialog" class="info-modal-dialog" closedby="any" aria-labelledby="quickIndexTitle">
+    <div class="info-modal-card">
+      <header class="info-modal-header">
+        <div>
+          <span class="eyebrow-chip">FAST ACCESS // ALL 7 TOOLS &amp; 7 PLAYABLE CABINETS</span>
+          <h2 id="quickIndexTitle">Direct Project &amp; Service Launcher</h2>
+        </div>
+        <form method="dialog">
+          <button type="submit" class="modal-close-btn" aria-label="Close quick index">&#10005;</button>
+        </form>
+      </header>
+
+      <div class="info-modal-body" id="quickIndexBody"></div>
+    </div>
+  </dialog>
+
+</body>
+</html>

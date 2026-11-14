@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Product-to-Launch AI Workbench — Photos, Copy &amp; Market Intel</title>
+  <style>
+    :root {
+      --bg: #070b14;
+      --card: #11192c;
+      --border: rgba(148, 163, 184, 0.2);
+      --accent: #34d399;
+      --cyan: #38bdf8;
+      --amber: #fbbf24;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: Inter, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100dvh;
+      padding: 16px;
+    }
+    .shell {
+      max-width: 1160px;
+      margin: 0 auto;
+      display: grid;
+      gap: 16px;
+    }
+    .top-strip {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px 18px;
+      border-radius: 16px;
+      background: var(--card);
+      border: 1px solid var(--border);
+    }
+    .product-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+    }
+    button, .upload-lbl {
+      font-family: inherit;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      background: #1e293b;
+      color: #e2e8f0;
+      padding: 8px 13px;
+      border-radius: 10px;
+      font-size: 12.5px;
+      font-weight: 700;
+      transition: all 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    button:hover, .upload-lbl:hover { border-color: #fff; }
+    button.active {
+      background: linear-gradient(135deg, #34d399, #38bdf8);
+      color: #041019;
+      border-color: transparent;
+    }
+    .upload-lbl {
+      border-color: rgba(251, 191, 36, 0.55);
+      color: #fde68a;
+    }
+    .workspace {
+      display: grid;
+      grid-template-columns: 390px 1fr;
+      gap: 16px;
+    }
+    @media (max-width: 880px) {
+      .workspace { grid-template-columns: 1fr; }
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .studio-canvas-wrap {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: #0b1120;
+    }
+    canvas { width: 100%; height: 100%; display: block; }
+    .raw-badge {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 10.5px;
+      font-weight: 800;
+      background: rgba(8, 12, 24, 0.82);
+      color: #6ee7b7;
+      border: 1px solid rgba(52, 211, 153, 0.45);
+    }
+    .backdrop-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+    }
+    .backdrop-row button {
+      justify-content: center;
+      padding: 7px 6px;
+      font-size: 11px;
+    }
+    .slider-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .slider-row input[type="range"] { flex: 1; accent-color: var(--accent); }
+
+    .tabs-head {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 12px;
+    }
+    .copy-block {
+      background: #090e1a;
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      padding: 14px;
+    }
+    .copy-block h4 {
+      font-size: 11.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--cyan);
+      margin-bottom: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .copy-block p, .copy-block li {
+      font-size: 13.5px;
+      line-height: 1.55;
+      color: #e2e8f0;
+    }
+    .copy-block ul { padding-left: 18px; display: grid; gap: 5px; }
+    .market-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 10px;
+    }
+    .stat-tile {
+      background: #090e1a;
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      padding: 13px;
+    }
+    .stat-val {
+      font-size: 22px;
+      font-weight: 900;
+      color: var(--accent);
+      margin-top: 3px;
+    }
+    .price-bar {
+      height: 10px;
+      border-radius: 99px;
+      background: linear-gradient(90deg, #475569, #38bdf8, #34d399, #f59e0b);
+      position: relative;
+      margin: 14px 0 6px;
+    }
+    .price-pin {
+      position: absolute;
+      top: -5px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #fff;
+      border: 3px solid #050811;
+      transform: translateX(-50%);
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="top-strip">
+      <div>
+        <div style="font-size:11px;font-weight:800;color:#34d399;letter-spacing:0.08em">ALL-IN-ONE SMALL BUSINESS AI SAMPLE</div>
+        <h1 style="font-size:19px;font-weight:900;margin-top:2px">1 Raw Product Photo &rarr; Studio Shot, Store Copy &amp; Market Intel</h1>
+      </div>
+
+      <div class="product-pills" id="samplePills">
+        <button type="button" class="active" data-prod="coffee">&#9749; Cold Brew</button>
+        <button type="button" data-prod="serum">&#10024; Botanical Serum</button>
+        <button type="button" data-prod="ceramic">&#127861; Matcha Bowl</button>
+        <button type="button" data-prod="hoodie">&#129509; Heavy Hoodie</button>
+        <label class="upload-lbl">
+          &#128247; Upload Your Photo
+          <input type="file" id="photoInput" accept="image/*" hidden />
+        </label>
+      </div>
+    </header>
+
+    <div class="workspace">
+      <!-- LEFT COLUMN: 1. STUDIO PRODUCT PHOTO GENERATOR -->
+      <section class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <h2 style="font-size:15px;font-weight:800">1. AI Product Studio Backdrop</h2>
+          <button type="button" id="holdRawBtn" style="padding:5px 10px;font-size:11px">Compare Raw Shot</button>
+        </div>
+
+        <div class="studio-canvas-wrap">
+          <span class="raw-badge" id="canvasStatusBadge">STUDIO RELIT &bull; 1080&times;1080</span>
+          <canvas id="studioCanvas" width="720" height="720"></canvas>
+        </div>
+
+        <div class="backdrop-row" id="backdropBtns">
+          <button type="button" class="active" data-bg="linen">Warm Linen</button>
+          <button type="button" data-bg="obsidian">Obsidian</button>
+          <button type="button" data-bg="sunlit">Terracotta</button>
+          <button type="button" data-bg="neon">Creator Pop</button>
+        </div>
+
+        <div class="slider-row">
+          <span>Key Light Angle</span>
+          <input type="range" id="lightSlider" min="-100" max="100" value="38" />
+        </div>
+        <div class="slider-row">
+          <span>Contact Shadow</span>
+          <input type="range" id="shadowSlider" min="10" max="100" value="68" />
+        </div>
+
+        <button type="button" id="downloadShotBtn" class="active" style="justify-content:center;padding:10px">
+          &#11015; Download Ready-to-Post PNG
+        </button>
+      </section>
+
+      <!-- RIGHT COLUMN: 2. COPYWRITING & 3. MARKET INVESTIGATION -->
+      <section class="card">
+        <div class="tabs-head">
+          <button type="button" class="active" data-right-tab="copy">&#9997; 2. Product Descriptions &amp; Viral Hooks</button>
+          <button type="button" data-right-tab="market">&#128269; 3. Market &amp; Competitor Investigation</button>
+          <div style="margin-left:auto;display:flex;gap:6px">
+            <button type="button" id="toneToggleBtn" style="font-size:11.5px;padding:6px 10px">Tone: Editorial</button>
+            <button type="button" id="langToggleBtn" style="font-size:11.5px;padding:6px 10px">EN / ES</button>
+          </div>
+        </div>
+
+        <div id="rightPanelBody" style="display:grid;gap:12px"></div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    const PRODUCTS = {
+      coffee: {
+        name: 'Oaxaca Single-Origin Cold Brew Concentrate',
+        esName: 'Concentrado Cold Brew de Origen Único Oaxaca',
+        colorA: '#3b1d0e',
+        colorB: '#d97706',
+        labelTag: 'COLD BREW // 16 OZ',
+        shape: 'bottle',
+        priceLow: 16,
+        priceSweet: 24,
+        priceHigh: 34,
+        cogs: 5.8,
+        searchVol: '48,200 / mo',
+        keywords: ['low acid cold brew concentrate', 'specialty iced coffee bottle', 'chocolatey cold brew at home'],
+        complaints: [
+          'Competitors taste sour/oxidized after 48 hours open — highlight nitrogen-flushed seal.',
+          'Buyers hate guessing dilution ratios — print clear 1:2 Oz pour lines right on the label.'
+        ],
+        copy: {
+          Editorial: {
+            en: 'Steeped slow for 20 hours in cold mountain water, our Oaxaca Single-Origin Concentrate pours like velvet with natural notes of toasted cacao, piloncillo, and roasted hazelnut—zero bitterness, zero crash, and 12 café-grade glasses in every bottle.',
+            es: 'Macerado en frío durante 20 horas, nuestro concentrado de origen único en Oaxaca ofrece notas naturales de cacao tostado, piloncillo y avellana—sin acidez agresiva y con 12 vasos de cafetería en cada botella.'
+          },
+          Punchy: {
+            en: 'Stop paying $7.50 for watered-down iced coffee. Pour 2 oz over ice, add oat milk, and get café-level cacao-smooth cold brew in 8 seconds flat ($1.95/cup).',
+            es: 'Deja de pagar $7 dólares por café aguado. Sirve 60 ml sobre hielo, agrega tu leche favorita y ten un cold brew cremoso en 8 segundos.'
+          }
+        },
+        hooks: [
+          '"POV: You just made a $7.50 café oat latte in 8 seconds before leaving for work…"',
+          '"Why 90% of store-bought cold brew tastes sour (and what 20-hour Oaxaca cacao roast fixes)."',
+          '"Counting exactly how many iced coffees fit inside one $24 concentrate bottle."'
+        ]
+      },
+      serum: {
+        name: 'Prickly Pear & Squalane Barrier Glow Oil',
+        esName: 'Aceite Facial Iluminador de Nopal y Escualano',
+        colorA: '#065f46',
+        colorB: '#fbbf24',
+        labelTag: 'BARRIER OIL // 30 ML',
+        shape: 'dropper',
+        priceLow: 28,
+        priceSweet: 42,
+        priceHigh: 68,
+        cogs: 7.4,
+        searchVol: '74,500 / mo',
+        keywords: ['non greasy facial glow oil', 'prickly pear seed oil skin barrier', 'glass skin night serum'],
+        complaints: [
+          'Luxury oils feel heavy under sunscreen/makeup — emphasize fast dry-touch squalane absorption.',
+          'Clear glass bottles degrade vitamin E — showcase UV-protective emerald apothecary glass.'
+        ],
+        copy: {
+          Editorial: {
+            en: 'Cold-pressed desert prickly pear seed meets weightless sugarcane squalane to calm redness overnight and leave a lit-from-within satin finish under makeup—never heavy, never comedogenic.',
+            es: 'Semilla de nopal prensada en frío con escualano ligero para calmar la piel sensible y dejar un brillo satinado inmediato sin sensación grasa.'
+          },
+          Punchy: {
+            en: 'Three drops before bed = waking up looking like you slept 10 hours and drank a gallon of water. Zero pore-clogging fillers.',
+            es: 'Tres gotas antes de dormir = despertar con piel luminosa e hidratada sin obstruir los poros.'
+          }
+        },
+        hooks: [
+          '"The 3-drop desert oil estheticians use instead of $110 department-store serums."',
+          '"Watch the blot-paper oil test 60 seconds after applying our Prickly Pear Glow Oil."',
+          '"Why desert prickly pear holds 150% more Vitamin E than argan oil."'
+        ]
+      },
+      ceramic: {
+        name: 'Hand-Thrown Speckled Stoneware Matcha Chawan',
+        esName: 'Tazón Chawan Artesanal de Cerámica para Matcha',
+        colorA: '#78716c',
+        colorB: '#84cc16',
+        labelTag: 'HAND-THROWN STONEWARE',
+        shape: 'bowl',
+        priceLow: 32,
+        priceSweet: 54,
+        priceHigh: 85,
+        cogs: 12.0,
+        searchVol: '31,900 / mo',
+        keywords: ['spouted ceramic matcha bowl', 'handmade stoneware chawan', 'drip free matcha pouring bowl'],
+        complaints: [
+          'Mass-produced spouts dribble down the side — highlight hand-pinched drip-clean pour lip.',
+          'Narrow bowls cramp bamboo whisks — emphasize wide 5.2-inch flat whisking floor.'
+        ],
+        copy: {
+          Editorial: {
+            en: 'Wheel-thrown in small batches from raw speckled stoneware and glazed in satin oat-milk white, featuring a wide whisking base for micro-foam and a hand-pulled pour spout that never drips.',
+            es: 'Torneado a mano en gres moteado con esmalte satinado blanco avena, base amplia para espumar fácilmente y vertedero limpio sin goteo.'
+          },
+          Punchy: {
+            en: 'Finally a handmade matcha bowl whose spout actually pours clean into your iced glass without spilling $2 of ceremonial matcha on the counter.',
+            es: 'Por fin un tazón artesanal para matcha cuyo vertedero sirve limpio en tu vaso con hielo sin derramar ni una gota.'
+          }
+        },
+        hooks: [
+          '"Testing the drip-free pour test on batch #14 fresh out of our kiln."',
+          '"Why your bamboo whisk isn’t making micro-foam (hint: look at your bowl’s floor)."',
+          '"60 seconds from raw speckled clay lump to finished matcha chawan."'
+        ]
+      },
+      hoodie: {
+        name: '480GSM Boxy Garment-Dyed Studio Hoodie',
+        esName: 'Sudadera Boxy 480GSM Teñida en Prenda',
+        colorA: '#312e81',
+        colorB: '#c084fc',
+        labelTag: '480 GSM // NO DRAWSTRING',
+        shape: 'hoodie',
+        priceLow: 55,
+        priceSweet: 84,
+        priceHigh: 135,
+        cogs: 21.5,
+        searchVol: '92,000 / mo',
+        keywords: ['480gsm heavyweight boxy hoodie', 'no drawstring double lined hood', 'cropped drop shoulder hoodie'],
+        complaints: [
+          'Flimsy hoods collapse flat behind the neck — highlight structured double-layer self-standing hood.',
+          'Shrinks 2 inches on first wash — highlight pre-shrunk enzyme garment dye.'
+        ],
+        copy: {
+          Editorial: {
+            en: 'Cut from custom-milled 480GSM combed organic French terry with a structured double-lined hood, clean drawstring-free neckline, and enzyme garment wash for lived-in drape from day one.',
+            es: 'Confeccionada en felpa francesa orgánica de 480GSM con capucha de doble capa que mantiene su estructura y lavado enzimático suave desde el primer uso.'
+          },
+          Punchy: {
+            en: 'A double-lined 480GSM hood that actually stands up, zero floppy drawstrings, and zero shrinkage in the dryer.',
+            es: 'Capucha doble de 480GSM que mantiene su forma, sin cordones estorbosos y pre-encogida de fábrica.'
+          }
+        },
+        hooks: [
+          '"The scale test: weighing a mall hoodie vs. our 480GSM double-lined studio blank."',
+          '"3 proportion details that separate an $84 lifetime hoodie from fast fashion."',
+          '"Washing & drying our sample 15 times straight to prove 0% collar bacon."'
+        ]
+      }
+    };
+
+    const BACKDROPS = {
+      linen: { top: '#efe9df', bot: '#d6ccc0', pedestal: '#fffdf9', text: '#1e293b' },
+      obsidian: { top: '#1e293b', bot: '#060913', pedestal: '#111827', text: '#f8fafc' },
+      sunlit: { top: '#fed7aa', bot: '#c2410c', pedestal: '#ffedd5', text: '#431407' },
+      neon: { top: '#2e1065', bot: '#090514', pedestal: '#ec4899', text: '#f8fafc' }
+    };
+
+    let activeProd = 'coffee';
+    let activeBg = 'linen';
+    let activeRightTab = 'copy';
+    let activeTone = 'Editorial';
+    let activeLang = 'en';
+    let showRaw = false;
+    let uploadedImg = null;
+    let customMarginPrice = 24;
+
+    const canvas = document.getElementById('studioCanvas');
+    const ctx = canvas.getContext('2d');
+    const lightSlider = document.getElementById('lightSlider');
+    const shadowSlider = document.getElementById('shadowSlider');
+    const rightPanelBody = document.getElementById('rightPanelBody');
+    const canvasStatusBadge = document.getElementById('canvasStatusBadge');
+
+    function drawStudioCanvas() {
+      const p = PRODUCTS[activeProd];
+      const bg = BACKDROPS[activeBg];
+      const lightX = Number(lightSlider.value) * 2.6;
+      const shadowStrength = Number(shadowSlider.value) / 100;
+
+      ctx.clearRect(0, 0, 720, 720);
+
+      if (showRaw) {
+        // Simulated messy kitchen/desk raw phone snapshot
+        ctx.fillStyle = '#9ca3af';
+        ctx.fillRect(0, 0, 720, 720);
+        ctx.fillStyle = '#6b7280';
+        ctx.fillRect(0, 490, 720, 230);
+        canvasStatusBadge.textContent = 'BEFORE • UNLIT PHONE SNAPSHOT';
+      } else {
+        const g = ctx.createRadialGradient(360 + lightX, 210, 40, 360, 380, 560);
+        g.addColorStop(0, bg.top);
+        g.addColorStop(1, bg.bot);
+        ctx.fillStyle = g;
+        ctx.fillRect(0, 0, 720, 720);
+
+        // Diagonal sunlight window blind beam
+        ctx.save();
+        ctx.globalAlpha = activeBg === 'obsidian' || activeBg === 'neon' ? 0.12 : 0.22;
+        ctx.fillStyle = '#ffffff';
+        ctx.translate(360 + lightX * 0.4, 280);
+        ctx.rotate(-0.38);
+        ctx.fillRect(-380, -90, 760, 68);
+        ctx.fillRect(-380, 20, 760, 48);
+        ctx.restore();
+
+        // Studio Podium Pedestal
+        ctx.fillStyle = bg.pedestal;
+        ctx.beginPath();
+        ctx.ellipse(360, 545, 210, 42, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillRect(150, 545, 420, 110);
+        canvasStatusBadge.textContent = 'AFTER • AI STUDIO RELIGHTING • 1080×1080';
+      }
+
+      // Contact Shadow
+      ctx.save();
+      ctx.fillStyle = `rgba(0, 0, 0, ${showRaw ? 0.18 : shadowStrength * 0.55})`;
+      ctx.beginPath();
+      ctx.ellipse(360 - (showRaw ? 0 : lightX * 0.28), 532, 128, 24, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+
+      if (uploadedImg) {
+        const scale = Math.min(390 / uploadedImg.width, 390 / uploadedImg.height);
+        const w = uploadedImg.width * scale;
+        const h = uploadedImg.height * scale;
+        ctx.save();
+        if (!showRaw) {
+          ctx.filter = 'contrast(1.08) saturate(1.1)';
+          ctx.shadowColor = 'rgba(0,0,0,0.42)';
+          ctx.shadowBlur = 32;
+        }
+        ctx.drawImage(uploadedImg, 360 - w / 2, 520 - h, w, h);
+        ctx.restore();
+        return;
+      }
+
+      // Crisp procedural product illustration with dynamic directional highlight
+      ctx.save();
+      if (showRaw) ctx.filter = 'saturate(0.65) contrast(0.85) brightness(0.9)';
+      const prodGrad = ctx.createLinearGradient(250 + lightX * 0.35, 200, 470, 520);
+      prodGrad.addColorStop(0, p.colorB);
+      prodGrad.addColorStop(1, p.colorA);
+      ctx.fillStyle = prodGrad;
+
+      if (p.shape === 'bottle' || p.shape === 'dropper') {
+        ctx.beginPath();
+        ctx.roundRect(275, 235, 170, 290, 34);
+        ctx.fill();
+        ctx.fillStyle = '#1e293b';
+        ctx.roundRect(322, 175, 76, 65, 10);
+        ctx.fill();
+        // Label
+        ctx.fillStyle = '#faf8f5';
+        ctx.fillRect(285, 315, 150, 130);
+        ctx.fillStyle = '#0f172a';
+        ctx.font = '800 15px Inter, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(p.labelTag, 360, 385);
+      } else if (p.shape === 'bowl') {
+        ctx.beginPath();
+        ctx.arc(360, 390, 145, 0, Math.PI, false);
+        ctx.closePath();
+        ctx.fill();
+        ctx.fillStyle = '#84cc16';
+        ctx.beginPath();
+        ctx.ellipse(360, 390, 142, 26, 0, 0, Math.PI * 2);
+        ctx.fill();
+      } else {
+        // Boxy Hoodie silhouette
+        ctx.beginPath();
+        ctx.roundRect(235, 240, 250, 280, 28);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(360, 235, 68, Math.PI, 0);
+        ctx.fill();
+      }
+      ctx.restore();
+    }
+
+    function renderRightColumn() {
+      const p = PRODUCTS[activeProd];
+      const title = activeLang === 'es' ? p.esName : p.name;
+
+      if (activeRightTab === 'copy') {
+        const desc = p.copy[activeTone][activeLang];
+        rightPanelBody.innerHTML = `
+          <div class="copy-block">
+            <h4>
+              <span>Storefront Product Title &amp; Description (${activeTone} • ${activeLang.toUpperCase()})</span>
+              <button type="button" id="copyDescBtn" style="padding:4px 9px;font-size:11px">Copy Text</button>
+            </h4>
+            <strong style="display:block;font-size:16px;margin-bottom:6px">${title}</strong>
+            <p id="generatedDescText">${desc}</p>
+          </div>
+
+          <div class="copy-block">
+            <h4>3 Viral Short-Form Video Hooks (TikTok / IG Reels / Shorts)</h4>
+            <ul>
+              ${p.hooks.map(h => `<li>${h}</li>`).join('')}
+            </ul>
+          </div>
+
+          <div class="copy-block">
+            <h4>High-Intent SEO &amp; AI-Search Keywords</h4>
+            <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:4px">
+              ${p.keywords.map(k => `<span style="padding:4px 10px;border-radius:99px;background:#1e293b;font-size:12px;color:#bae6fd">${k}</span>`).join('')}
+            </div>
+          </div>
+        `;
+        document.getElementById('copyDescBtn')?.addEventListener('click', (e) => {
+          navigator.clipboard?.writeText(`${title}\n\n${desc}`);
+          e.currentTarget.textContent = '✓ Copied!';
+        });
+      } else {
+        const net = (customMarginPrice - p.cogs - customMarginPrice * 0.03 - 6.5).toFixed(2);
+        const pinLeft = Math.max(8, Math.min(92, ((p.priceSweet - p.priceLow) / (p.priceHigh - p.priceLow)) * 100));
+        rightPanelBody.innerHTML = `
+          <div class="market-grid">
+            <div class="stat-tile">
+              <div style="font-size:11.5px;color:var(--muted)">Recommended Sweet-Spot Price</div>
+              <div class="stat-val">$${p.priceSweet}.00</div>
+              <div style="font-size:11px;color:var(--muted)">Market range: $${p.priceLow} – $${p.priceHigh}</div>
+            </div>
+            <div class="stat-tile">
+              <div style="font-size:11.5px;color:var(--muted)">Buyer Search Demand</div>
+              <div class="stat-val" style="color:#38bdf8">${p.searchVol}</div>
+              <div style="font-size:11px;color:var(--muted)">Rising YoY category intent</div>
+            </div>
+            <div class="stat-tile">
+              <div style="font-size:11.5px;color:var(--muted)">Est. Profit / Order (@ $${customMarginPrice})</div>
+              <div class="stat-val" style="color:${Number(net) > 0 ? '#34d399' : '#f87171'}">$${net}</div>
+              <div style="font-size:11px;color:var(--muted)">After $${p.cogs} COGS + $6.50 ship/fees</div>
+            </div>
+          </div>
+
+          <div class="copy-block">
+            <h4>Test Your Retail Price Slider ($${customMarginPrice})</h4>
+            <input type="range" id="priceSimSlider" min="${p.priceLow}" max="${p.priceHigh}" value="${customMarginPrice}" style="width:100%;margin-top:8px;accent-color:#34d399" />
+            <div class="price-bar"><div class="price-pin" style="left:${pinLeft}%"></div></div>
+            <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted)">
+              <span>Budget ($${p.priceLow})</span>
+              <span style="color:#34d399;font-weight:700">Sweet Spot ($${p.priceSweet})</span>
+              <span>Luxury ($${p.priceHigh})</span>
+            </div>
+          </div>
+
+          <div class="copy-block">
+            <h4>Competitor Review Gaps (Angles to Win Customers Immediately)</h4>
+            <ul>
+              ${p.complaints.map(c => `<li>${c}</li>`).join('')}
+            </ul>
+          </div>
+        `;
+        document.getElementById('priceSimSlider')?.addEventListener('input', (e) => {
+          customMarginPrice = Number(e.target.value);
+          renderRightColumn();
+        });
+      }
+    }
+
+    document.querySelectorAll('[data-prod]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        uploadedImg = null;
+        activeProd = btn.dataset.prod;
+        customMarginPrice = PRODUCTS[activeProd].priceSweet;
+        document.querySelectorAll('[data-prod]').forEach(b => b.classList.toggle('active', b === btn));
+        drawStudioCanvas();
+        renderRightColumn();
+      });
+    });
+
+    document.getElementById('photoInput').addEventListener('change', (e) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        const img = new Image();
+        img.onload = () => {
+          uploadedImg = img;
+          drawStudioCanvas();
+        };
+        img.src = reader.result;
+      };
+      reader.readAsDataURL(file);
+    });
+
+    document.querySelectorAll('[data-bg]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        activeBg = btn.dataset.bg;
+        document.querySelectorAll('[data-bg]').forEach(b => b.classList.toggle('active', b === btn));
+        drawStudioCanvas();
+      });
+    });
+
+    lightSlider.addEventListener('input', drawStudioCanvas);
+    shadowSlider.addEventListener('input', drawStudioCanvas);
+
+    const holdRawBtn = document.getElementById('holdRawBtn');
+    holdRawBtn.addEventListener('click', () => {
+      showRaw = !showRaw;
+      holdRawBtn.textContent = showRaw ? '✨ Back to Studio Grade' : 'Compare Raw Shot';
+      drawStudioCanvas();
+    });
+
+    document.getElementById('downloadShotBtn').addEventListener('click', () => {
+      const a = document.createElement('a');
+      a.download = `${activeProd}-studio-1080.png`;
+      a.href = canvas.toDataURL('image/png');
+      a.click();
+    });
+
+    document.querySelectorAll('[data-right-tab]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        activeRightTab = btn.dataset.rightTab;
+        document.querySelectorAll('[data-right-tab]').forEach(b => b.classList.toggle('active', b === btn));
+        renderRightColumn();
+      });
+    });
+
+    document.getElementById('toneToggleBtn').addEventListener('click', (e) => {
+      activeTone = activeTone === 'Editorial' ? 'Punchy' : 'Editorial';
+      e.currentTarget.textContent = `Tone: ${activeTone}`;
+      renderRightColumn();
+    });
+
+    document.getElementById('langToggleBtn').addEventListener('click', () => {
+      activeLang = activeLang === 'en' ? 'es' : 'en';
+      renderRightColumn();
+    });
+
+    drawStudioCanvas();
+    renderRightColumn();
+  </script>
+</body>
+</html>
