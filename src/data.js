@@ -1,243 +1,235 @@
 /**
- * Centralized Project & Prototype Catalog for AI-Services Dual-World Showcase
- * Left World  = TOOLS (Interactive AI, Shader, Quant & Pipeline Tools)
- * Right World = GAMES (Playable WebGL, Canvas, Physics & RTS Games)
+ * Centralized Project & Service Catalog for Maxwell — AI Services
+ * Left World  = TOOLS (7 Problem-First Business & Creator AI Tools + Before/After Workbench)
+ * Right World = GAMES (7 Playable Cabinets Proving Interactive Engineering & Viral Funnels)
  */
 
-export const SITE_META = {
+export const CONTACT_CONFIG = {
   owner: 'Maxwell Montes Diaz',
+  // Update instagramHandle below whenever you launch your dedicated business IG account:
+  instagramHandle: 'maxalwayswell',
+  whatsappNumber: '16196347772',
+  phoneDisplay: '619-634-7772',
+  email: 'maxwell_montes@yahoo.com',
   portfolioUrl: 'https://mascaz.github.io/',
   githubUrl: 'https://github.com/Mascaz/AI-Services'
 };
 
+// Backwards-compatible alias
+export const SITE_META = CONTACT_CONFIG;
+
 export const TOOLS_ITEMS = [
   {
-    id: 'ai-airbrush',
-    name: 'AI Airbrush Studio',
-    shortName: 'AI Airbrush',
-    toolShape: 'airbrush',
-    physicalLabel: 'Pneumatic Shader Airbrush',
+    id: 'website-makeover',
+    name: 'Website Makeover Workbench',
+    shortName: 'Site Makeover',
+    toolShape: 'roller',
+    physicalLabel: 'Before ↔ After Web Rig',
     accent: '#38bdf8',
-    secondaryAccent: '#f59e0b',
-    badge: 'GPU Shader Studio',
+    secondaryAccent: '#fbbf24',
+    audiences: ['business', 'creator'],
+    briefPresetNeed: 'needWeb',
+    badge: 'Before ↔ After',
     loadType: 'local',
-    bundleSizeLabel: '252 KB • Lazy Mount',
-    category: 'Metal & WebGL Portrait Retouching • 3D Relighting & UV Liquify',
-    iconUrl: './assets/icons/ai-airbrush.png',
-    playUrl: './games/ai-airbrush/index.html',
-    playLabel: 'Launch WebGL Airbrush',
-    tldr: 'On-device portrait retouching studio with 3D directional normal-field relighting, bilateral skin smoothing, and UV Liquify sculpting.',
+    bundleSizeLabel: 'Live Split Slider',
+    category: 'Full Storefront & Local Business Redesigns • Mobile-First & High-Trust',
+    iconUrl: './assets/icons/website-makeover.svg',
+    playUrl: './games/website-makeover/index.html',
+    playLabel: 'Compare Before & After',
+    tldr: 'Drag the live split slider to watch a plain Shopify template become an editorial luxury store, or an old 2014 brochure site turn into a modern bilingual clinic.',
+    ideaBiz:
+      'Turn an outdated website or default Shopify theme into a fast, high-trust storefront with instant WhatsApp/booking conversion.',
+    ideaCreator:
+      'Upgrade a generic link-in-bio or merch template into a custom flagship site that makes brands and sponsors take you seriously.',
     description:
-      'Ports custom iOS Metal compute/fragment kernels directly to WebGL for 100% client-side high-resolution portrait retouching. Drag the interactive 3D studio light orb across 6 presets, sculpt with cumulative RGFloat UV Liquify brushes (Push, Slim, Plump, Restore), and inspect changes with a real-time Before/After split slider—zero cloud uploads.',
-    tech: ['WebGL GLSL Shaders', 'SwiftUI & Metal Origin', '3D Normal Relighting', 'UV Liquify Mesh']
+      'Compare generic “Before” templates directly against real finished client architectures: Case 01 transforms a plain starter Shopify product grid into Relais Palais (cinematic editorial lookbooks, hover swaps, tactile cart drawer), and Case 02 upgrades a cramped 2014 clinic page into Dr. Luis Montes’s bilingual EN/ES orthopedic platform.',
+    tech: ['Shopify & Custom Web', 'Before/After Split View', 'Bilingual EN/ES UX', 'WhatsApp & Booking Flows']
   },
   {
-    id: 'emoji-shield',
-    name: 'EmojiShield Privacy AI',
-    shortName: 'EmojiShield',
-    toolShape: 'visor',
-    physicalLabel: 'Optic Privacy Visor',
+    id: 'product-to-launch',
+    name: 'Product Photo, Copy & Market Lab',
+    shortName: 'Product AI Lab',
+    toolShape: 'camera-loupe',
+    physicalLabel: 'Photo + Copy + Market Rig',
     accent: '#fbbf24',
-    secondaryAccent: '#34d399',
-    badge: 'On-Device WASM AI',
-    loadType: 'edge',
-    bundleSizeLabel: '0 KB Repo • Edge Streamed',
-    category: 'Client-Side YOLOv8 Auto-Censor • ONNX Runtime Web WASM',
-    iconUrl: './assets/icons/emoji-shield.png',
-    playUrl: 'https://mascaz.github.io/games/emoji-shield/index.html',
-    playLabel: 'Launch EmojiShield AI',
-    tldr: 'Runs YOLOv8 locally inside the browser via SIMD WebAssembly to detect faces/regions and composite vector emoji shields with zero server uploads.',
+    secondaryAccent: '#38bdf8',
+    audiences: ['business', 'creator'],
+    briefPresetNeed: 'needProd',
+    badge: 'Upload & Test',
+    loadType: 'local',
+    bundleSizeLabel: 'Instant Studio',
+    category: '1 Raw Photo → Studio Backdrops + EN/ES Copy + Competitor Price Research',
+    iconUrl: './assets/icons/product-to-launch.svg',
+    playUrl: './games/product-to-launch/index.html',
+    playLabel: 'Try Product AI Lab',
+    tldr: 'Upload any product photo (or pick a sample) to generate studio lighting scenes, bilingual Shopify descriptions, viral hooks, and competitor price/review-gap analysis.',
+    ideaBiz:
+      'A private tool trained on your brand style: snap a phone photo of new inventory and get clean catalog images, SEO copy, and pricing comps in 15 seconds.',
+    ideaCreator:
+      'Turn merch samples, digital products, or affiliate picks into studio-lit thumbnails and high-converting 3-second TikTok/Reels hooks.',
     description:
-      'Demonstrates Edge Micro-Frontend streaming: although the YOLOv8 ONNX model + WASM runtime weighs ~55 MB, this repository stays 0 KB heavier and initial site boot downloads 0 bytes until the moment you launch the tool. Includes batch processing and an interactive Touch-Up sticker canvas.',
-    tech: ['ONNX Runtime Web (WASM)', 'YOLOv8 320n', 'React & TypeScript', '100% Local Privacy']
+      'Built specifically to show small businesses and creators how one cohesive workflow replaces three separate subscriptions: stage product photos across 5 lighting moods with downloadable PNGs, generate English + Spanish product copy and UGC scripts, and inspect market price bands plus competitor 1-star review gaps.',
+    tech: ['Custom Photo Upload', '5 Studio Lighting Presets', 'EN/ES Copy & Hooks', 'Competitor Gap Research']
+  },
+  {
+    id: 'ai-airbrush',
+    name: 'Photo & Portrait Relighting',
+    shortName: 'AI Airbrush',
+    toolShape: 'airbrush',
+    physicalLabel: '3D Shader Airbrush',
+    accent: '#22d3ee',
+    secondaryAccent: '#f59e0b',
+    audiences: ['business', 'creator'],
+    briefPresetNeed: 'needProd',
+    badge: 'Fix Photos Fast',
+    loadType: 'local',
+    bundleSizeLabel: '252 KB • WebGL GPU',
+    category: 'On-Device 3D Directional Relighting, Retouching & Sculpting • Zero Cloud Lag',
+    iconUrl: './assets/icons/ai-airbrush.png',
+    playUrl: './games/ai-airbrush/index.html',
+    playLabel: 'Launch Photo Relighter',
+    tldr: 'Fix flat phone lighting without booking a reshoot: drag a 3D studio light orb around portraits or products and retouch details privately in your browser.',
+    ideaBiz:
+      'Give your team a 1-click browser retoucher so staff portraits, menu items, and catalog shots look consistently studio-lit.',
+    ideaCreator:
+      'Add dramatic rim-lighting and clean retouching to YouTube thumbnails and IG cover shots right on your phone or laptop.',
+    description:
+      'Ports custom iOS Metal compute/fragment shaders directly to WebGL for 100% client-side high-resolution retouching. Drag the interactive 3D studio light orb across 6 presets, sculpt with cumulative UV Liquify brushes, and compare with a real-time split slider—with zero server uploads.',
+    tech: ['WebGL GLSL Shaders', '3D Normal Relighting', 'UV Liquify Brushes', '100% Private On-Device']
   },
   {
     id: 'fototecateca',
-    name: 'Fototecateca Ad Booth',
-    shortName: 'Fototecateca',
+    name: 'Instant Video Ad Booth',
+    shortName: 'Video Ad Booth',
     toolShape: 'clapper',
-    physicalLabel: "Director's Slate & Rig",
+    physicalLabel: "Director's Commercial Rig",
     accent: '#f472b6',
     secondaryAccent: '#60a5fa',
-    badge: 'AI Video Studio',
+    audiences: ['business', 'creator'],
+    briefPresetNeed: 'needVideo',
+    badge: 'AI Commercials',
     loadType: 'local',
-    bundleSizeLabel: '104 KB • Lazy Mount',
-    category: 'Structured TV Parody Commercial Generator • Veo 3.1 & Gemini 3.5',
+    bundleSizeLabel: '104 KB • Storyboard',
+    category: 'Photo-to-Commercial Storyboard & AI Video Ad Generator • 5 Broadcast Styles',
     iconUrl: './assets/icons/fototecateca.svg',
     playUrl: './games/fototecateca/index.html',
-    playLabel: 'Enter Ad Booth Studio',
-    tldr: 'Interactive TV parody commercial booth compiling 3-frame storyboards and 8s Veo 3.1 commercials across 5 classic broadcast channels.',
+    playLabel: 'Open Video Ad Booth',
+    tldr: 'Turn a product, founder, or mascot photo into a 3-scene storyboarded commercial across 5 broadcast styles with guided director controls.',
+    ideaBiz:
+      'Generate scroll-stopping 90s infomercials, luxury spots, or local promo ads for new product launches without hiring a video crew.',
+    ideaCreator:
+      'Embed an interactive AI commercial booth where fans cast themselves or their pets in themed promos for your brand.',
     description:
-      'Turns pet or cast profiles into structured 3-beat TV parody ads (90s Infomercial, Luxury Perfume, Local Injury Lawyer, Retro Toy Ad, Action Trailer) with guided Arcade-Dial corrections and unused-take coin rebates. Runs a self-contained client-side interactive studio preview.',
-    tech: ['Next.js 15 Architecture', 'Veo 3.1 & Gemini 3.5', 'Stripe Rebate Ledger', 'WebAudio Booth UX']
+      'Turns uploaded profiles or product shots into structured 3-beat commercials (90s Infomercial, Luxury Perfume, Local Spotlight, Retro Toy Ad, Action Trailer) with guided Arcade-Dial corrections instead of confusing prompt engineering.',
+    tech: ['Veo 3.1 & Gemini Pipeline', '3-Beat Storyboards', 'Guided Director Dials', 'Zero Prompt Guesswork']
   },
   {
-    id: 'game-localization',
-    name: 'ES Localization Workbench',
-    shortName: 'ES Localization',
-    toolShape: 'caliper',
-    physicalLabel: 'Token-Parity Vernier Caliper',
-    accent: '#2dd4bf',
-    secondaryAccent: '#818cf8',
-    badge: 'QA Pipeline Tool',
+    id: 'creator-video-pipeline',
+    name: 'Creator Shorts & Video Pipeline',
+    shortName: 'Shorts Pipeline',
+    toolShape: 'film-reel',
+    physicalLabel: '1080p Auto-Video Engine',
+    accent: '#a78bfa',
+    secondaryAccent: '#f472b6',
+    audiences: ['creator', 'business'],
+    briefPresetNeed: 'needVideo',
+    badge: 'Auto 1080p MP4',
     loadType: 'local',
-    bundleSizeLabel: '16 KB • Instant',
-    category: 'Game-to-Spanish Dialogue Engine & Overflow Validator • Python & LLM',
-    iconUrl: './assets/icons/game-localization.svg',
-    playUrl: './games/game-localization/index.html',
-    playLabel: 'Open Localization Bench',
-    tldr: 'Translates dialogue bundles into Latin American Spanish (es-419) while shielding inline engine control tags and auditing line-width expansion.',
+    bundleSizeLabel: 'Live Rendered Video',
+    category: 'Script-to-1080p Bilingual Video Automation • Voiceover, Captions & Motion',
+    iconUrl: './assets/icons/creator-video-pipeline.svg',
+    playUrl: './games/creator-video-pipeline/index.html',
+    playLabel: 'Watch Live Pipeline',
+    tldr: 'Feed in a short topic or product spec and automatically render a 1080p MP4 complete with EN/ES neural voiceovers, synced captions, and camera motion.',
+    ideaBiz:
+      'Automatically turn every new Shopify product or FAQ into narrated Reels, TikToks, and bilingual product explainer videos.',
+    ideaCreator:
+      'Batch-produce faceless Shorts/Reels series or automatically dub and caption every upload for Spanish + English channels.',
     description:
-      'Freezes inline runtime sequences (color switches, wait/shake triggers, hard breaks, and dynamic variables) prior to LLM batch translation, enforces 100% token parity in automated QA, locks speaker formality (tú vs. usted), and previews typewriter cadence live.',
-    tech: ['Control-Tag Shielding', 'es-419 Glossary Lock', 'Line-Budget Auditor', 'Typewriter Sim']
-  },
-  {
-    id: 'argon-bot',
-    name: 'Argon FX Quant Engine',
-    shortName: 'Argon FX Bot',
-    toolShape: 'oscilloscope',
-    physicalLabel: '3-Layer Telemetry Scope',
-    accent: '#34d399',
-    secondaryAccent: '#38bdf8',
-    badge: 'Quant Simulator',
-    loadType: 'local',
-    bundleSizeLabel: '16 KB • Instant',
-    category: 'Decoupled Micro/Meso/Macro FX Strategy Engine • Python & Gemini',
-    iconUrl: './assets/icons/argon-bot.svg',
-    playUrl: './games/argon-bot/index.html',
-    playLabel: 'Launch Quant Telemetry',
-    tldr: 'Separates 1-second stop-loss reflexes (Micro), 1-minute 8-currency strength matrices (Meso), and Gemini LLM regime tuning (Macro).',
-    description:
-      'Prevents microstructure tick noise from whipsawing macro thesis execution. Features bounded ring-buffer tick ingestion, drawdown circuit breakers, 2.5× spread friction filters, and session-aware regime switching—running live in-browser on 100% synthetic market streams.',
-    tech: ['3-Layer Quant Loop', '8-Major Strength Matrix', 'Gemini Macro Tuning', 'Synthetic Tick Sim']
+      'Built on a battle-tested Python + FFmpeg + Neural TTS + AI scene engine that compiles structured JSON scripts into broadcast-ready 1080p videos with dual-language narration, character consistency, and word-timed subtitles.',
+    tech: ['Automated 1080p MP4', 'Bilingual EN/ES Voice', 'Synced Burn-In Captions', 'Batch Content Engine']
   },
   {
     id: 'dropshipping-made-easy',
-    name: 'E-Commerce Margin Forge',
-    shortName: 'Margin Forge',
+    name: 'Market, Margin & Copy Forge',
+    shortName: 'Margin & Market',
     toolShape: 'scale',
-    physicalLabel: 'Unit-Economics Balance',
-    accent: '#a78bfa',
+    physicalLabel: 'Profit & ROAS Balance',
+    accent: '#34d399',
     secondaryAccent: '#fbbf24',
-    badge: 'Bilingual Playbook',
+    audiences: ['business', 'creator'],
+    briefPresetNeed: 'needMarket',
+    badge: 'Margin + Research',
     loadType: 'local',
-    bundleSizeLabel: '400 KB • Lazy Mount',
-    category: 'Bilingual (EN/ES) Unit-Economics & Copy Launchpad • React 19',
+    bundleSizeLabel: 'Bilingual EN/ES',
+    category: 'Unit-Economics Simulator, Niche Validator & Viral Ad Script Builder',
     iconUrl: './assets/icons/dropshipping-made-easy.svg',
     playUrl: './games/dropshipping-made-easy/index.html',
-    playLabel: 'Open Margin Simulator',
-    tldr: 'Interactive English & Spanish store launchpad with real CPA/ROAS margin calculators, supplier checklists, and viral short-form script builders.',
+    playLabel: 'Open Margin & Copy Tool',
+    tldr: 'Validate product margins before spending on ads: live CPA/ROAS profit calculator, supplier vetting checklist, and bilingual (EN/ES) store copy.',
+    ideaBiz:
+      'Add interactive pricing, quote, or ROI calculators to your website—or use custom research dashboards to vet new SKUs before ordering inventory.',
+    ideaCreator:
+      'Know your exact break-even ROAS and profit per unit before launching creator merch, digital bundles, or TikTok Shop items.',
     description:
-      'Guides founders through unit economics without hype: simulate net margin after COGS, shipping, payment fees, and ad spend; generate bilingual boutique brand copy and TikTok/Reels hooks; and export shareable launch blueprints.',
-    tech: ['React 19', 'TypeScript', 'Bilingual EN/ES', 'Live ROAS & Margin Math']
+      'Interactive English & Spanish e-commerce launchpad that replaces guesswork with transparent unit economics: model COGS, shipping, ad CPA, and net margin while generating boutique product descriptions and short-form ad scripts.',
+    tech: ['Live ROAS & Margin Math', 'Niche Validation', 'Bilingual EN/ES Copy', 'React 19 Interactive']
+  },
+  {
+    id: 'game-localization',
+    name: 'Global & Bilingual Translator',
+    shortName: 'Global Translator',
+    toolShape: 'caliper',
+    physicalLabel: 'Tone & Layout Caliper',
+    accent: '#2dd4bf',
+    secondaryAccent: '#818cf8',
+    audiences: ['business', 'creator'],
+    briefPresetNeed: 'needWeb',
+    badge: '15+ Languages',
+    loadType: 'local',
+    bundleSizeLabel: '16 KB • Instant',
+    category: 'Layout-Safe Brand & Storefront Localization • Tone Lock & Overflow QA',
+    iconUrl: './assets/icons/game-localization.svg',
+    playUrl: './games/game-localization/index.html',
+    playLabel: 'Test Translator Bench',
+    tldr: 'Translate websites, catalogs, and scripts into Spanish or 15+ languages while preserving brand voice, UI button lengths, and formatting tags.',
+    ideaBiz:
+      'Unlock cross-border & bilingual customers cleanly—your entire store, booking form, and catalog localized without broken layouts.',
+    ideaCreator:
+      'Localize digital products, subtitles, quizzes, or interactive experiences for global fans in minutes instead of weeks.',
+    description:
+      'Demonstrates why raw copy-paste translation breaks real apps and storefronts—and how an engineered AI localization pipeline shields code/HTML tags, locks brand glossary terms, enforces formality, and verifies UI character widths automatically.',
+    tech: ['15+ Language Ready', 'Brand Glossary Lock', 'UI Width Validator', 'Formatting Tag Shield']
   }
 ];
 
 export const GAMES_ITEMS = [
   {
-    id: 'redial',
-    name: 'REDIAL',
-    shortName: 'REDIAL',
-    cabinetStyle: 'neon-slasher',
-    accent: '#ff2a85',
-    secondaryAccent: '#00f0ff',
-    cabinetBodyColor: '#1a0b26',
-    badge: 'Playable Roguelike',
-    loadType: 'local',
-    bundleSizeLabel: '232 KB • Instant CRT',
-    controlsHint: 'WASD + Mouse / Gamepad / Twin-Stick Touch',
-    category: 'Neon One-Hit-Kill Action Roguelike • Procedural Floors & Synthwave',
-    iconUrl: './assets/icons/redial.png',
-    playUrl: './games/redial/index.html',
-    playLabel: 'Insert Coin • Play REDIAL',
-    tldr: '"Do you like starting over?" Neon-soaked top-down one-hit-kill roguelike with stackable animal masks, floor modifiers, and a synthwave jukebox.',
-    description:
-      'Every floor is generated from scratch. One hit drops them—and one hit drops you. Draft stackable animal mask perks between calls, survive Blackout and Heavy Hitters modifiers, and play seamlessly with keyboard+mouse, controller, or mobile twin-stick touch controls.',
-    tech: ['HTML5 Canvas', 'Procedural Floor Gen', 'Synthwave Jukebox', 'Twin-Stick Mobile + KB/M']
-  },
-  {
-    id: 'ai-pikmin',
-    name: 'Pikmin: PNF-404 Sim',
-    shortName: 'PNF-404 Sim',
-    cabinetStyle: 'botanical-rts',
-    accent: '#34d399',
+    id: 'desired',
+    name: 'DESIRED — Viral Persona Deck',
+    shortName: 'DESIRED',
+    cabinetStyle: 'velvet-deck',
+    accent: '#f43f5e',
     secondaryAccent: '#fbbf24',
-    cabinetBodyColor: '#0c241c',
-    badge: 'Playable Squad RTS',
+    cabinetBodyColor: '#260b19',
+    audiences: ['creator', 'business'],
+    briefPresetNeed: 'needGame',
+    badge: 'Creator Funnel',
     loadType: 'local',
-    bundleSizeLabel: '312 KB • Instant CRT',
-    controlsHint: 'Click/Drag Whistle & Throw • Touch Ready',
-    category: 'Top-Down Squad Tactics & 1–4P Co-op • TypeScript & PeerJS',
-    iconUrl: './assets/icons/ai-pikmin.png',
-    playUrl: './games/ai-pikmin/index.html',
-    playLabel: 'Insert Coin • Play PNF-404',
-    tldr: 'Command Red, Yellow, and Blue squads across 5 planetary sectors, boss arenas, 4-minute Time Attack drills, and serverless WebRTC co-op.',
+    bundleSizeLabel: '236 KB • 9:16 Story Card',
+    controlsHint: 'Swipe Cards Left/Right or Tap Choices',
+    category: '25-Card Swipeable Quiz + Instant 1080×1920 IG/TikTok Story Card Export',
+    iconUrl: './assets/icons/desired.svg',
+    playUrl: './games/desired/index.html',
+    playLabel: 'Insert Coin • Swipe Deck',
+    tldr: 'Swipe through 25 tactile scenario cards to reveal your archetype—then download a crisp 9:16 Story Card designed to go viral on Instagram & TikTok.',
+    ideaBiz:
+      'A 60-second “Find Your Perfect Routine / Shade / Gift” swipe quiz that recommends your exact products and captures warm leads.',
+    ideaCreator:
+      'A custom personality deck for your community where every fan posts a branded 9:16 result card tagging your @handle in their Story.',
     description:
-      'Help Captain Olimar pass his Hocotate Freight Deep-Space Salvage Certification! Micro-manage elemental Pikmin squads with throw and whistle rings to haul 15 ship modules before sunset across Story Mode, 15-Cycle Hard Mode, and Time Attack.',
-    tech: ['TypeScript', 'Squad Pathing AI', 'PeerJS 1–4P Co-op', 'Procedural WebAudio']
-  },
-  {
-    id: 'world-strikers',
-    name: 'World Strikers',
-    shortName: 'World Strikers',
-    cabinetStyle: 'stadium-wide',
-    accent: '#facc15',
-    secondaryAccent: '#38bdf8',
-    cabinetBodyColor: '#0f1d38',
-    badge: 'Playable Cage Demo',
-    loadType: 'edge',
-    bundleSizeLabel: '0 KB Repo • Edge Streamed',
-    controlsHint: 'Keyboard / Gamepad / Touch Arcade Controls',
-    category: '20,000V Walled-Cage Arcade Soccer • Canvas & 9-Track EDM OST',
-    iconUrl: './assets/icons/world-strikers.png',
-    playUrl: 'https://mascaz.github.io/games/world-strikers/index.html',
-    playLabel: 'Insert Coin • Kick Off',
-    tldr: 'Smash rivals into 20,000V electric fences, unleash cultural chaos items, and rip slow-motion Super Shots in Spain vs. France exhibition play.',
-    description:
-      'High-voltage arcade soccer brawler! Streamed on-demand from the edge CDN so its 9-track EDM soundtrack and sprites add 0 ms to initial page boot. Features X-ray electric fence shocks, item chaos, AI tactics, and MVP box scores.',
-    tech: ['Custom Cage Physics', 'Slow-Mo Super Shots', '9-Track EDM Synth', 'Edge Micro-Frontend']
-  },
-  {
-    id: 'sumten',
-    name: 'SumTen',
-    shortName: 'SumTen',
-    cabinetStyle: 'pixel-candy',
-    accent: '#fb7185',
-    secondaryAccent: '#2dd4bf',
-    cabinetBodyColor: '#231224',
-    badge: 'Playable Puzzle',
-    loadType: 'local',
-    bundleSizeLabel: '20 KB • Ultra-Light',
-    controlsHint: 'Mouse Drag or Finger Drag Rectangles',
-    category: '16×10 Retro Pixel Number Grid • Guaranteed-Solvable Generator',
-    iconUrl: './assets/icons/sumten.png',
-    playUrl: './games/sumten/index.html',
-    playLabel: 'Insert Coin • Play SumTen',
-    tldr: 'Drag rectangles over digits summing to 10 against a 120s clock on backwards-generated 100% solvable boards with ×8 combos and chiptune SFX.',
-    description:
-      'Weighing just 20 KB total, SumTen boots in under a single frame! Every 16×10 grid is constructed in reverse from a complete clear path—including nested clear sequences—paired with procedural pixel visuals and chiptune audio.',
-    tech: ['20 KB Total Footprint', 'Reverse-Solved Boards', 'Procedural Chiptune', 'Touch + Mouse Drag']
-  },
-  {
-    id: 'wild-peak',
-    name: 'Wild Peak 3D',
-    shortName: 'Wild Peak 3D',
-    cabinetStyle: 'n64-poly',
-    accent: '#a78bfa',
-    secondaryAccent: '#f59e0b',
-    cabinetBodyColor: '#1b1630',
-    badge: 'Playable 3D N64',
-    loadType: 'local',
-    bundleSizeLabel: '1.0 MB • Pause-3D Handoff',
-    controlsHint: 'WASD / Arrows / Splitscreen / Touch',
-    category: 'Procedural N64 Low-Poly 3D Survival Roguelite • Three.js',
-    iconUrl: './assets/icons/wild-peak.svg',
-    playUrl: './games/wild-peak/index.html?v=2',
-    playLabel: 'Insert Coin • Enter 3D Wilds',
-    tldr: '100% code-generated N64 low-poly wilderness with towering landmarks, procedural IK characters, custom N64 shaders, and splitscreen racing.',
-    description:
-      'Showcases Single-WebGL-Context Governance: the moment you step into the Wild Peak cabinet, the outer 3D Arcade freezes its own render loop to 0% GPU so Wild Peak’s Three.js N64 shader world gets 100% of your graphics card.',
-    tech: ['Three.js N64 Shader', '100% Procedural Geometry', 'IK Character Poses', 'Splitscreen Race Mode']
+      'Built specifically as a high-retention social growth engine: combines spring-physics card swiping across 4 psychological axes with an instant client-side 1080×1920 canvas Story Card generator so every player becomes free organic reach.',
+    tech: ['Swipe Card Physics', '1080×1920 Story Export', 'Zero Backend Cost', 'Built for IG & TikTok']
   },
   {
     id: 'cat-capsules',
@@ -247,18 +239,158 @@ export const GAMES_ITEMS = [
     accent: '#f472b6',
     secondaryAccent: '#c084fc',
     cabinetBodyColor: '#29152c',
-    badge: 'Playable Physics',
+    audiences: ['business', 'creator'],
+    briefPresetNeed: 'needGame',
+    badge: 'Brand Gacha',
     loadType: 'edge',
-    bundleSizeLabel: '0 KB Repo • Edge Streamed',
+    bundleSizeLabel: '0 KB Boot • On-Demand',
     controlsHint: 'Tap or Move & Click to Drop Capsules',
-    category: 'Suika-Style Reactive Physics Merge • PixiJS v8 & Rapier2D WASM',
+    category: 'Tactile Physics Drop & Merge Experience • PixiJS v8 & Rapier2D WASM',
     iconUrl: './assets/icons/cat-capsules.png',
     playUrl: 'https://mascaz.github.io/games/cat-capsules/index.html',
     playLabel: 'Insert Coin • Drop Cats',
-    tldr: 'Drop and merge glossy cat capsules driven by Rapier2D WASM physics, real-time cursor eye-tracking, impact squish, and skeletal tail/ear rigs.',
+    tldr: 'Drop and merge glossy cat capsules with reactive eye-tracking, squish physics, and unlockable themes—showing how irresistible branded mini-games feel.',
+    ideaBiz:
+      'Replace ignored “Spin-the-Wheel” discount popups with a 30-second physics drop featuring your actual products to unlock VIP perks.',
+    ideaCreator:
+      'A cozy branded mascot merge game on your page where weekly high scores win merch drops or shoutouts.',
     description:
-      'Combines deterministic Rapier2D physics with a procedural 2D skeletal cat animation rig that tracks your cursor/finger, squishes on collision, and unlocks boutique capsule themes—streamed on demand only when launched.',
-    tech: ['PixiJS v8', 'Rapier2D WASM', '2D Bone Gaze Rig', 'Mobile + Desktop Ready']
+      'Combines deterministic Rapier2D WASM physics with a procedural 2D skeletal cat animation rig that tracks your finger/cursor and squishes on impact—streamed on demand so initial page load stays instant.',
+    tech: ['PixiJS v8', 'Rapier2D Physics', 'Cursor Eye-Tracking', 'Mobile + Desktop']
+  },
+  {
+    id: 'sumten',
+    name: 'SumTen',
+    shortName: 'SumTen',
+    cabinetStyle: 'pixel-candy',
+    accent: '#fb7185',
+    secondaryAccent: '#2dd4bf',
+    cabinetBodyColor: '#231224',
+    audiences: ['business', 'creator'],
+    briefPresetNeed: 'needGame',
+    badge: '20 KB Daily Hook',
+    loadType: 'local',
+    bundleSizeLabel: '20 KB • Instant Load',
+    controlsHint: 'Drag Rectangles Summing to 10 (Mouse or Touch)',
+    category: 'Ultra-Light 20 KB Daily Retention Puzzle • Guaranteed-Solvable Boards',
+    iconUrl: './assets/icons/sumten.png',
+    playUrl: './games/sumten/index.html',
+    playLabel: 'Insert Coin • Play SumTen',
+    tldr: 'Drag boxes over numbers summing to 10 against a 120s clock—weighing just 20 KB total, it loads faster than a single JPEG banner.',
+    ideaBiz:
+      'Embed a Wordle-style daily 90-second puzzle in your loyalty app or newsletter to bring customers back every morning.',
+    ideaCreator:
+      'Give followers a daily streak challenge on your site with shareable score badges for group chats and X/Threads.',
+    description:
+      'Proves that playable interactivity never has to slow down a storefront: at 20 KB total (code + visuals + chiptune audio), SumTen boots in a single frame with reverse-engineered 100% solvable boards.',
+    tech: ['20 KB Total Size', '100% Solvable Gen', 'Procedural Audio', 'Zero Load Penalty']
+  },
+  {
+    id: 'world-strikers',
+    name: 'World Strikers',
+    shortName: 'World Strikers',
+    cabinetStyle: 'stadium-wide',
+    accent: '#facc15',
+    secondaryAccent: '#38bdf8',
+    cabinetBodyColor: '#0f1d38',
+    audiences: ['creator', 'business'],
+    briefPresetNeed: 'needGame',
+    badge: 'Event Arcade',
+    loadType: 'edge',
+    bundleSizeLabel: '0 KB Boot • On-Demand',
+    controlsHint: 'Keyboard / Gamepad / Touch Arcade Controls',
+    category: '20,000V Walled-Cage Arcade Soccer • Slow-Mo Super Shots & 9-Track OST',
+    iconUrl: './assets/icons/world-strikers.png',
+    playUrl: 'https://mascaz.github.io/games/world-strikers/index.html',
+    playLabel: 'Insert Coin • Kick Off',
+    tldr: 'High-voltage arcade cage soccer with electric fence shocks, item chaos, and slow-motion Super Shots across mobile touch, controller, and keyboard.',
+    ideaBiz:
+      'Launch a limited-time sports or holiday event game with your brand on the stadium boards and coupon rewards for winners.',
+    ideaCreator:
+      'Host a community tournament pitting fan factions against each other right inside the browser—no app download needed.',
+    description:
+      'Full arcade sports spectacle running smoothly in any browser tab, streamed on demand from edge CDN so its 9-track EDM synth soundtrack adds zero weight to initial site load.',
+    tech: ['Custom Cage Physics', 'Slow-Mo Super Shots', 'Touch + Gamepad', 'On-Demand Streaming']
+  },
+  {
+    id: 'redial',
+    name: 'REDIAL',
+    shortName: 'REDIAL',
+    cabinetStyle: 'neon-slasher',
+    accent: '#ff2a85',
+    secondaryAccent: '#00f0ff',
+    cabinetBodyColor: '#1a0b26',
+    audiences: ['creator'],
+    briefPresetNeed: 'needGame',
+    badge: 'Pure Juice & Craft',
+    loadType: 'local',
+    bundleSizeLabel: '232 KB • Instant CRT',
+    controlsHint: 'WASD + Mouse / Gamepad / Twin-Stick Touch',
+    category: 'Neon One-Hit-Kill Action Roguelike • Procedural Floors & Synthwave Jukebox',
+    iconUrl: './assets/icons/redial.png',
+    playUrl: './games/redial/index.html',
+    playLabel: 'Insert Coin • Play REDIAL',
+    tldr: 'Neon-soaked top-down action with procedural rooms, animal mask perks, screen shake, and a synthwave jukebox—built to show off high-polish game feel.',
+    ideaBiz:
+      'When your brand wants an unforgettable interactive launch microsite instead of another static landing page.',
+    ideaCreator:
+      'Pair an album release, comic, or streetwear drop with a playable retro arcade world featuring your own music and lore.',
+    description:
+      'Every floor is generated from scratch with crisp hit-stop, lighting, and stackable mask perks—playable seamlessly on desktop keyboard/mouse, controller, or twin-stick mobile touch.',
+    tech: ['HTML5 Canvas', 'Procedural Floors', 'Synthwave Jukebox', 'Mobile Twin-Stick']
+  },
+  {
+    id: 'ai-pikmin',
+    name: 'Pikmin: PNF-404 Sim',
+    shortName: 'PNF-404 Sim',
+    cabinetStyle: 'botanical-rts',
+    accent: '#34d399',
+    secondaryAccent: '#fbbf24',
+    cabinetBodyColor: '#0c241c',
+    audiences: ['creator'],
+    briefPresetNeed: 'needGame',
+    badge: '1–4P Live Co-op',
+    loadType: 'local',
+    bundleSizeLabel: '312 KB • Instant CRT',
+    controlsHint: 'Click/Drag Whistle & Throw • Touch Ready',
+    category: 'Real-Time Squad Tactics & Serverless 1–4 Player WebRTC Co-op',
+    iconUrl: './assets/icons/ai-pikmin.png',
+    playUrl: './games/ai-pikmin/index.html',
+    playLabel: 'Insert Coin • Play PNF-404',
+    tldr: 'Command elemental squads across 5 sectors and boss arenas—including live 1–4 player multiplayer in the browser with zero server bills.',
+    ideaBiz:
+      'Proof of full-stack engineering: if real-time multiplayer AI runs smoothly in 312 KB, your custom business tool is in safe hands.',
+    ideaCreator:
+      'Play a custom co-op browser game live on Twitch/YouTube stream with viewers joining instantly via 4-letter room codes.',
+    description:
+      'Micro-manage Red, Yellow, and Blue squads with whistle/throw rings across Story Mode, Time Attack, and serverless PeerJS WebRTC co-op.',
+    tech: ['TypeScript', 'Pathfinding AI', '1–4P WebRTC Co-op', 'Procedural Audio']
+  },
+  {
+    id: 'wild-peak',
+    name: 'Wild Peak 3D',
+    shortName: 'Wild Peak 3D',
+    cabinetStyle: 'n64-poly',
+    accent: '#a78bfa',
+    secondaryAccent: '#f59e0b',
+    cabinetBodyColor: '#1b1630',
+    audiences: ['creator', 'business'],
+    briefPresetNeed: 'needGame',
+    badge: 'Procedural 3D',
+    loadType: 'local',
+    bundleSizeLabel: '1.0 MB • GPU Handoff',
+    controlsHint: 'WASD / Arrows / Splitscreen / Touch',
+    category: '100% Code-Generated Low-Poly 3D World • Custom Three.js Shaders',
+    iconUrl: './assets/icons/wild-peak.svg',
+    playUrl: './games/wild-peak/index.html?v=2',
+    playLabel: 'Insert Coin • Enter 3D',
+    tldr: 'An entire 3D mountain world generated from pure code—just like this 3D arcade—proving 3D websites can feel magical without slow downloads.',
+    ideaBiz:
+      'Interactive 3D product showcases, virtual showrooms, or spatial menus that load fast on mobile phones.',
+    ideaCreator:
+      'A playable 3D world, virtual pop-up room, or treasure hunt built around your brand universe.',
+    description:
+      'Demonstrates Single-WebGL-Context Governance: the moment you launch Wild Peak 3D, the outer 3D Arcade pauses its own render loop to 0% GPU so the inner 3D world runs at buttery 60fps.',
+    tech: ['Three.js Shaders', 'Procedural 3D', 'Zero .GLB Bloat', 'Splitscreen Ready']
   }
 ];
-

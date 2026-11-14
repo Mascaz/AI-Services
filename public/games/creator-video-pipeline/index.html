@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Creator Shorts &amp; Bilingual Video Auto-Pipeline</title>
+  <style>
+    :root {
+      --bg: #070914;
+      --card: #12182b;
+      --border: rgba(167, 139, 250, 0.25);
+      --accent: #a78bfa;
+      --pink: #f472b6;
+      --text: #f8fafc;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: Inter, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100dvh;
+      padding: 16px;
+    }
+    .wrap {
+      max-width: 1120px;
+      margin: 0 auto;
+      display: grid;
+      gap: 16px;
+    }
+    .header {
+      padding: 14px 18px;
+      border-radius: 16px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+    .pills { display: flex; gap: 6px; flex-wrap: wrap; }
+    button {
+      font-family: inherit;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      background: #1e1b4b;
+      color: #e2e8f0;
+      padding: 8px 13px;
+      border-radius: 10px;
+      font-size: 12.5px;
+      font-weight: 700;
+    }
+    button.active {
+      background: linear-gradient(135deg, #a78bfa, #f472b6);
+      color: #090514;
+      border-color: transparent;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1.25fr 1fr;
+      gap: 16px;
+    }
+    @media (max-width: 860px) { .grid { grid-template-columns: 1fr; } }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    video {
+      width: 100%;
+      border-radius: 12px;
+      background: #000;
+      border: 1px solid rgba(255,255,255,0.14);
+    }
+    pre {
+      background: #080b16;
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      border-radius: 12px;
+      padding: 14px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 12px;
+      line-height: 1.55;
+      color: #c4b5fd;
+      overflow-x: auto;
+      white-space: pre-wrap;
+    }
+    .beat-row {
+      padding: 10px 12px;
+      border-radius: 10px;
+      background: #0a0f1f;
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="header">
+      <div>
+        <div style="font-size:11px;font-weight:800;color:#f472b6;letter-spacing:0.08em">AUTOMATED CREATOR VIDEO ENGINE</div>
+        <h1 style="font-size:19px;font-weight:900;margin-top:2px">1 Script JSON &rarr; Voiceover, Captions, Motion &amp; 1080p MP4</h1>
+      </div>
+      <div class="pills">
+        <button type="button" class="active" data-preset="bilingual">&#127916; Live Rendered Episode (EN + ES)</button>
+        <button type="button" data-preset="product">&#128717; Product Drop Reel Blueprint</button>
+        <button type="button" data-preset="shorts">&#127908; Faceless Creator Shorts Blueprint</button>
+      </div>
+    </header>
+
+    <div class="grid">
+      <section class="card" id="previewCol"></section>
+      <section class="card" id="jsonCol"></section>
+    </div>
+  </div>
+
+  <script>
+    const PRESETS = {
+      bilingual: {
+        title: 'Rendered Output: Bilingual Episode (Python + FFmpeg + Neural TTS)',
+        desc: 'Press Play below to watch a real 1080p episode compiled automatically from a single declarative story.json file—complete with paired English & Latin American Spanish voiceovers, Ken Burns camera motion, and vocabulary callout cards.',
+        hasVideo: true,
+        videoUrl: 'https://mascaz.github.io/games/kids-video-gen/assets/sample_reading_spanish.mp4',
+        posterUrl: 'https://mascaz.github.io/games/kids-video-gen/assets/teacher_scene.png',
+        beats: [
+          { t: '00:00', en: 'Welcome & Hook', es: 'Bienvenida bilingüe + música suave' },
+          { t: '00:14', en: 'Scene 1: Rainbow Colors', es: 'Ken Burns zoom + tarjeta fonética' },
+          { t: '00:36', en: 'Scene 2: Geometric Shapes', es: 'Sincronización automática de subtítulos' }
+        ],
+        json: `{
+  "pipeline": "story_to_1080p_mp4",
+  "voices": { "en": "en-US-Studio", "es": "es-MX-Neural" },
+  "kenBurnsMotion": "smooth_pan_zoom_60fps",
+  "lowerThirdCards": true,
+  "scenes": [
+    {
+      "id": "rainbow_intro",
+      "narration_en": "Look up at the bright rainbow!",
+      "narration_es": "¡Mira el arcoíris brillante!",
+      "vocabCard": "El Arcoíris • The Rainbow"
+    }
+  ]
+}`
+      },
+      product: {
+        title: 'E-Commerce Batch Reel Pipeline (Turn 20 SKUs into 40 EN/ES Reels Overnight)',
+        desc: 'Give small businesses a repeatable video machine: drop new product photos + bullet points into a folder and automatically render 9:16 Reels/TikToks in both English and Spanish with beat-matched captions.',
+        hasVideo: false,
+        beats: [
+          { t: '0.0s – 1.8s', en: 'Pattern-Interrupt Hook Caption + Slow Zoom', es: 'Auto-synthesized EN & ES voice tracks' },
+          { t: '1.8s – 5.5s', en: '3 Feature Callout Pills + Price Comparison', es: 'FFmpeg filtergraph motion blur transitions' },
+          { t: '5.5s – 8.0s', en: 'Offer Code + Store URL End-Card', es: 'Exports 1080×1920 MP4 + SRT captions' }
+        ],
+        json: `{
+  "format": "9x16_vertical_reel",
+  "languages": ["en-US", "es-419"],
+  "skuBatch": ["cold-brew-16oz", "matcha-bowl-v2"],
+  "hookStyle": "problem_agitate_solve",
+  "ctaOverlay": "Use code LAUNCH15 • Link in bio"
+}`
+      },
+      shorts: {
+        title: 'Creator Faceless Series & Podcast Clip Automator',
+        desc: 'Built for YouTubers, educators, and niche creators who want consistent daily uploads without spending 4 hours per video inside Premiere or CapCut.',
+        hasVideo: false,
+        beats: [
+          { t: 'Step 1', en: 'Topic / Script Intake', es: 'Structured JSON beats prevent AI rambling' },
+          { t: 'Step 2', en: 'Visual + Voice Synthesis', es: 'Consistent character/style keyframes + neural TTS' },
+          { t: 'Step 3', en: '1-Command FFmpeg Master', es: 'Burned-in dynamic captions + background ducking' }
+        ],
+        json: `{
+  "channel": "@yourchannel",
+  "cadence": "daily_shorts_1080x1920",
+  "audioDuckingDb": -14,
+  "captionHighlightColor": "#FBBF24",
+  "exportTargets": ["youtube_shorts", "tiktok", "ig_reels"]
+}`
+      }
+    };
+
+    const previewCol = document.getElementById('previewCol');
+    const jsonCol = document.getElementById('jsonCol');
+
+    function render(key) {
+      const p = PRESETS[key];
+      document.querySelectorAll('[data-preset]').forEach(b => b.classList.toggle('active', b.dataset.preset === key));
+
+      previewCol.innerHTML = `
+        <h2 style="font-size:16.5px;font-weight:800">${p.title}</h2>
+        <p style="font-size:13.5px;line-height:1.55;color:#cbd5e1">${p.desc}</p>
+        ${
+          p.hasVideo
+            ? `<video controls preload="metadata" poster="${p.posterUrl}" src="${p.videoUrl}"></video>`
+            : `<div style="display:grid;gap:8px;margin-top:4px">
+                ${p.beats.map(b => `<div class="beat-row"><strong style="color:#f472b6">${b.t}</strong><span>${b.en}</span><span style="color:#94a3b8;font-size:12px">${b.es}</span></div>`).join('')}
+               </div>`
+        }
+      `;
+
+      jsonCol.innerHTML = `
+        <h3 style="font-size:14px;font-weight:800;color:#a78bfa">Declarative Pipeline Input (story.json)</h3>
+        <pre>${p.json}</pre>
+        <div style="display:grid;gap:8px">
+          ${p.beats.map(b => `<div class="beat-row"><strong style="color:#38bdf8">${b.t}</strong><span>${b.en}</span></div>`).join('')}
+        </div>
+      `;
+    }
+
+    document.querySelectorAll('[data-preset]').forEach(b => b.addEventListener('click', () => render(b.dataset.preset)));
+    render('bilingual');
+  </script>
+</body>
+</html>

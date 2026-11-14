@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Website Makeover Workbench — Before vs. After</title>
+  <style>
+    :root {
+      --bg: #070b14;
+      --panel: #0f172a;
+      --accent: #38bdf8;
+      --gold: #fbbf24;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: Inter, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      user-select: none;
+    }
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 10px 16px;
+      background: #0b1120;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+      z-index: 30;
+    }
+    .case-tabs, .mode-tabs {
+      display: flex;
+      gap: 6px;
+      background: #060913;
+      padding: 4px;
+      border-radius: 11px;
+      border: 1px solid rgba(148, 163, 184, 0.18);
+    }
+    button {
+      font-family: inherit;
+      cursor: pointer;
+      border: none;
+      border-radius: 8px;
+      padding: 7px 12px;
+      font-size: 12.5px;
+      font-weight: 700;
+      color: #cbd5e1;
+      background: transparent;
+      transition: all 0.16s ease;
+    }
+    button:hover { color: #fff; background: rgba(255,255,255,0.06); }
+    button.active {
+      background: linear-gradient(135deg, #f8fafc, #bae6fd);
+      color: #050811;
+    }
+    .stage {
+      position: relative;
+      flex: 1;
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    /* AFTER LAYER (Full underneath) */
+    .after-layer {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      background: #ffffff;
+    }
+    .after-iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+    }
+
+    /* BEFORE LAYER (Clipped by slider %) */
+    .before-layer {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      overflow-y: auto;
+      background: #f3f4f6;
+      color: #1f2937;
+      clip-path: inset(0 50% 0 0);
+      user-select: text;
+    }
+
+    /* Corner Labels */
+    .corner-badge {
+      position: absolute;
+      top: 14px;
+      z-index: 22;
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      pointer-events: none;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.35);
+    }
+    .badge-before {
+      left: 14px;
+      background: rgba(30, 41, 59, 0.92);
+      color: #fca5a5;
+      border: 1px solid rgba(248, 113, 113, 0.45);
+    }
+    .badge-after {
+      right: 14px;
+      background: rgba(6, 78, 59, 0.94);
+      color: #6ee7b7;
+      border: 1px solid rgba(52, 211, 153, 0.55);
+    }
+
+    /* DRAGGABLE SPLIT HANDLE */
+    .slider-line {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      width: 4px;
+      transform: translateX(-50%);
+      background: linear-gradient(180deg, #38bdf8, #ffffff, #fbbf24);
+      box-shadow: 0 0 22px rgba(56, 189, 248, 0.9);
+      z-index: 25;
+      cursor: ew-resize;
+    }
+    .slider-knob {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: #0b1120;
+      border: 3px solid #ffffff;
+      box-shadow: 0 8px 28px rgba(0,0,0,0.65);
+      display: grid;
+      place-items: center;
+      font-weight: 900;
+      font-size: 15px;
+      color: #ffffff;
+    }
+    .drag-shield {
+      position: absolute;
+      inset: 0;
+      z-index: 24;
+      display: none;
+      cursor: ew-resize;
+    }
+    body.dragging .drag-shield { display: block; }
+
+    /* BREAKDOWN VIEW */
+    .breakdown-panel {
+      position: absolute;
+      inset: 0;
+      z-index: 28;
+      background: rgba(7, 11, 20, 0.96);
+      backdrop-filter: blur(14px);
+      overflow-y: auto;
+      padding: 28px 20px;
+      display: none;
+    }
+    .breakdown-panel.open { display: block; }
+    .bd-wrap {
+      max-width: 880px;
+      margin: 0 auto;
+      display: grid;
+      gap: 16px;
+    }
+    .bd-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 14px;
+    }
+    .bd-card {
+      padding: 18px;
+      border-radius: 16px;
+      background: #111a2e;
+      border: 1px solid rgba(148, 163, 184, 0.2);
+    }
+    .bd-card h4 { font-size: 15px; margin-bottom: 6px; color: #bae6fd; }
+    .bd-card p { font-size: 13px; line-height: 1.55; color: #cbd5e1; }
+
+    /* =====================================================================
+       GENERIC "BEFORE" PLACEHOLDER TEMPLATES (Intentionally Dated / Basic)
+       ===================================================================== */
+    /* 1. Basic Unstyled Default Shopify Store */
+    .tpl-shopify {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #ffffff;
+      color: #222;
+      min-height: 100%;
+    }
+    .tpl-shop-bar {
+      background: #e5e7eb;
+      text-align: center;
+      padding: 7px;
+      font-size: 12px;
+      color: #374151;
+    }
+    .tpl-shop-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 28px;
+      border-bottom: 1px solid #d1d5db;
+    }
+    .tpl-shop-hero {
+      background: #d1d5db;
+      padding: 64px 24px;
+      text-align: center;
+      border-bottom: 1px solid #cbd5e1;
+    }
+    .tpl-shop-hero h1 { font-size: 28px; color: #111827; margin-bottom: 10px; }
+    .tpl-shop-btn {
+      display: inline-block;
+      margin-top: 14px;
+      padding: 10px 18px;
+      background: #2563eb;
+      color: #fff;
+      font-size: 13px;
+    }
+    .tpl-shop-grid {
+      max-width: 920px;
+      margin: 32px auto;
+      padding: 0 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 18px;
+    }
+    .tpl-prod-box {
+      border: 1px solid #d1d5db;
+      padding: 12px;
+      text-align: left;
+    }
+    .tpl-gray-img {
+      height: 150px;
+      background: #e5e7eb;
+      display: grid;
+      place-items: center;
+      color: #6b7280;
+      font-size: 12px;
+      margin-bottom: 10px;
+    }
+
+    /* 2. Dated 2014 Baby-Blue Clinic Brochure Template */
+    .tpl-clinic {
+      font-family: Georgia, 'Times New Roman', serif;
+      background: #ebf6fc;
+      color: #1e3a5f;
+      min-height: 100%;
+    }
+    .tpl-clinic-top {
+      background: #0284c7;
+      color: #fff;
+      padding: 14px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: Arial, sans-serif;
+    }
+    .tpl-clinic-main {
+      max-width: 860px;
+      margin: 24px auto;
+      padding: 22px;
+      background: #ffffff;
+      border: 2px solid #bae6fd;
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 20px;
+    }
+    .tpl-form-box {
+      background: #f1f5f9;
+      border: 1px solid #94a3b8;
+      padding: 14px;
+      font-family: Arial, sans-serif;
+      font-size: 12px;
+    }
+    .tpl-form-box input, .tpl-form-box select {
+      width: 100%;
+      padding: 5px;
+      margin: 4px 0 8px;
+      border: 1px solid #94a3b8;
+    }
+    @media (max-width: 680px) {
+      .tpl-clinic-main { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header class="toolbar">
+    <div class="case-tabs" role="tablist">
+      <button type="button" class="active" data-case="shopify">
+        &#128717; Fashion / Shopify Rework
+      </button>
+      <button type="button" data-case="clinic">
+        &#129658; Local Practice / Service Rework
+      </button>
+    </div>
+
+    <div class="mode-tabs">
+      <button type="button" class="active" data-view="split">&#8596; Drag Before / After</button>
+      <button type="button" data-view="after">&#10024; Use Live "After" Site</button>
+      <button type="button" data-view="notes">&#128202; What Changed</button>
+    </div>
+  </header>
+
+  <main class="stage" id="stageArea">
+    <!-- Live Upgraded AFTER Website -->
+    <div class="after-layer">
+      <iframe id="afterFrame" class="after-iframe" title="Upgraded Client Website"></iframe>
+    </div>
+
+    <!-- Generic Template BEFORE Website -->
+    <div class="before-layer" id="beforeLayer"></div>
+
+    <span class="corner-badge badge-before" id="beforeBadge">BEFORE &bull; GENERIC TEMPLATE</span>
+    <span class="corner-badge badge-after" id="afterBadge">AFTER &bull; CUSTOM REWORK</span>
+
+    <!-- Drag Shield so iframe doesn't swallow pointermove while dragging -->
+    <div class="drag-shield" id="dragShield"></div>
+
+    <!-- Split Handle -->
+    <div class="slider-line" id="sliderLine">
+      <div class="slider-knob">&#8596;</div>
+    </div>
+
+    <!-- Breakdown Overlay -->
+    <section class="breakdown-panel" id="breakdownPanel">
+      <div class="bd-wrap" id="breakdownContent"></div>
+    </section>
+  </main>
+
+  <script>
+    const CASES = {
+      shopify: {
+        afterUrl: '../relais-palais/index.html',
+        beforeHtml: `
+          <div class="tpl-shopify">
+            <div class="tpl-shop-bar">WELCOME TO OUR STORE — FREE SHIPPING ON ORDERS OVER $100</div>
+            <div class="tpl-shop-nav">
+              <strong style="font-size:18px">MY CLOTHING STORE</strong>
+              <span style="font-size:13px;color:#6b7280">Home &nbsp;|&nbsp; Catalog &nbsp;|&nbsp; Contact &nbsp;|&nbsp; Cart (0)</span>
+            </div>
+            <div class="tpl-shop-hero">
+              <h1>Summer / Fall Collection</h1>
+              <p style="color:#4b5563;font-size:14px">Browse our latest items below. Standard shipping takes 2–3 weeks.</p>
+              <span class="tpl-shop-btn">Shop All Products</span>
+            </div>
+            <div class="tpl-shop-grid">
+              <div class="tpl-prod-box">
+                <div class="tpl-gray-img">[ Phone Photo_01.jpg ]</div>
+                <strong>Mini Skirt</strong>
+                <div style="color:#4b5563;font-size:13px;margin:4px 0">$88.00</div>
+                <div style="background:#e5e7eb;text-align:center;padding:6px;font-size:12px">Add to cart</div>
+              </div>
+              <div class="tpl-prod-box">
+                <div class="tpl-gray-img">[ Phone Photo_02.jpg ]</div>
+                <strong>Purple Graphic Tee</strong>
+                <div style="color:#4b5563;font-size:13px;margin:4px 0">$45.00</div>
+                <div style="background:#e5e7eb;text-align:center;padding:6px;font-size:12px">Add to cart</div>
+              </div>
+              <div class="tpl-prod-box">
+                <div class="tpl-gray-img">[ Uncropped_03.jpg ]</div>
+                <strong>Everyday Tee #2</strong>
+                <div style="color:#4b5563;font-size:13px;margin:4px 0">$45.00</div>
+                <div style="background:#e5e7eb;text-align:center;padding:6px;font-size:12px">Add to cart</div>
+              </div>
+            </div>
+          </div>
+        `,
+        notesTitle: 'From Default Shopify Template → Relais Palais Editorial Boutique',
+        cards: [
+          {
+            t: '1. Brand World & Video Lookbook Hero',
+            d: 'Replaced a generic gray hero banner with an editorial full-bleed motion lookbook, framed announcement ticker, and cohesive Rhode-inspired luxury typography.'
+          },
+          {
+            t: '2. Cohesive AI-Graded Product Plates',
+            d: 'Unified mismatched raw garment photos onto consistent studio purple fabric plates and clean 4:5 cards so the entire catalog feels shot in the same Paris atelier.'
+          },
+          {
+            t: '3. Frictionless Slide-Out Bag & Size Guide',
+            d: 'Added interactive collection tabs, instant slide-out cart drawer, and clear made-to-order sizing modals—shipped both as a standalone site and modular Shopify Liquid sections.'
+          }
+        ]
+      },
+      clinic: {
+        afterUrl: 'https://dr-luis-montes-tijuana.vercel.app',
+        beforeHtml: `
+          <div class="tpl-clinic">
+            <div class="tpl-clinic-top">
+              <strong>✚ CLINIC WEBSITE (2014 TEMPLATE)</strong>
+              <span style="font-size:12px">HOME | ABOUT ME</span>
+            </div>
+            <div class="tpl-clinic-main">
+              <div>
+                <div style="height:160px;background:#cbd5e1;display:grid;place-items:center;color:#475569;font-family:Arial;font-size:12px;margin-bottom:14px">
+                  [ Harsh Fluorescent Stock Hospital Clip-Art ]
+                </div>
+                <h2 style="font-size:21px;margin-bottom:8px">Welcome to Our Medical Office</h2>
+                <p style="font-size:14px;line-height:1.5">
+                  We treat orthopedic conditions for children and adults. Call our office during business hours or fill out all 15 fields on the right and wait for a callback.
+                </p>
+                <ul style="margin:14px 0 0 18px;font-size:13px;line-height:1.7">
+                  <li> Knee Pain (non-clickable text)</li>
+                  <li> Flat Feet (non-clickable text)</li>
+                  <li> Fractures (non-clickable text)</li>
+                </ul>
+              </div>
+              <div class="tpl-form-box">
+                <strong>REQUEST APPOINTMENT (NOT AUTOMATIC)</strong>
+                <p style="color:#dc2626;font-size:11px;margin:4px 0 8px">* Fill all fields. Does not confirm appointment.</p>
+                <label>Full Patient Name *</label><input placeholder="Required" />
+                <label>Parent Name *</label><input placeholder="Required" />
+                <label>Birth Day / Month / Year *</label><input placeholder="DD / MM / YYYY" />
+                <label>Phone &amp; Secondary Phone *</label><input placeholder="Required" />
+                <label>Insurance Policy Number *</label><input placeholder="Required" />
+                <label>Describe Symptoms *</label><input placeholder="Required" />
+                <div style="background:#0284c7;color:#fff;text-align:center;padding:8px;font-weight:bold;margin-top:6px">SUBMIT FORM</div>
+              </div>
+            </div>
+          </div>
+        `,
+        notesTitle: 'From 2014 Brochure & 15-Field Form → High-Trust Concierge & AI-Search Ready Site',
+        cards: [
+          {
+            t: '1. AI-Polished Architectural Portraits',
+            d: 'Replaced harsh hospital cutouts and eyeglass glare with warm, authoritative portraits matching the real corporate medical suite—preserving 100% authentic likeness.'
+          },
+          {
+            t: '2. 30-Second Structured WhatsApp Concierge',
+            d: 'Replaced a cold 15-field form with a 4-tap triage assistant that sends reception a clean, structured WhatsApp summary (age, joint concern, X-ray status, preferred day).'
+          },
+          {
+            t: '3. Built for Google + ChatGPT / Perplexity Search',
+            d: 'Added 6 dedicated condition guides, "2:00 AM Parent Traffic-Light" cards, and full MedicalClinic JSON-LD schema so AI search engines recommend the practice first.'
+          }
+        ]
+      }
+    };
+
+    let currentCase = 'shopify';
+    let currentView = 'split';
+    let splitPct = 46;
+
+    const afterFrame = document.getElementById('afterFrame');
+    const beforeLayer = document.getElementById('beforeLayer');
+    const sliderLine = document.getElementById('sliderLine');
+    const dragShield = document.getElementById('dragShield');
+    const stageArea = document.getElementById('stageArea');
+    const beforeBadge = document.getElementById('beforeBadge');
+    const afterBadge = document.getElementById('afterBadge');
+    const breakdownPanel = document.getElementById('breakdownPanel');
+    const breakdownContent = document.getElementById('breakdownContent');
+
+    function applySplit(pct) {
+      splitPct = Math.max(4, Math.min(96, pct));
+      if (currentView === 'after') {
+        beforeLayer.style.display = 'none';
+        sliderLine.style.display = 'none';
+        beforeBadge.style.display = 'none';
+      } else {
+        beforeLayer.style.display = 'block';
+        sliderLine.style.display = 'block';
+        beforeBadge.style.display = 'block';
+        beforeLayer.style.clipPath = `inset(0 ${100 - splitPct}% 0 0)`;
+        sliderLine.style.left = `${splitPct}%`;
+      }
+    }
+
+    function loadCase(key) {
+      currentCase = key;
+      const data = CASES[key];
+      document.querySelectorAll('[data-case]').forEach(b => b.classList.toggle('active', b.dataset.case === key));
+      beforeLayer.innerHTML = data.beforeHtml;
+      if (afterFrame.getAttribute('src') !== data.afterUrl) {
+        afterFrame.src = data.afterUrl;
+      }
+      breakdownContent.innerHTML = `
+        <h2 style="font-size:22px;font-weight:900">${data.notesTitle}</h2>
+        <div class="bd-grid">
+          ${data.cards.map(c => `<div class="bd-card"><h4>${c.t}</h4><p>${c.d}</p></div>`).join('')}
+        </div>
+      `;
+      applySplit(splitPct);
+    }
+
+    function setView(v) {
+      currentView = v;
+      document.querySelectorAll('[data-view]').forEach(b => b.classList.toggle('active', b.dataset.view === v));
+      breakdownPanel.classList.toggle('open', v === 'notes');
+      afterBadge.textContent = v === 'after' ? 'LIVE INTERACTIVE "AFTER" SITE' : 'AFTER • CUSTOM REWORK';
+      applySplit(splitPct);
+    }
+
+    document.querySelectorAll('[data-case]').forEach(b => b.addEventListener('click', () => loadCase(b.dataset.case)));
+    document.querySelectorAll('[data-view]').forEach(b => b.addEventListener('click', () => setView(b.dataset.view)));
+
+    // Pointer Dragging for Split Slider
+    let dragging = false;
+    function updateFromClientX(clientX) {
+      const rect = stageArea.getBoundingClientRect();
+      const pct = ((clientX - rect.left) / rect.width) * 100;
+      applySplit(pct);
+    }
+
+    sliderLine.addEventListener('pointerdown', (e) => {
+      dragging = true;
+      document.body.classList.add('dragging');
+      sliderLine.setPointerCapture?.(e.pointerId);
+      updateFromClientX(e.clientX);
+    });
+    window.addEventListener('pointermove', (e) => {
+      if (!dragging) return;
+      updateFromClientX(e.clientX);
+    });
+    window.addEventListener('pointerup', () => {
+      dragging = false;
+      document.body.classList.remove('dragging');
+    });
+    dragShield.addEventListener('pointermove', (e) => {
+      if (dragging) updateFromClientX(e.clientX);
+    });
+
+    loadCase('shopify');
+  </script>
+</body>
+</html>
