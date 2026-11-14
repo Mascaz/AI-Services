@@ -1,10 +1,10 @@
 /**
  * Dual-World Procedural WebAudio Synthesizer (0 KB assets, $0 API cost)
  * -----------------------------------------------------------------------------
- * LEFT WORLD ("tool" — Braun / Teenage Engineering Hardware Lab):
- *   - Machined aluminum rotary detent ticks (high-passed noise impulse + woody click)
- *   - Tactile Alps/Cherry mechanical keycap switches (dual transient + chassis thud)
- *   - Precision camera-shutter latch + warm harmonic calibration triad on launch
+ * LEFT WORLD ("tool" — Editorial Print & Photography Design Atelier):
+ *   - Archival heavy-stock paper whisper-flicks on hover
+ *   - Tactile Leica leaf-shutter / letterpress impression clicks on step/select
+ *   - Broadsheet folio turn + warm sunlit studio chord on world entry & launch
  *
  * RIGHT WORLD ("arcade" / "game" — 1986 Shibuya CRT Arcade):
  *   - Sanwa leaf-spring microswitch ticks & convex plunger double-snaps
@@ -34,7 +34,7 @@ function getNoiseBuffer(ctx) {
   if (noiseBuffer && noiseBuffer.sampleRate === ctx.sampleRate) {
     return noiseBuffer;
   }
-  const duration = 0.25;
+  const duration = 0.28;
   const length = Math.floor(ctx.sampleRate * duration);
   const buf = ctx.createBuffer(1, length, ctx.sampleRate);
   const data = buf.getChannelData(0);
@@ -43,12 +43,11 @@ function getNoiseBuffer(ctx) {
   let b2 = 0;
   for (let i = 0; i < length; i++) {
     const white = Math.random() * 2 - 1;
-    // Hybrid crisp white + warm pink transient texture
     b0 = 0.99765 * b0 + white * 0.099046;
     b1 = 0.963 * b1 + white * 0.2965164;
     b2 = 0.57 * b2 + white * 1.0526913;
     const pink = (b0 + b1 + b2 + white * 0.1848) * 0.18;
-    data[i] = white * 0.62 + pink * 0.38;
+    data[i] = white * 0.52 + pink * 0.48;
   }
   noiseBuffer = buf;
   return buf;
@@ -64,17 +63,25 @@ function createStereoOut(ctx, pan = 0) {
   return ctx.destination;
 }
 
-function triggerNoiseBurst(ctx, dest, { time, duration, filterType = 'bandpass', freq = 2000, q = 2.0, gain = 0.04 }) {
+function triggerNoiseBurst(
+  ctx,
+  dest,
+  { time, duration, attack = 0.002, filterType = 'bandpass', freq = 2000, freqEnd = null, q = 2.0, gain = 0.04 }
+) {
   const src = ctx.createBufferSource();
   src.buffer = getNoiseBuffer(ctx);
 
   const filter = ctx.createBiquadFilter();
   filter.type = filterType;
   filter.frequency.setValueAtTime(freq, time);
+  if (freqEnd) {
+    filter.frequency.exponentialRampToValueAtTime(freqEnd, time + duration);
+  }
   filter.Q.setValueAtTime(q, time);
 
   const env = ctx.createGain();
-  env.gain.setValueAtTime(Math.max(0.0001, gain), time);
+  env.gain.setValueAtTime(0.0001, time);
+  env.gain.linearRampToValueAtTime(Math.max(0.0002, gain), time + attack);
   env.gain.exponentialRampToValueAtTime(0.0001, time + duration);
 
   src.connect(filter);
@@ -82,7 +89,7 @@ function triggerNoiseBurst(ctx, dest, { time, duration, filterType = 'bandpass',
   env.connect(dest);
 
   src.start(time);
-  src.stop(time + duration + 0.005);
+  src.stop(time + duration + 0.008);
 }
 
 export function isSfxEnabled() {
@@ -98,7 +105,7 @@ export function toggleSfx() {
 }
 
 /**
- * Subtle tactile hover tick — rotary detent (Left) vs. leaf-spring ping (Right)
+ * Subtle tactile hover — Archival Cardstock Whisper-Flick (Left) vs. Arcade Microswitch Blip (Right)
  */
 export function playHoverTick(kind = 'tool', pan = kind === 'tool' ? -0.15 : 0.15) {
   const nowPerf = performance.now();
@@ -111,29 +118,32 @@ export function playHoverTick(kind = 'tool', pan = kind === 'tool' ? -0.15 : 0.1
   const out = createStereoOut(ctx, pan);
 
   if (kind === 'tool') {
-    // Machined aluminum rotary dial detent
+    // Crisp cotton-rag cardstock corner brush
     triggerNoiseBurst(ctx, out, {
       time: now,
-      duration: 0.012,
-      filterType: 'highpass',
-      freq: 3400,
-      q: 1.4,
-      gain: 0.024
+      attack: 0.004,
+      duration: 0.028,
+      filterType: 'bandpass',
+      freq: 2600,
+      freqEnd: 4200,
+      q: 1.1,
+      gain: 0.026
     });
 
+    // Subtle wooden gallery frame / nib tap
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
-    osc.type = 'triangle';
-    osc.frequency.setValueAtTime(1320, now);
-    osc.frequency.exponentialRampToValueAtTime(480, now + 0.016);
-    gain.gain.setValueAtTime(0.02, now);
-    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.018);
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(680, now);
+    osc.frequency.exponentialRampToValueAtTime(260, now + 0.018);
+    gain.gain.setValueAtTime(0.016, now);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.02);
     osc.connect(gain);
     gain.connect(out);
     osc.start(now);
-    osc.stop(now + 0.022);
+    osc.stop(now + 0.024);
   } else {
-    // Arcade microswitch feather tick + CRT phosphor blip
+    // Arcade microswitch feather tick + CRT phosphor blip (Unchanged)
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
     osc.type = 'square';
@@ -149,7 +159,7 @@ export function playHoverTick(kind = 'tool', pan = kind === 'tool' ? -0.15 : 0.1
 }
 
 /**
- * Primary selection / step sound — Mechanical Keycap Switch (Left) vs. Sanwa Arcade Button (Right)
+ * Primary selection / step — Leica Rangefinder & Archival Stamp (Left) vs. Sanwa Arcade Button (Right)
  */
 export function playMicroClick(kind = 'tool', pan = null) {
   const ctx = getCtx();
@@ -160,43 +170,43 @@ export function playMicroClick(kind = 'tool', pan = null) {
   const out = createStereoOut(ctx, stereoPan);
 
   if (kind === 'tool') {
-    // 1. Keycap tactile leaf transient
+    // 1. Heavy archival folio page slide + crisp letterpress impression
     triggerNoiseBurst(ctx, out, {
       time: now,
-      duration: 0.018,
+      attack: 0.003,
+      duration: 0.048,
       filterType: 'bandpass',
-      freq: 2650,
-      q: 2.8,
-      gain: 0.075
+      freq: 1750,
+      freqEnd: 2900,
+      q: 1.35,
+      gain: 0.055
     });
 
-    // 2. Anodized aluminum plate bottom-out thud
+    // 2. Delicate Leica leaf-shutter double click
+    triggerNoiseBurst(ctx, out, {
+      time: now + 0.011,
+      attack: 0.001,
+      duration: 0.012,
+      filterType: 'highpass',
+      freq: 3200,
+      q: 1.8,
+      gain: 0.036
+    });
+
+    // 3. Warm wooden drafting-table dampened settle
     const bodyOsc = ctx.createOscillator();
     const bodyGain = ctx.createGain();
-    bodyOsc.type = 'triangle';
-    bodyOsc.frequency.setValueAtTime(240, now);
-    bodyOsc.frequency.exponentialRampToValueAtTime(68, now + 0.042);
-    bodyGain.gain.setValueAtTime(0.075, now);
-    bodyGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.046);
+    bodyOsc.type = 'sine';
+    bodyOsc.frequency.setValueAtTime(168, now);
+    bodyOsc.frequency.exponentialRampToValueAtTime(54, now + 0.045);
+    bodyGain.gain.setValueAtTime(0.068, now);
+    bodyGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.05);
     bodyOsc.connect(bodyGain);
     bodyGain.connect(out);
     bodyOsc.start(now);
-    bodyOsc.stop(now + 0.05);
-
-    // 3. Crisp metallic contact ping
-    const pinOsc = ctx.createOscillator();
-    const pinGain = ctx.createGain();
-    pinOsc.type = 'sine';
-    pinOsc.frequency.setValueAtTime(1180, now + 0.004);
-    pinOsc.frequency.exponentialRampToValueAtTime(590, now + 0.028);
-    pinGain.gain.setValueAtTime(0.032, now + 0.004);
-    pinGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.032);
-    pinOsc.connect(pinGain);
-    pinGain.connect(out);
-    pinOsc.start(now + 0.004);
-    pinOsc.stop(now + 0.036);
+    bodyOsc.stop(now + 0.054);
   } else {
-    // Sanwa OBSF-30 convex arcade button snap + spring rebound
+    // Sanwa OBSF-30 convex arcade button snap + spring rebound (Unchanged)
     triggerNoiseBurst(ctx, out, {
       time: now,
       duration: 0.014,
@@ -206,7 +216,6 @@ export function playMicroClick(kind = 'tool', pan = null) {
       gain: 0.06
     });
 
-    // Plunger strike + microswitch spring ring
     const snapOsc = ctx.createOscillator();
     const snapGain = ctx.createGain();
     snapOsc.type = 'square';
@@ -219,7 +228,6 @@ export function playMicroClick(kind = 'tool', pan = null) {
     snapOsc.start(now);
     snapOsc.stop(now + 0.042);
 
-    // Secondary arcade chirp harmonic
     const bleep = ctx.createOscillator();
     const bleepGain = ctx.createGain();
     bleep.type = 'sawtooth';
@@ -235,7 +243,7 @@ export function playMicroClick(kind = 'tool', pan = null) {
 }
 
 /**
- * Crossing the split seam between Hub <-> Left Hardware Lab <-> Right Shibuya Arcade
+ * Crossing the split seam between Hub <-> Left Editorial Studio <-> Right Shibuya Arcade
  */
 export function playWorldTransition(targetMode = 'hub') {
   const ctx = getCtx();
@@ -245,32 +253,34 @@ export function playWorldTransition(targetMode = 'hub') {
 
   if (targetMode === 'tools') {
     const out = createStereoOut(ctx, -0.22);
-    // Pneumatic drafting rail slide + mechanical relay latch
+    // Broadsheet folio page turn + warm sunlit gallery fifth (F4 -> C5)
     triggerNoiseBurst(ctx, out, {
       time: now,
-      duration: 0.14,
+      attack: 0.018,
+      duration: 0.16,
       filterType: 'bandpass',
-      freq: 1200,
-      q: 1.8,
-      gain: 0.042
+      freq: 950,
+      freqEnd: 2400,
+      q: 1.0,
+      gain: 0.048
     });
 
-    [440, 659.25].forEach((freq, idx) => {
+    [349.23, 523.25].forEach((freq, idx) => {
       const osc = ctx.createOscillator();
       const g = ctx.createGain();
-      const t0 = now + 0.03 + idx * 0.045;
-      osc.type = 'triangle';
+      const t0 = now + 0.025 + idx * 0.055;
+      osc.type = 'sine';
       osc.frequency.setValueAtTime(freq, t0);
-      g.gain.setValueAtTime(0.042, t0);
-      g.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.13);
+      g.gain.setValueAtTime(0.045, t0);
+      g.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.24);
       osc.connect(g);
       g.connect(out);
       osc.start(t0);
-      osc.stop(t0 + 0.14);
+      osc.stop(t0 + 0.26);
     });
   } else if (targetMode === 'games') {
     const out = createStereoOut(ctx, 0.22);
-    // Neon transformer power-up sweep + 80s synth arpeggio spark
+    // Neon transformer power-up sweep + 80s synth arpeggio spark (Unchanged)
     const sweep = ctx.createOscillator();
     const filter = ctx.createBiquadFilter();
     const g = ctx.createGain();
@@ -302,32 +312,31 @@ export function playWorldTransition(targetMode = 'hub') {
       osc.stop(t0 + 0.12);
     });
   } else {
-    // Center Split Hub — balanced dual-detent lock
     const out = createStereoOut(ctx, 0);
     triggerNoiseBurst(ctx, out, {
       time: now,
-      duration: 0.025,
+      duration: 0.03,
       filterType: 'bandpass',
-      freq: 1800,
-      q: 2.2,
-      gain: 0.04
+      freq: 1600,
+      q: 1.8,
+      gain: 0.036
     });
     const osc = ctx.createOscillator();
     const g = ctx.createGain();
     osc.type = 'sine';
     osc.frequency.setValueAtTime(523.25, now);
-    osc.frequency.exponentialRampToValueAtTime(392.0, now + 0.09);
-    g.gain.setValueAtTime(0.038, now);
-    g.gain.exponentialRampToValueAtTime(0.0001, now + 0.1);
+    osc.frequency.exponentialRampToValueAtTime(392.0, now + 0.1);
+    g.gain.setValueAtTime(0.036, now);
+    g.gain.exponentialRampToValueAtTime(0.0001, now + 0.11);
     osc.connect(g);
     g.connect(out);
     osc.start(now);
-    osc.stop(now + 0.11);
+    osc.stop(now + 0.12);
   }
 }
 
 /**
- * Stage Boot Sound — Leica/Hardware Shutter + Calibration Chord (Left)
+ * Stage Boot — Hasselblad Studio Shutter + Warm Maj7 Chord (Left)
  * vs. Iron Coin Mech Drop + YM2151 1UP Chime + CRT Degauss Thump (Right)
  */
 export function playLaunchSound(mode = 'game') {
@@ -339,7 +348,6 @@ export function playLaunchSound(mode = 'game') {
   if (mode === 'game') {
     const out = createStereoOut(ctx, 0.06);
 
-    // 1. CRT Degauss magnetic low thump
     const thump = ctx.createOscillator();
     const thumpGain = ctx.createGain();
     thump.type = 'sine';
@@ -352,7 +360,6 @@ export function playLaunchSound(mode = 'game') {
     thump.start(now);
     thump.stop(now + 0.21);
 
-    // 2. Metallic Yen/Quarter Coin Chute Clink (inharmonic bell partials)
     [2780, 4190].forEach((freq, i) => {
       const bell = ctx.createOscillator();
       const bg = ctx.createGain();
@@ -367,7 +374,6 @@ export function playLaunchSound(mode = 'game') {
       bell.stop(t0 + 0.095);
     });
 
-    // 3. Classic 1986 1UP Arcade Arpeggio (B5 -> E6 -> G#6 -> B6)
     [987.77, 1318.51, 1661.22, 1975.53].forEach((freq, idx) => {
       const osc = ctx.createOscillator();
       const filter = ctx.createBiquadFilter();
@@ -392,42 +398,39 @@ export function playLaunchSound(mode = 'game') {
   } else {
     const out = createStereoOut(ctx, -0.06);
 
-    // 1. Precision dual-curtain mechanical shutter / bench clamp
+    // 1. Crisp medium-format camera mirror & leaf shutter
     triggerNoiseBurst(ctx, out, {
       time: now,
-      duration: 0.02,
+      attack: 0.002,
+      duration: 0.024,
       filterType: 'bandpass',
-      freq: 2900,
-      q: 2.4,
-      gain: 0.07
+      freq: 2400,
+      q: 2.0,
+      gain: 0.058
     });
     triggerNoiseBurst(ctx, out, {
-      time: now + 0.036,
-      duration: 0.022,
+      time: now + 0.042,
+      attack: 0.002,
+      duration: 0.032,
       filterType: 'bandpass',
-      freq: 2100,
-      q: 2.6,
-      gain: 0.065
+      freq: 1650,
+      q: 1.6,
+      gain: 0.052
     });
 
-    // 2. Teenage Engineering OP-1 warm calibration triad (C5 -> G5 -> D6)
-    [523.25, 783.99, 1174.66].forEach((freq, idx) => {
+    // 2. Warm gallery Rhodes / tuning-fork Fmaj7 chord (F4 -> A4 -> C5 -> E5)
+    [349.23, 440.0, 523.25, 659.25].forEach((freq, idx) => {
       const osc = ctx.createOscillator();
-      const filter = ctx.createBiquadFilter();
       const gain = ctx.createGain();
-      const t0 = now + 0.05 + idx * 0.038;
-      const dur = idx === 2 ? 0.24 : 0.15;
+      const t0 = now + 0.045 + idx * 0.032;
+      const dur = idx === 3 ? 0.34 : 0.22;
 
-      osc.type = 'triangle';
+      osc.type = 'sine';
       osc.frequency.setValueAtTime(freq, t0);
-      filter.type = 'lowpass';
-      filter.frequency.setValueAtTime(2800, t0);
-
-      gain.gain.setValueAtTime(0.052, t0);
+      gain.gain.setValueAtTime(0.036, t0);
       gain.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
 
-      osc.connect(filter);
-      filter.connect(gain);
+      osc.connect(gain);
       gain.connect(out);
       osc.start(t0);
       osc.stop(t0 + dur + 0.01);
@@ -436,7 +439,7 @@ export function playLaunchSound(mode = 'game') {
 }
 
 /**
- * Closing the stage — Mechanical Unlatch (Left) vs. CRT Beam Collapse (Right)
+ * Closing the stage — Soft Linen Folio Close (Left) vs. CRT Beam Collapse (Right)
  */
 export function playStageClose(mode = 'game') {
   const ctx = getCtx();
@@ -458,22 +461,23 @@ export function playStageClose(mode = 'game') {
   } else {
     triggerNoiseBurst(ctx, ctx.destination, {
       time: now,
-      duration: 0.018,
-      filterType: 'bandpass',
-      freq: 1950,
-      q: 2.5,
-      gain: 0.055
+      attack: 0.005,
+      duration: 0.065,
+      filterType: 'lowpass',
+      freq: 1400,
+      q: 0.9,
+      gain: 0.045
     });
     const osc = ctx.createOscillator();
     const g = ctx.createGain();
-    osc.type = 'triangle';
-    osc.frequency.setValueAtTime(620, now);
-    osc.frequency.exponentialRampToValueAtTime(220, now + 0.055);
-    g.gain.setValueAtTime(0.04, now);
-    g.gain.exponentialRampToValueAtTime(0.0001, now + 0.06);
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(210, now);
+    osc.frequency.exponentialRampToValueAtTime(78, now + 0.065);
+    g.gain.setValueAtTime(0.042, now);
+    g.gain.exponentialRampToValueAtTime(0.0001, now + 0.07);
     osc.connect(g);
     g.connect(ctx.destination);
     osc.start(now);
-    osc.stop(now + 0.065);
+    osc.stop(now + 0.075);
   }
 }

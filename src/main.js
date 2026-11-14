@@ -511,15 +511,15 @@ function renderHud() {
 
   p1InspectorCard.style.setProperty('--active-accent', rawItem.accent);
 
-  // World-specific top chassis telemetry bar
+  // World-specific top colophon / CRT telemetry bar
   if (p1DeckUnitCode && p1DeckWorldStamp) {
     const numStr = `0${activeIdx + 1} / 0${list.length}`;
     if (isGames) {
       p1DeckUnitCode.textContent = `CAB ${numStr} // 1UP FREE PLAY`;
       p1DeckWorldStamp.textContent = 'SHIBUYA 1986 • 60HZ CRT';
     } else {
-      p1DeckUnitCode.textContent = `MOD ${numStr} // ${(rawItem.physicalLabel || 'BENCH UNIT').toUpperCase()}`;
-      p1DeckWorldStamp.textContent = 'FIELD HARDWARE SPEC';
+      p1DeckUnitCode.textContent = `FOLIO N° ${numStr} — ${(rawItem.physicalLabel || 'ARCHIVAL EDITION').toUpperCase()}`;
+      p1DeckWorldStamp.textContent = 'PRINT & DESIGN ATELIER';
     }
   }
 
@@ -669,12 +669,12 @@ function openPlayableStage(rawItem, kind = 'game', initialTab = 'live') {
   stageExternalLink.href = rawItem.playUrl;
   stageTelemetryTag.textContent = rawItem.category;
   stageLoadingText.textContent =
-    kind === 'game' ? `BOOTING 60HZ ROM // ${item.name.toUpperCase()}…` : `INITIALIZING BENCH // ${item.name.toUpperCase()}…`;
+    kind === 'game' ? `BOOTING 60HZ ROM // ${item.name.toUpperCase()}…` : `OPENING EDITION // ${item.name.toUpperCase()}…`;
 
   stageSpecsContent.innerHTML = `
     <div class="arch-card" style="padding:20px">
       <div class="arch-step">${rawItem.category}</div>
-      <h3 style="font-size:22px;margin-top:6px;text-transform:uppercase">${item.name}</h3>
+      <h3 style="font-size:22px;margin-top:6px">${item.name}</h3>
       <span class="arch-metric-pill">${rawItem.bundleSizeLabel}</span>
       <p style="font-size:14px;line-height:1.65;margin-top:8px">${rawItem.description}</p>
       <div class="idea-spark-box" style="margin-top:14px">
@@ -881,18 +881,22 @@ sendIgBtn.addEventListener('click', async () => {
 function renderQuickIndexModal() {
   const renderCol = (items, kind, heading, colClass, accentColor, fontVar) => `
     <div class="${colClass}">
-      <h3 style="font-family:${fontVar};font-size:15px;text-transform:uppercase;color:${accentColor};margin-bottom:8px">${heading}</h3>
+      <h3 style="font-family:${fontVar};font-size:16px;${kind === 'game' ? 'text-transform:uppercase;' : ''}color:${accentColor};margin-bottom:8px">${heading}</h3>
       ${items
         .map((raw, idx) => {
           const it = localizeItem(raw);
+          const titleStyle =
+            kind === 'game'
+              ? 'font-family:var(--font-arc-display);font-weight:800;font-size:13px;text-transform:uppercase'
+              : 'font-family:var(--font-ed-serif);font-weight:700;font-size:15px;letter-spacing:-0.015em';
           return `
             <button type="button" class="tldr-row-btn" data-quick-kind="${kind}" data-quick-idx="${idx}">
               <img src="${raw.iconUrl}" alt="${it.name}" width="38" height="38" loading="lazy" />
               <div style="flex:1;min-width:0">
-                <div style="font-weight:700;font-size:13px;text-transform:uppercase">${it.name}</div>
-                <div style="font-family:var(--font-hw-mono);font-size:10.5px;opacity:0.78;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${it.badge} &bull; ${raw.category}</div>
+                <div style="${titleStyle}">${it.name}</div>
+                <div style="font-family:var(--font-ed-mono);font-size:10.5px;opacity:0.78;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${it.badge} &bull; ${raw.category}</div>
               </div>
-              <span style="font-family:var(--font-hw-mono);font-size:12px;color:${accentColor}">&#9654;</span>
+              <span style="font-family:var(--font-ed-mono);font-size:12px;color:${accentColor}">&#9654;</span>
             </button>
           `;
         })
@@ -902,12 +906,12 @@ function renderQuickIndexModal() {
 
   quickIndexBody.innerHTML = `
     <div class="tldr-columns">
-      ${renderCol(TOOLS_ITEMS, 'tool', `← ${t(currentLang, 'leftTitle')} [07]`, 'tldr-col-tools', '#ff5500', 'var(--font-hw-sans)')}
+      ${renderCol(TOOLS_ITEMS, 'tool', `← ${t(currentLang, 'leftTitle')} (07)`, 'tldr-col-tools', '#c83e2b', 'var(--font-ed-serif)')}
       ${renderCol(GAMES_ITEMS, 'game', `${t(currentLang, 'rightTitle')} [07] →`, 'tldr-col-games', '#00f0ff', 'var(--font-arc-pixel)')}
     </div>
-    <div style="padding-top:12px;border-top:1px solid rgba(255,255,255,0.16);display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;font-family:var(--font-hw-mono);font-size:12px;color:#e2e8f0">
+    <div style="padding-top:12px;border-top:1px solid rgba(255,255,255,0.16);display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;font-family:var(--font-ed-mono);font-size:12px;color:#e2e8f0">
       <div style="display:flex;gap:14px;flex-wrap:wrap">
-        <a href="${CONTACT_CONFIG.portfolioUrl}" target="_blank" rel="noopener" style="color:#ff5500;font-weight:700">mascaz.github.io &#8599;</a>
+        <a href="${CONTACT_CONFIG.portfolioUrl}" target="_blank" rel="noopener" style="color:#f6f1e7;font-weight:700">mascaz.github.io &#8599;</a>
         <a href="https://www.instagram.com/${CONTACT_CONFIG.instagramHandle}/" target="_blank" rel="noopener" style="color:#00f0ff;font-weight:700">@${CONTACT_CONFIG.instagramHandle} &#8599;</a>
       </div>
       <button type="button" id="quickStartProjectBtn" class="send-channel-btn send-ig-btn" style="padding:8px 14px">

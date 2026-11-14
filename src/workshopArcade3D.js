@@ -2,73 +2,77 @@ import * as THREE from 'three';
 
 /**
  * Dual-Identity 3D Scene:
- *   LEFT  (x < 0) = Braun / Teenage Engineering Anodized Hardware Lab & Pegboard
- *   RIGHT (x > 0) = 1986 Shibuya Wet-Asphalt CRT Cyber-Arcade
- *   SEAM  (x = 0) = Literal Physical & Atmospheric Split Threshold
+ *   LEFT  (x < 0) = Sunlit Swiss Editorial Print & Design Studio (Framed Folios & Proof Table)
+ *   RIGHT (x > 0) = 1986 Shibuya Wet-Asphalt CRT Cyber-Arcade (7 Neon Cabinets)
+ *   SEAM  (x = 0) = Literal Day-vs-Night Architectural & Atmospheric Threshold
  */
 
-const HW_PUTTY = '#ebe5d8';
-const HW_INK = '#14171c';
-const HW_ORANGE = '#ff5500';
+const ED_PAPER = '#faf6ee';
+const ED_WALL = '#f2ece1';
+const ED_INK = '#151413';
+const ED_VERMILION = '#c83e2b';
+const ED_BRASS = '#b08d57';
+
 const ARC_PINK = '#ff2a85';
 const ARC_CYAN = '#00f0ff';
 
-function createWorkshopSignTexture(title, subtitle) {
+function createEditorialSignTexture(title, subtitle) {
   const canvas = document.createElement('canvas');
   canvas.width = 1024;
   canvas.height = 256;
   const ctx = canvas.getContext('2d');
 
-  // Anodized warm-putty Braun/TE faceplate
-  ctx.fillStyle = HW_PUTTY;
+  // Warm archival cotton-rag masthead stock
+  ctx.fillStyle = ED_PAPER;
   ctx.fillRect(0, 0, 1024, 256);
 
-  // Heavy gunmetal outer bezel + recessed inner rule
-  ctx.strokeStyle = HW_INK;
-  ctx.lineWidth = 14;
-  ctx.strokeRect(7, 7, 1010, 242);
+  // Outer sumi-ink gallery frame + hair-thin inner double rule
+  ctx.strokeStyle = ED_INK;
+  ctx.lineWidth = 10;
+  ctx.strokeRect(5, 5, 1014, 246);
 
-  ctx.lineWidth = 3;
-  ctx.strokeRect(26, 26, 972, 204);
+  ctx.lineWidth = 2;
+  ctx.strokeRect(22, 22, 980, 212);
+  ctx.strokeRect(28, 28, 968, 200);
 
-  // Top-left safety-orange module badge
-  ctx.fillStyle = HW_ORANGE;
-  ctx.fillRect(26, 26, 210, 40);
-  ctx.fillStyle = '#ffffff';
-  ctx.font = '700 20px "IBM Plex Mono", ui-monospace, monospace';
+  // Top editorial colophon rule
+  ctx.beginPath();
+  ctx.moveTo(44, 66);
+  ctx.lineTo(980, 66);
+  ctx.stroke();
+
+  ctx.fillStyle = ED_INK;
+  ctx.font = '700 17px "Space Mono", ui-monospace, monospace';
   ctx.textAlign = 'left';
   ctx.textBaseline = 'middle';
-  ctx.fillText('SYS.01 // LAB', 42, 47);
+  ctx.fillText('§ EDITION N° 07 — PRINT & DIGITAL ATELIER', 48, 47);
 
-  // Top-right serial stamp
-  ctx.fillStyle = '#525866';
-  ctx.textAlign = 'right';
-  ctx.fillText('REV.04 • 24V DC', 978, 47);
-
-  // Corner screw crosshairs
-  ctx.fillStyle = HW_INK;
-  ctx.font = '700 24px "IBM Plex Mono", monospace';
+  // Top-right vermilion ink stamp
+  ctx.fillStyle = ED_VERMILION;
+  ctx.fillRect(808, 34, 168, 26);
+  ctx.fillStyle = '#ffffff';
+  ctx.font = '700 15px "Space Mono", monospace';
   ctx.textAlign = 'center';
-  [
-    [46, 208],
-    [978, 208]
-  ].forEach(([sx, sy]) => {
-    ctx.fillText('+', sx, sy);
-  });
+  ctx.fillText('ARCHIVE LIVE', 892, 48);
 
-  // Main stamped hardware title
-  const fontSize = title.length > 10 ? 64 : 84;
-  ctx.font = `700 ${fontSize}px "Chakra Petch", system-ui, sans-serif`;
-  ctx.fillStyle = HW_INK;
+  // Main expressive editorial serif masthead
+  const fontSize = title.length > 12 ? 62 : 76;
+  ctx.font = `700 ${fontSize}px "Fraunces", Georgia, serif`;
+  ctx.fillStyle = ED_INK;
   ctx.textAlign = 'center';
-  ctx.fillText(title.toUpperCase(), 512, 118);
+  ctx.fillText(title.toUpperCase(), 512, 126);
 
-  // Bottom dark gunmetal spec strip
-  ctx.fillStyle = HW_INK;
-  ctx.fillRect(140, 174, 744, 40);
-  ctx.fillStyle = HW_PUTTY;
-  ctx.font = '600 21px "IBM Plex Mono", system-ui, monospace';
-  ctx.fillText(subtitle.toUpperCase(), 512, 195);
+  // Bottom colophon rule + caption
+  ctx.strokeStyle = ED_INK;
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.moveTo(120, 178);
+  ctx.lineTo(904, 178);
+  ctx.stroke();
+
+  ctx.fillStyle = ED_VERMILION;
+  ctx.font = '700 19px "Space Mono", ui-monospace, monospace';
+  ctx.fillText(subtitle.toUpperCase(), 512, 204);
 
   const tex = new THREE.CanvasTexture(canvas);
   tex.colorSpace = THREE.SRGBColorSpace;
@@ -82,17 +86,14 @@ function createArcadeSignTexture(title, subtitle) {
   canvas.height = 256;
   const ctx = canvas.getContext('2d');
 
-  // Deep Shibuya night acrylic
   ctx.fillStyle = '#080312';
   ctx.fillRect(0, 0, 1024, 256);
 
-  // Scanline texture
   ctx.fillStyle = 'rgba(255, 42, 133, 0.07)';
   for (let y = 0; y < 256; y += 8) {
     ctx.fillRect(0, y, 1024, 3);
   }
 
-  // Angled polygon neon tube outer border
   const cut = 28;
   ctx.beginPath();
   ctx.moveTo(16 + cut, 16);
@@ -108,14 +109,12 @@ function createArcadeSignTexture(title, subtitle) {
   ctx.shadowBlur = 28;
   ctx.stroke();
 
-  // Inner cyan trace
   ctx.shadowColor = ARC_CYAN;
   ctx.shadowBlur = 14;
   ctx.strokeStyle = ARC_CYAN;
   ctx.lineWidth = 3;
   ctx.strokeRect(34, 34, 956, 188);
 
-  // Pixel corner telemetry
   ctx.shadowBlur = 0;
   ctx.font = '700 18px "Silkscreen", monospace';
   ctx.fillStyle = '#fde047';
@@ -126,7 +125,6 @@ function createArcadeSignTexture(title, subtitle) {
   ctx.textAlign = 'right';
   ctx.fillText('SHIBUYA 1986', 972, 56);
 
-  // Blazing arcade marquee title
   const fontSize = title.length > 10 ? 60 : 80;
   ctx.font = `800 ${fontSize}px "Syne", system-ui, sans-serif`;
   ctx.textAlign = 'center';
@@ -147,238 +145,496 @@ function createArcadeSignTexture(title, subtitle) {
   return tex;
 }
 
-function createPegTagTexture(item, idx = 0) {
+/**
+ * Draws bespoke Swiss Modernist editorial print artwork inside each framed gallery folio
+ */
+function drawSwissEditorialMotif(ctx, tool, idx) {
+  const cx = 256;
+  const cy = 224;
+
+  ctx.save();
+  // Subtle archival cream plate background inside passe-partout
+  ctx.fillStyle = '#f1ebe0';
+  ctx.fillRect(42, 92, 428, 252);
+  ctx.strokeStyle = ED_INK;
+  ctx.lineWidth = 2;
+  ctx.strokeRect(42, 92, 428, 252);
+
+  switch (tool.toolShape) {
+    case 'roller': {
+      // 01: Editorial Split Spread (Wireframe Before vs. Black/Gold Luxury After)
+      ctx.fillStyle = '#e5e0d5';
+      ctx.fillRect(44, 94, 212, 248);
+      ctx.strokeStyle = '#8c857b';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(64, 118, 172, 28);
+      ctx.strokeRect(64, 160, 80, 96);
+      ctx.strokeRect(156, 160, 80, 96);
+      ctx.fillStyle = '#6b655c';
+      ctx.font = '700 14px "Space Mono", monospace';
+      ctx.textAlign = 'left';
+      ctx.fillText('BEFORE', 66, 137);
+
+      ctx.fillStyle = ED_INK;
+      ctx.fillRect(256, 94, 212, 248);
+      ctx.fillStyle = ED_PAPER;
+      ctx.font = 'italic 700 26px "Fraunces", Georgia, serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('Relais', 362, 178);
+      ctx.fillText('Palais', 362, 208);
+      ctx.fillStyle = ED_VERMILION;
+      ctx.fillRect(306, 232, 112, 26);
+      ctx.fillStyle = '#ffffff';
+      ctx.font = '700 12px "Space Mono", monospace';
+      ctx.fillText('AFTER →', 362, 249);
+
+      // Vermilion split rule
+      ctx.strokeStyle = ED_VERMILION;
+      ctx.lineWidth = 5;
+      ctx.beginPath();
+      ctx.moveTo(256, 92);
+      ctx.lineTo(256, 344);
+      ctx.stroke();
+      break;
+    }
+
+    case 'camera-loupe': {
+      // 02: Medium-Format Contact Sheet & Exposure Crop Marks
+      ctx.strokeStyle = ED_INK;
+      ctx.lineWidth = 2.5;
+      // Crop L-brackets
+      [
+        [80, 118, 1, 1],
+        [432, 118, -1, 1],
+        [80, 318, 1, -1],
+        [432, 318, -1, -1]
+      ].forEach(([bx, by, sx, sy]) => {
+        ctx.beginPath();
+        ctx.moveTo(bx, by + sy * 26);
+        ctx.lineTo(bx, by);
+        ctx.lineTo(bx + sx * 26, by);
+        ctx.stroke();
+      });
+
+      // Swiss modernist sun/lens study
+      ctx.fillStyle = ED_INK;
+      ctx.beginPath();
+      ctx.arc(cx - 46, cy - 4, 66, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = ED_VERMILION;
+      ctx.beginPath();
+      ctx.arc(cx + 28, cy - 18, 42, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Color calibration swatch strip
+      ['#151413', '#c83e2b', '#d97706', '#b08d57', '#faf6ee'].forEach((col, i) => {
+        ctx.fillStyle = col;
+        ctx.fillRect(346, 134 + i * 32, 56, 24);
+        ctx.strokeRect(346, 134 + i * 32, 56, 24);
+      });
+      break;
+    }
+
+    case 'airbrush': {
+      // 03: Chiaroscuro Light & Shadow Sphere Study
+      const grad = ctx.createRadialGradient(cx - 28, cy - 28, 12, cx, cy, 86);
+      grad.addColorStop(0, '#ffffff');
+      grad.addColorStop(0.48, '#d6cec2');
+      grad.addColorStop(1, ED_INK);
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(cx, cy, 82, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = ED_INK;
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      // Golden-ratio orbit ring
+      ctx.strokeStyle = ED_VERMILION;
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      ctx.ellipse(cx, cy, 134, 42, -0.28, 0, Math.PI * 2);
+      ctx.stroke();
+
+      ctx.fillStyle = ED_VERMILION;
+      ctx.beginPath();
+      ctx.arc(cx - 116, cy + 34, 10, 0, Math.PI * 2);
+      ctx.fill();
+      break;
+    }
+
+    case 'clapper': {
+      // 04: 35mm Cinema Contact Storyboard Strip (3 Scenes)
+      ctx.fillStyle = ED_INK;
+      ctx.fillRect(58, 126, 396, 184);
+
+      // Sprocket holes top & bottom
+      ctx.fillStyle = ED_PAPER;
+      for (let x = 72; x < 444; x += 28) {
+        ctx.fillRect(x, 134, 14, 10);
+        ctx.fillRect(x, 290, 14, 10);
+      }
+
+      // 3 Storyboard frames
+      ['I', 'II', 'III'].forEach((roman, i) => {
+        const fx = 74 + i * 124;
+        ctx.fillStyle = i === 1 ? ED_VERMILION : '#f5efe4';
+        ctx.fillRect(fx, 154, 112, 124);
+        ctx.fillStyle = i === 1 ? '#ffffff' : ED_INK;
+        ctx.font = 'italic 700 32px "Fraunces", serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(roman, fx + 56, 224);
+      });
+      break;
+    }
+
+    case 'film-reel': {
+      // 05: Vertical 9:16 Editorial Reel + Audio Waveform Spec
+      ctx.fillStyle = ED_INK;
+      ctx.fillRect(92, 108, 126, 218);
+      ctx.fillStyle = ED_VERMILION;
+      ctx.fillRect(102, 118, 106, 152);
+      ctx.fillStyle = '#ffffff';
+      ctx.font = '700 22px "Fraunces", serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('9:16', 155, 200);
+      ctx.fillStyle = ED_PAPER;
+      ctx.fillRect(108, 282, 94, 12);
+      ctx.fillRect(122, 300, 66, 10);
+
+      // Editorial audio waveform bars on right
+      for (let b = 0; b < 14; b++) {
+        const bh = 28 + Math.abs(Math.sin(b * 0.85 + 1)) * 116;
+        ctx.fillStyle = b % 4 === 0 ? ED_VERMILION : ED_INK;
+        ctx.fillRect(250 + b * 14, cy - bh / 2, 8, bh);
+      }
+      break;
+    }
+
+    case 'scale': {
+      // 06: Broadsheet Financial Ledger & Unit-Economics Chart
+      ctx.strokeStyle = 'rgba(21, 20, 19, 0.2)';
+      ctx.lineWidth = 1;
+      for (let y = 124; y <= 316; y += 38) {
+        ctx.beginPath();
+        ctx.moveTo(68, y);
+        ctx.lineTo(444, y);
+        ctx.stroke();
+      }
+
+      const heights = [64, 96, 128, 168, 204];
+      heights.forEach((bh, i) => {
+        const bx = 88 + i * 70;
+        ctx.fillStyle = i === 4 ? ED_VERMILION : i === 3 ? ED_BRASS : ED_INK;
+        ctx.fillRect(bx, 318 - bh, 46, bh);
+      });
+
+      ctx.fillStyle = ED_INK;
+      ctx.font = '700 16px "Space Mono", monospace';
+      ctx.textAlign = 'left';
+      ctx.fillText('ROAS +3.8× // NET MARGIN', 72, 124);
+      break;
+    }
+
+    case 'caliper':
+    default: {
+      // 07: International Typographic Specimen Grid
+      ctx.strokeStyle = ED_INK;
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(256, 104);
+      ctx.lineTo(256, 332);
+      ctx.moveTo(56, 218);
+      ctx.lineTo(456, 218);
+      ctx.stroke();
+
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillStyle = ED_INK;
+      ctx.font = 'italic 700 54px "Fraunces", Georgia, serif';
+      ctx.fillText('Aa', 156, 162);
+      ctx.fillStyle = ED_VERMILION;
+      ctx.font = '700 50px "Fraunces", Georgia, serif';
+      ctx.fillText('Ññ', 356, 162);
+      ctx.fillStyle = ED_INK;
+      ctx.font = '700 48px system-ui, sans-serif';
+      ctx.fillText('あ', 156, 274);
+      ctx.fillText('ع', 356, 274);
+      break;
+    }
+  }
+
+  ctx.restore();
+}
+
+function createEditorialFolioTexture(tool, idx = 0) {
   const canvas = document.createElement('canvas');
   canvas.width = 512;
-  canvas.height = 152;
+  canvas.height = 460;
   const ctx = canvas.getContext('2d');
+  let loadedIcon = null;
 
-  // Stamped warm-putty aluminum tag
-  ctx.fillStyle = '#f2ede2';
-  ctx.fillRect(0, 0, 512, 152);
+  function draw() {
+    // Museum cotton-rag passe-partout mat
+    ctx.fillStyle = ED_PAPER;
+    ctx.fillRect(0, 0, 512, 460);
 
-  // Left safety-orange / unit index block
-  ctx.fillStyle = idx === 0 ? HW_ORANGE : HW_INK;
-  ctx.fillRect(0, 0, 86, 152);
+    // Outer double letterpress border
+    ctx.strokeStyle = ED_INK;
+    ctx.lineWidth = 6;
+    ctx.strokeRect(10, 10, 492, 440);
+    ctx.lineWidth = 1.5;
+    ctx.strokeRect(20, 20, 472, 420);
 
-  ctx.fillStyle = idx === 0 ? '#ffffff' : HW_ORANGE;
-  ctx.font = '700 18px "IBM Plex Mono", monospace';
-  ctx.textAlign = 'center';
-  ctx.fillText('MOD', 43, 52);
-  ctx.fillStyle = '#ffffff';
-  ctx.font = '700 34px "Chakra Petch", sans-serif';
-  ctx.fillText(`0${idx + 1}`, 43, 98);
+    // Top Editorial Masthead Row
+    ctx.fillStyle = ED_INK;
+    ctx.font = 'italic 700 28px "Fraunces", Georgia, serif';
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(`N° 0${idx + 1}`, 42, 54);
 
-  // Top accent bar
-  ctx.fillStyle = item.accent;
-  ctx.fillRect(86, 0, 426, 10);
+    ctx.fillStyle = ED_VERMILION;
+    ctx.fillRect(326, 36, 144, 34);
+    ctx.fillStyle = '#ffffff';
+    ctx.font = '700 15px "Space Mono", monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText(tool.badge.toUpperCase(), 398, 54);
 
-  // Outer machined border
-  ctx.strokeStyle = HW_INK;
-  ctx.lineWidth = 6;
-  ctx.strokeRect(3, 3, 506, 146);
+    ctx.strokeStyle = ED_INK;
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(42, 78);
+    ctx.lineTo(470, 78);
+    ctx.stroke();
 
-  // Title & stamped spec badge
-  ctx.fillStyle = HW_INK;
-  ctx.font = '700 35px "Chakra Petch", system-ui, sans-serif';
-  ctx.textAlign = 'left';
-  ctx.fillText(item.shortName.toUpperCase(), 106, 66);
+    // Central Swiss Print Artwork
+    drawSwissEditorialMotif(ctx, tool, idx);
 
-  ctx.fillStyle = HW_INK;
-  ctx.fillRect(106, 88, 376, 38);
-  ctx.fillStyle = HW_PUTTY;
-  ctx.font = '600 19px "IBM Plex Mono", system-ui, monospace';
-  ctx.fillText(`▪ ${item.badge.toUpperCase()}`, 120, 113);
+    // Small stamped corner icon badge if loaded
+    if (loadedIcon) {
+      ctx.save();
+      ctx.fillStyle = ED_PAPER;
+      ctx.fillRect(408, 282, 52, 52);
+      ctx.strokeStyle = ED_INK;
+      ctx.lineWidth = 2;
+      ctx.strokeRect(408, 282, 52, 52);
+      ctx.drawImage(loadedIcon, 412, 286, 44, 44);
+      ctx.restore();
+    }
 
-  // Rivet crosshairs on right
-  ctx.fillStyle = '#646b78';
-  ctx.font = '700 18px "IBM Plex Mono", monospace';
-  ctx.fillText('+', 486, 34);
+    // Bottom Serif Title & Colophon
+    ctx.fillStyle = ED_INK;
+    const titleSize = tool.shortName.length > 14 ? 30 : 35;
+    ctx.font = `700 ${titleSize}px "Fraunces", Georgia, serif`;
+    ctx.textAlign = 'left';
+    ctx.fillText(tool.shortName, 42, 382);
 
+    ctx.strokeStyle = 'rgba(21, 20, 19, 0.28)';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(42, 404);
+    ctx.lineTo(470, 404);
+    ctx.stroke();
+
+    ctx.fillStyle = '#57524a';
+    ctx.font = '700 15px "Space Mono", monospace';
+    ctx.fillText(tool.physicalLabel.toUpperCase(), 42, 424);
+
+    ctx.fillStyle = ED_VERMILION;
+    ctx.textAlign = 'right';
+    ctx.fillText('OPEN →', 470, 424);
+  }
+
+  draw();
   const tex = new THREE.CanvasTexture(canvas);
   tex.colorSpace = THREE.SRGBColorSpace;
+
+  const img = new Image();
+  img.crossOrigin = 'anonymous';
+  img.width = 128;
+  img.height = 128;
+  img.onload = () => {
+    loadedIcon = img;
+    draw();
+    tex.needsUpdate = true;
+  };
+  img.src = tool.iconUrl;
+
+  tex.userData = {
+    redraw() {
+      draw();
+      tex.needsUpdate = true;
+    }
+  };
   return tex;
 }
 
-function createBlueprintTexture() {
+function createEditorialDeskMatTexture() {
   const canvas = document.createElement('canvas');
   canvas.width = 1024;
   canvas.height = 512;
   const ctx = canvas.getContext('2d');
 
-  // Teenage Engineering dark graphite self-healing cutting mat
-  ctx.fillStyle = '#1b1f26';
+  // Warm natural linen / portfolio desk blotter
+  ctx.fillStyle = '#e8e0d2';
   ctx.fillRect(0, 0, 1024, 512);
 
-  ctx.strokeStyle = 'rgba(235, 229, 216, 0.13)';
+  // Fine architectural column grid
+  ctx.strokeStyle = 'rgba(21, 20, 19, 0.14)';
   ctx.lineWidth = 1.2;
-  for (let x = 0; x <= 1024; x += 32) {
+  for (let x = 64; x < 1024; x += 64) {
     ctx.beginPath();
-    ctx.moveTo(x, 0);
-    ctx.lineTo(x, 512);
-    ctx.stroke();
-  }
-  for (let y = 0; y <= 512; y += 32) {
-    ctx.beginPath();
-    ctx.moveTo(0, y);
-    ctx.lineTo(1024, y);
+    ctx.moveTo(x, 28);
+    ctx.lineTo(x, 484);
     ctx.stroke();
   }
 
-  // Safety-orange & putty technical calibration frame
-  ctx.strokeStyle = 'rgba(235, 229, 216, 0.55)';
+  ctx.strokeStyle = ED_INK;
   ctx.lineWidth = 3;
   ctx.strokeRect(24, 24, 976, 464);
+  ctx.lineWidth = 1;
+  ctx.strokeRect(32, 32, 960, 448);
 
-  ctx.fillStyle = HW_ORANGE;
-  ctx.fillRect(24, 24, 18, 464);
+  // Laid-out editorial contact sheet cards in center of table
+  [330, 512, 694].forEach((cx, i) => {
+    ctx.save();
+    ctx.translate(cx, 224);
+    ctx.rotate((i - 1) * 0.045);
+    ctx.fillStyle = ED_PAPER;
+    ctx.fillRect(-74, -96, 148, 192);
+    ctx.strokeStyle = ED_INK;
+    ctx.lineWidth = 2;
+    ctx.strokeRect(-74, -96, 148, 192);
 
-  // Millimeter tick marks along top edge
-  ctx.strokeStyle = HW_ORANGE;
-  ctx.lineWidth = 2;
-  for (let x = 64; x < 980; x += 16) {
-    const h = x % 64 === 0 ? 18 : 9;
-    ctx.beginPath();
-    ctx.moveTo(x, 24);
-    ctx.lineTo(x, 24 + h);
-    ctx.stroke();
-  }
+    ctx.fillStyle = i === 1 ? ED_VERMILION : ED_INK;
+    ctx.fillRect(-58, -78, 116, 104);
+    ctx.fillStyle = ED_INK;
+    ctx.fillRect(-58, 42, 96, 8);
+    ctx.fillRect(-58, 58, 68, 6);
+    ctx.restore();
+  });
 
-  ctx.strokeStyle = 'rgba(255, 85, 0, 0.55)';
-  ctx.lineWidth = 2.5;
-  ctx.beginPath();
-  ctx.arc(512, 228, 94, 0, Math.PI * 2);
-  ctx.stroke();
-
-  ctx.beginPath();
-  ctx.moveTo(400, 228);
-  ctx.lineTo(624, 228);
-  ctx.moveTo(512, 116);
-  ctx.lineTo(512, 340);
-  ctx.stroke();
-
-  ctx.fillStyle = HW_PUTTY;
-  ctx.font = '600 21px "IBM Plex Mono", monospace';
-  ctx.fillText('FIELD WORKBENCH // 01: WEB MAKEOVER  •  02: PRODUCT LAB  •  03: BRIEF', 58, 464);
+  ctx.fillStyle = ED_INK;
+  ctx.font = '700 20px "Space Mono", monospace';
+  ctx.textAlign = 'center';
+  ctx.fillText('ATELIER PROOF TABLE — § I: BEFORE/AFTER EDITION   •   § II: COMMISSION BRIEF', 512, 458);
 
   const tex = new THREE.CanvasTexture(canvas);
   tex.colorSpace = THREE.SRGBColorSpace;
   return tex;
 }
 
-function createBeforeAfterMonitorTexture() {
+function createBeforeAfterProofTexture() {
   const canvas = document.createElement('canvas');
   canvas.width = 640;
   canvas.height = 360;
   const ctx = canvas.getContext('2d');
 
-  // Left Half: Dated gray template ("BEFORE")
-  ctx.fillStyle = '#d6d3cb';
+  // Left Half: Dated generic template ("BEFORE")
+  ctx.fillStyle = '#ddd8ce';
   ctx.fillRect(0, 0, 320, 360);
-  ctx.fillStyle = '#9ca3af';
-  ctx.fillRect(20, 22, 280, 34);
-  ctx.fillStyle = '#374151';
-  ctx.font = '700 20px "IBM Plex Mono", monospace';
-  ctx.fillText('RAW // OLD TEMPLATE', 32, 46);
-  ctx.fillStyle = '#e5e7eb';
-  ctx.fillRect(20, 76, 132, 120);
-  ctx.fillRect(166, 76, 134, 120);
-  ctx.fillStyle = '#9ca3af';
-  ctx.fillRect(20, 214, 240, 18);
-  ctx.fillRect(20, 244, 180, 18);
-  ctx.fillStyle = '#1f2937';
-  ctx.font = '700 19px "Chakra Petch", sans-serif';
-  ctx.fillText('GENERIC STARTER PAGE', 24, 318);
+  ctx.fillStyle = '#9c9589';
+  ctx.fillRect(22, 22, 276, 32);
+  ctx.fillStyle = '#ffffff';
+  ctx.font = '700 17px "Space Mono", monospace';
+  ctx.fillText('BEFORE // GENERIC', 34, 44);
+  ctx.fillStyle = '#ece8e0';
+  ctx.fillRect(22, 74, 130, 124);
+  ctx.fillRect(166, 74, 132, 124);
+  ctx.fillStyle = '#aba498';
+  ctx.fillRect(22, 216, 236, 16);
+  ctx.fillRect(22, 244, 174, 16);
+  ctx.fillStyle = '#4a4640';
+  ctx.font = '700 18px "Space Mono", monospace';
+  ctx.fillText('PLAIN STARTER SITE', 26, 318);
 
-  // Right Half: High-craft bespoke build ("AFTER")
-  ctx.fillStyle = '#12151c';
+  // Right Half: Bespoke Editorial Flagship ("AFTER")
+  ctx.fillStyle = ED_PAPER;
   ctx.fillRect(320, 0, 320, 360);
 
-  ctx.fillStyle = HW_ORANGE;
-  ctx.fillRect(340, 22, 280, 34);
+  ctx.fillStyle = ED_INK;
+  ctx.fillRect(340, 22, 278, 32);
+  ctx.fillStyle = ED_PAPER;
+  ctx.font = '700 17px "Space Mono", monospace';
+  ctx.fillText('AFTER // EDITORIAL', 354, 44);
+
+  ctx.fillStyle = ED_INK;
+  ctx.fillRect(340, 74, 278, 156);
+  ctx.fillStyle = ED_PAPER;
+  ctx.font = 'italic 700 32px "Fraunces", Georgia, serif';
+  ctx.fillText('Relais Palais', 362, 140);
+  ctx.font = '400 16px "Space Mono", monospace';
+  ctx.fillStyle = '#d6cfc2';
+  ctx.fillText('BESPOKE + BILINGUAL UX', 362, 176);
+
+  ctx.fillStyle = ED_VERMILION;
+  ctx.fillRect(340, 254, 278, 56);
   ctx.fillStyle = '#ffffff';
-  ctx.font = '700 20px "IBM Plex Mono", monospace';
-  ctx.fillText('AFTER // BESPOKE BUILD', 352, 46);
+  ctx.font = '700 18px "Space Mono", monospace';
+  ctx.fillText('▶ DRAG LIVE PROOF', 368, 289);
 
-  ctx.fillStyle = '#ebe5d8';
-  ctx.fillRect(340, 76, 280, 152);
-  ctx.strokeStyle = HW_ORANGE;
-  ctx.lineWidth = 4;
-  ctx.strokeRect(340, 76, 280, 152);
-
-  ctx.fillStyle = '#12151c';
-  ctx.font = '700 28px "Chakra Petch", sans-serif';
-  ctx.fillText('RELAIS PALAIS', 358, 138);
-  ctx.font = '600 17px "IBM Plex Mono", monospace';
-  ctx.fillStyle = '#4b5563';
-  ctx.fillText('EDITORIAL + EN/ES UX', 358, 174);
-
-  // Sharp mechanical trigger bar (zero round pill!)
-  ctx.fillStyle = HW_ORANGE;
-  ctx.fillRect(340, 256, 280, 56);
-  ctx.fillStyle = '#ffffff';
-  ctx.font = '700 20px "IBM Plex Mono", monospace';
-  ctx.fillText('▶ TEST SPLIT SLIDER', 362, 291);
-
-  // Center hardware split rule + square slider block
-  ctx.strokeStyle = HW_ORANGE;
-  ctx.lineWidth = 8;
+  // Center vermilion proof divider
+  ctx.strokeStyle = ED_VERMILION;
+  ctx.lineWidth = 6;
   ctx.beginPath();
   ctx.moveTo(320, 0);
   ctx.lineTo(320, 360);
   ctx.stroke();
 
-  ctx.fillStyle = HW_INK;
-  ctx.fillRect(292, 152, 56, 56);
-  ctx.strokeStyle = HW_ORANGE;
-  ctx.lineWidth = 4;
-  ctx.strokeRect(292, 152, 56, 56);
-  ctx.fillStyle = '#ffffff';
-  ctx.font = '700 24px "IBM Plex Mono", monospace';
+  ctx.fillStyle = ED_PAPER;
+  ctx.fillRect(294, 154, 52, 52);
+  ctx.strokeStyle = ED_INK;
+  ctx.lineWidth = 3;
+  ctx.strokeRect(294, 154, 52, 52);
+  ctx.fillStyle = ED_INK;
+  ctx.font = '700 22px "Space Mono", monospace';
   ctx.textAlign = 'center';
-  ctx.fillText('↔', 320, 188);
+  ctx.fillText('↔', 320, 187);
 
   const tex = new THREE.CanvasTexture(canvas);
   tex.colorSpace = THREE.SRGBColorSpace;
   return tex;
 }
 
-function createClipboardTexture() {
+function createCommissionDossierTexture() {
   const canvas = document.createElement('canvas');
   canvas.width = 384;
   canvas.height = 512;
   const ctx = canvas.getContext('2d');
 
-  ctx.fillStyle = HW_PUTTY;
+  ctx.fillStyle = ED_PAPER;
   ctx.fillRect(0, 0, 384, 512);
 
-  ctx.fillStyle = HW_INK;
-  ctx.fillRect(0, 0, 384, 96);
+  ctx.strokeStyle = ED_INK;
+  ctx.lineWidth = 6;
+  ctx.strokeRect(8, 8, 368, 496);
+  ctx.lineWidth = 1.5;
+  ctx.strokeRect(18, 18, 348, 476);
 
-  ctx.fillStyle = HW_ORANGE;
-  ctx.fillRect(0, 92, 384, 8);
+  ctx.fillStyle = ED_INK;
+  ctx.font = 'italic 700 30px "Fraunces", Georgia, serif';
+  ctx.fillText('Commission Brief', 34, 68);
 
-  ctx.fillStyle = '#ffffff';
-  ctx.font = '700 27px "Chakra Petch", sans-serif';
-  ctx.fillText('✦ SPEC BRIEF // 01', 24, 58);
+  ctx.strokeStyle = ED_VERMILION;
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.moveTo(34, 88);
+  ctx.lineTo(350, 88);
+  ctx.stroke();
 
-  const rows = ['[X] WEBSITE MAKEOVER', '[X] PRODUCT PHOTO AI', '[X] MARKET RESEARCH', '[X] BRANDED ARCADE'];
-  ctx.fillStyle = HW_INK;
-  ctx.font = '600 22px "IBM Plex Mono", monospace';
+  const rows = ['§ Website Makeover', '§ Product Visuals AI', '§ Market Dossier', '§ Interactive Piece'];
+  ctx.fillStyle = ED_INK;
+  ctx.font = '700 22px "Fraunces", Georgia, serif';
   rows.forEach((line, i) => {
-    ctx.fillText(line, 24, 162 + i * 62);
+    ctx.fillText(line, 36, 154 + i * 62);
   });
 
-  // Sharp TE orange keycap CTA
-  ctx.fillStyle = HW_ORANGE;
-  ctx.fillRect(24, 408, 336, 70);
-  ctx.strokeStyle = HW_INK;
-  ctx.lineWidth = 5;
-  ctx.strokeRect(24, 408, 336, 70);
-
+  ctx.fillStyle = ED_VERMILION;
+  ctx.fillRect(34, 404, 316, 66);
   ctx.fillStyle = '#ffffff';
-  ctx.font = '700 23px "Chakra Petch", sans-serif';
-  ctx.fillText('OPEN BRIEF SHEET →', 64, 451);
+  ctx.font = '700 19px "Space Mono", monospace';
+  ctx.fillText('INQUIRE / BRIEF →', 68, 444);
 
   const tex = new THREE.CanvasTexture(canvas);
   tex.colorSpace = THREE.SRGBColorSpace;
@@ -398,7 +654,6 @@ function createMarqueeTexture(game, idx = 0) {
   ctx.fillStyle = grad;
   ctx.fillRect(0, 0, 512, 160);
 
-  // Diagonal 1986 arcade speed stripes
   ctx.fillStyle = `${game.accent}26`;
   for (let x = -120; x < 620; x += 44) {
     ctx.beginPath();
@@ -446,17 +701,17 @@ function createCrtScreenTexture(game) {
   let loadedImg = null;
 
   function draw() {
-    const bg = ctx.createRadialGradient(256, 176, 24, 256, 192, 310);
-    bg.addColorStop(0, '#1e1035');
-    bg.addColorStop(1, '#04020a');
+    const bg = ctx.createRadialGradient(256, 164, 24, 256, 192, 310);
+    bg.addColorStop(0, '#23123d');
+    bg.addColorStop(1, '#05020c');
     ctx.fillStyle = bg;
     ctx.fillRect(0, 0, 512, 384);
 
-    // Perspective synth horizon grid
+    // Perspective synth horizon grid in lower half
     ctx.strokeStyle = `${game.accent}55`;
     ctx.lineWidth = 2;
-    for (let i = 0; i < 8; i++) {
-      const y = 216 + i * 22;
+    for (let i = 0; i < 7; i++) {
+      const y = 232 + i * 22;
       ctx.beginPath();
       ctx.moveTo(0, y);
       ctx.lineTo(512, y);
@@ -467,37 +722,47 @@ function createCrtScreenTexture(game) {
     ctx.fillStyle = '#fde047';
     ctx.font = '700 15px "Silkscreen", monospace';
     ctx.textAlign = 'left';
-    ctx.fillText('1UP  004800', 24, 32);
+    ctx.fillText('1UP  004800', 22, 30);
     ctx.fillStyle = game.secondaryAccent;
     ctx.textAlign = 'right';
-    ctx.fillText('CREDIT 01', 488, 32);
+    ctx.fillText('CREDIT 01', 490, 30);
+
+    // Prominent, unobstructed 152x152 Cabinet Logo Artwork
+    const iconSize = 152;
+    const ix = Math.round((512 - iconSize) / 2);
+    const iy = 42;
 
     if (loadedImg) {
       ctx.save();
       ctx.shadowColor = game.accent;
-      ctx.shadowBlur = 26;
+      ctx.shadowBlur = 30;
+      ctx.fillStyle = '#090414';
+      ctx.fillRect(ix - 4, iy - 4, iconSize + 8, iconSize + 8);
       ctx.strokeStyle = game.accent;
       ctx.lineWidth = 4;
-      ctx.strokeRect(188, 50, 136, 136);
-      ctx.drawImage(loadedImg, 190, 52, 132, 132);
+      ctx.strokeRect(ix - 4, iy - 4, iconSize + 8, iconSize + 8);
+      ctx.drawImage(loadedImg, ix, iy, iconSize, iconSize);
       ctx.restore();
     } else {
       ctx.fillStyle = game.accent;
-      ctx.fillRect(196, 56, 120, 120);
+      ctx.fillRect(ix, iy, iconSize, iconSize);
     }
 
     ctx.fillStyle = '#ffffff';
-    ctx.font = '800 30px "Syne", system-ui, sans-serif';
+    ctx.shadowColor = game.accent;
+    ctx.shadowBlur = 14;
+    ctx.font = '800 31px "Syne", system-ui, sans-serif';
     ctx.textAlign = 'center';
-    ctx.fillText(game.shortName.toUpperCase(), 256, 232);
+    ctx.fillText(game.shortName.toUpperCase(), 256, 236);
+    ctx.shadowBlur = 0;
 
-    // Angled arcade START prompt bar (zero round pill)
+    // Angled arcade START prompt bar
     ctx.fillStyle = game.accent;
     ctx.beginPath();
-    ctx.moveTo(88, 268);
-    ctx.lineTo(440, 268);
-    ctx.lineTo(424, 324);
-    ctx.lineTo(72, 324);
+    ctx.moveTo(86, 268);
+    ctx.lineTo(442, 268);
+    ctx.lineTo(426, 324);
+    ctx.lineTo(70, 324);
     ctx.closePath();
     ctx.fill();
 
@@ -505,9 +770,9 @@ function createCrtScreenTexture(game) {
     ctx.font = '700 20px "Silkscreen", monospace';
     ctx.fillText('▶ INSERT COIN • PLAY', 256, 303);
 
-    // Heavy authentic 15kHz CRT scanlines
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.32)';
-    for (let y = 0; y < 384; y += 5) {
+    // Subtle 15kHz CRT scanlines (lighter over logo so artwork pops!)
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.22)';
+    for (let y = 0; y < 384; y += 6) {
       ctx.fillRect(0, y, 512, 2);
     }
 
@@ -522,6 +787,9 @@ function createCrtScreenTexture(game) {
 
   const img = new Image();
   img.crossOrigin = 'anonymous';
+  // Explicit width/height ensures viewBox-only SVGs (e.g. desired.svg, wild-peak.svg) rasterize crisply in all browsers
+  img.width = 256;
+  img.height = 256;
   img.onload = () => {
     loadedImg = img;
     draw();
@@ -538,40 +806,38 @@ function createCrtScreenTexture(game) {
   return tex;
 }
 
-function createLeftStudioFloorTexture() {
+function createLeftEditorialFloorTexture() {
   const canvas = document.createElement('canvas');
   canvas.width = 512;
   canvas.height = 512;
   const ctx = canvas.getContext('2d');
 
-  // Warm matte industrial drafting floor tile
-  ctx.fillStyle = '#252830';
+  // Sunlit architectural gallery limestone / warm travertine tile
+  ctx.fillStyle = '#dfd7c8';
   ctx.fillRect(0, 0, 512, 512);
 
-  // Subtle putty grid
-  ctx.strokeStyle = 'rgba(235, 229, 216, 0.14)';
+  // Fine Swiss architectural joint lines
+  ctx.strokeStyle = 'rgba(21, 20, 19, 0.18)';
   ctx.lineWidth = 2;
   ctx.strokeRect(0, 0, 512, 512);
 
-  ctx.strokeStyle = 'rgba(235, 229, 216, 0.06)';
+  ctx.strokeStyle = 'rgba(21, 20, 19, 0.07)';
   ctx.lineWidth = 1;
-  for (let i = 128; i < 512; i += 128) {
-    ctx.beginPath();
-    ctx.moveTo(i, 0);
-    ctx.lineTo(i, 512);
-    ctx.moveTo(0, i);
-    ctx.lineTo(512, i);
-    ctx.stroke();
-  }
-
-  // Safety-orange registration crosshairs at intersections
-  ctx.strokeStyle = 'rgba(255, 85, 0, 0.48)';
-  ctx.lineWidth = 2.5;
   ctx.beginPath();
-  ctx.moveTo(244, 256);
-  ctx.lineTo(268, 256);
-  ctx.moveTo(256, 244);
-  ctx.lineTo(256, 268);
+  ctx.moveTo(256, 0);
+  ctx.lineTo(256, 512);
+  ctx.moveTo(0, 256);
+  ctx.lineTo(512, 256);
+  ctx.stroke();
+
+  // Subtle vermilion gallery registration cross at tile center
+  ctx.strokeStyle = 'rgba(200, 62, 43, 0.42)';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(246, 256);
+  ctx.lineTo(266, 256);
+  ctx.moveTo(256, 246);
+  ctx.lineTo(256, 266);
   ctx.stroke();
 
   const tex = new THREE.CanvasTexture(canvas);
@@ -588,11 +854,9 @@ function createRightArcadeFloorTexture() {
   canvas.height = 512;
   const ctx = canvas.getContext('2d');
 
-  // Deep wet-asphalt Shibuya night floor
   ctx.fillStyle = '#070311';
   ctx.fillRect(0, 0, 512, 512);
 
-  // Electric synthwave magenta/cyan grid
   ctx.strokeStyle = 'rgba(255, 42, 133, 0.34)';
   ctx.lineWidth = 3;
   ctx.strokeRect(0, 0, 512, 512);
@@ -606,7 +870,6 @@ function createRightArcadeFloorTexture() {
   ctx.lineTo(512, 256);
   ctx.stroke();
 
-  // Subtle arcade carpet geometric diamond spark
   ctx.fillStyle = 'rgba(0, 240, 255, 0.22)';
   ctx.beginPath();
   ctx.moveTo(256, 238);
@@ -625,234 +888,83 @@ function createRightArcadeFloorTexture() {
 }
 
 /**
- * Builds each custom 3D physical tool mesh hanging on the Braun/TE Pegboard (7 shapes)
+ * Builds a Framed Museum-Grade Editorial Print Folio for the Left Design Studio
  */
-function buildPhysicalToolMesh(tool) {
-  const group = new THREE.Group();
-  const chromeMat = new THREE.MeshStandardMaterial({
-    color: 0xf1f5f9,
-    metalness: 0.85,
-    roughness: 0.22
+function buildEditorialFolioNode(tool, idx) {
+  const root = new THREE.Group();
+  const folioW = 1.42;
+  const folioH = 1.26;
+
+  // Matte sumi-black gallery box frame
+  const frameMat = new THREE.MeshStandardMaterial({
+    color: ED_INK,
+    roughness: 0.45,
+    metalness: 0.15
   });
-  const darkGripMat = new THREE.MeshStandardMaterial({
-    color: 0x161920,
-    metalness: 0.28,
-    roughness: 0.62
-  });
-  const teOrangeMat = new THREE.MeshStandardMaterial({
-    color: new THREE.Color(HW_ORANGE),
-    emissive: new THREE.Color(HW_ORANGE),
-    emissiveIntensity: 0.32,
+  const brassMat = new THREE.MeshStandardMaterial({
+    color: ED_BRASS,
     roughness: 0.32,
-    metalness: 0.2
-  });
-  const accentMat = new THREE.MeshStandardMaterial({
-    color: new THREE.Color(tool.accent),
-    metalness: 0.38,
-    roughness: 0.28,
-    emissive: new THREE.Color(tool.accent),
-    emissiveIntensity: 0.25
+    metalness: 0.78
   });
 
-  switch (tool.toolShape) {
-    case 'roller': {
-      const rollerLeft = new THREE.Mesh(new THREE.CylinderGeometry(0.11, 0.11, 0.32, 22), darkGripMat);
-      rollerLeft.rotation.z = Math.PI / 2;
-      rollerLeft.position.set(-0.16, 0.18, 0);
-      group.add(rollerLeft);
+  const outerFrame = new THREE.Mesh(new THREE.BoxGeometry(folioW, folioH, 0.065), frameMat);
+  root.add(outerFrame);
 
-      const rollerRight = new THREE.Mesh(new THREE.CylinderGeometry(0.115, 0.115, 0.34, 22), teOrangeMat);
-      rollerRight.rotation.z = Math.PI / 2;
-      rollerRight.position.set(0.16, 0.18, 0);
-      group.add(rollerRight);
+  // Warm antique-brass inner gallery fillet
+  const brassFillet = new THREE.Mesh(
+    new THREE.BoxGeometry(folioW - 0.05, folioH - 0.05, 0.07),
+    brassMat
+  );
+  root.add(brassFillet);
 
-      const seamRing = new THREE.Mesh(new THREE.CylinderGeometry(0.125, 0.125, 0.03, 24), chromeMat);
-      seamRing.rotation.z = Math.PI / 2;
-      seamRing.position.set(0, 0.18, 0);
-      group.add(seamRing);
+  // High-DPI Editorial Print Poster face
+  const folioTex = createEditorialFolioTexture(tool, idx);
+  const printMat = new THREE.MeshStandardMaterial({
+    map: folioTex,
+    emissiveMap: folioTex,
+    emissive: new THREE.Color('#fffaf0'),
+    emissiveIntensity: 0.22,
+    roughness: 0.58,
+    metalness: 0.04
+  });
+  const printFace = new THREE.Mesh(
+    new THREE.PlaneGeometry(folioW - 0.09, folioH - 0.09),
+    printMat
+  );
+  printFace.position.z = 0.038;
+  root.add(printFace);
 
-      const wireArm = new THREE.Mesh(new THREE.BoxGeometry(0.035, 0.34, 0.035), chromeMat);
-      wireArm.position.set(0.34, 0.02, 0);
-      group.add(wireArm);
+  // Overhead Brass Museum Picture Light above each Folio
+  const lampStem = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.04, 0.18), brassMat);
+  lampStem.position.set(0, folioH / 2 + 0.05, 0.06);
+  root.add(lampStem);
 
-      const wireCross = new THREE.Mesh(new THREE.BoxGeometry(0.36, 0.035, 0.035), chromeMat);
-      wireCross.position.set(0.17, -0.13, 0);
-      group.add(wireCross);
+  const lampHood = new THREE.Mesh(new THREE.CylinderGeometry(0.028, 0.036, 0.46, 14), brassMat);
+  lampHood.rotation.z = Math.PI / 2;
+  lampHood.position.set(0, folioH / 2 + 0.05, 0.15);
+  root.add(lampHood);
 
-      const grip = new THREE.Mesh(new THREE.CylinderGeometry(0.055, 0.048, 0.34, 16), darkGripMat);
-      grip.position.set(0, -0.28, 0);
-      group.add(grip);
-      group.rotation.z = -0.14;
-      break;
-    }
+  // Selection Vermilion Gallery Backing Mat Outline
+  const highlightPlane = new THREE.Mesh(
+    new THREE.PlaneGeometry(folioW + 0.1, folioH + 0.1),
+    new THREE.MeshBasicMaterial({
+      color: new THREE.Color(ED_VERMILION),
+      transparent: true,
+      opacity: 0.0
+    })
+  );
+  highlightPlane.position.z = -0.025;
+  root.add(highlightPlane);
 
-    case 'camera-loupe': {
-      const body = new THREE.Mesh(new THREE.BoxGeometry(0.68, 0.44, 0.18), darkGripMat);
-      group.add(body);
-
-      const topPrism = new THREE.Mesh(new THREE.BoxGeometry(0.28, 0.12, 0.15), chromeMat);
-      topPrism.position.set(0, 0.26, 0);
-      group.add(topPrism);
-
-      const shutterBtn = new THREE.Mesh(new THREE.CylinderGeometry(0.048, 0.048, 0.065, 14), teOrangeMat);
-      shutterBtn.position.set(0.22, 0.24, 0.02);
-      group.add(shutterBtn);
-
-      const lensBarrel = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.18, 0.16, 24), chromeMat);
-      lensBarrel.rotation.x = Math.PI / 2;
-      lensBarrel.position.set(0, -0.01, 0.14);
-      group.add(lensBarrel);
-
-      const ringLight = new THREE.Mesh(new THREE.TorusGeometry(0.19, 0.028, 14, 28), teOrangeMat);
-      ringLight.position.set(0, -0.01, 0.22);
-      group.add(ringLight);
-
-      const opticGlass = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.12, 0.04, 24), accentMat);
-      opticGlass.rotation.x = Math.PI / 2;
-      opticGlass.position.set(0, -0.01, 0.21);
-      group.add(opticGlass);
-      break;
-    }
-
-    case 'film-reel': {
-      const outerRim = new THREE.Mesh(new THREE.TorusGeometry(0.32, 0.042, 14, 32), darkGripMat);
-      group.add(outerRim);
-
-      const innerDisc = new THREE.Mesh(new THREE.CylinderGeometry(0.28, 0.28, 0.05, 28), chromeMat);
-      innerDisc.rotation.x = Math.PI / 2;
-      group.add(innerDisc);
-
-      for (let s = 0; s < 5; s++) {
-        const angle = (s * Math.PI * 2) / 5;
-        const spokeHole = new THREE.Mesh(new THREE.CylinderGeometry(0.058, 0.058, 0.065, 16), darkGripMat);
-        spokeHole.rotation.x = Math.PI / 2;
-        spokeHole.position.set(Math.cos(angle) * 0.165, Math.sin(angle) * 0.165, 0);
-        group.add(spokeHole);
-      }
-
-      const playHub = new THREE.Mesh(new THREE.ConeGeometry(0.09, 0.08, 3), teOrangeMat);
-      playHub.rotation.z = -Math.PI / 2;
-      playHub.rotation.x = Math.PI / 2;
-      playHub.position.set(0.01, 0, 0.05);
-      group.add(playHub);
-      break;
-    }
-
-    case 'airbrush': {
-      const barrel = new THREE.Mesh(new THREE.CylinderGeometry(0.055, 0.042, 0.68, 20), chromeMat);
-      barrel.rotation.z = Math.PI / 2;
-      group.add(barrel);
-
-      const tail = new THREE.Mesh(new THREE.CylinderGeometry(0.042, 0.035, 0.34, 18), darkGripMat);
-      tail.rotation.z = Math.PI / 2;
-      tail.position.x = 0.46;
-      group.add(tail);
-
-      const nozzle = new THREE.Mesh(new THREE.ConeGeometry(0.042, 0.18, 18), teOrangeMat);
-      nozzle.rotation.z = Math.PI / 2;
-      nozzle.position.x = -0.42;
-      group.add(nozzle);
-
-      const cup = new THREE.Mesh(new THREE.CylinderGeometry(0.11, 0.045, 0.22, 20), accentMat);
-      cup.position.set(-0.08, 0.16, 0);
-      cup.rotation.z = -0.25;
-      group.add(cup);
-
-      const handleDrop = new THREE.Mesh(new THREE.CylinderGeometry(0.048, 0.055, 0.36, 16), darkGripMat);
-      handleDrop.position.set(0.12, -0.2, 0);
-      handleDrop.rotation.z = -0.28;
-      group.add(handleDrop);
-      group.rotation.z = 0.16;
-      break;
-    }
-
-    case 'clapper': {
-      const slate = new THREE.Mesh(new THREE.BoxGeometry(0.76, 0.52, 0.05), darkGripMat);
-      slate.position.y = -0.06;
-      group.add(slate);
-
-      const slateScreen = new THREE.Mesh(new THREE.BoxGeometry(0.66, 0.36, 0.058), accentMat);
-      slateScreen.position.y = -0.08;
-      group.add(slateScreen);
-
-      const bottomBar = new THREE.Mesh(new THREE.BoxGeometry(0.78, 0.08, 0.065), chromeMat);
-      bottomBar.position.y = 0.22;
-      group.add(bottomBar);
-
-      const topClap = new THREE.Group();
-      topClap.position.set(-0.37, 0.26, 0);
-      const clapStick = new THREE.Mesh(new THREE.BoxGeometry(0.78, 0.08, 0.065), teOrangeMat);
-      clapStick.position.set(0.37, 0.04, 0);
-      topClap.add(clapStick);
-      topClap.rotation.z = 0.24;
-      group.add(topClap);
-      break;
-    }
-
-    case 'caliper': {
-      const mainBeam = new THREE.Mesh(new THREE.BoxGeometry(0.92, 0.08, 0.035), chromeMat);
-      group.add(mainBeam);
-
-      const fixedJaw = new THREE.Mesh(new THREE.BoxGeometry(0.09, 0.34, 0.04), chromeMat);
-      fixedJaw.position.set(-0.41, -0.14, 0);
-      group.add(fixedJaw);
-
-      const sliderJaw = new THREE.Mesh(new THREE.BoxGeometry(0.09, 0.34, 0.042), chromeMat);
-      sliderJaw.position.set(-0.08, -0.14, 0);
-      group.add(sliderJaw);
-
-      const lcdHousing = new THREE.Mesh(new THREE.BoxGeometry(0.28, 0.17, 0.075), darkGripMat);
-      lcdHousing.position.set(0.04, 0.02, 0.02);
-      group.add(lcdHousing);
-
-      const lcdScreen = new THREE.Mesh(new THREE.BoxGeometry(0.21, 0.09, 0.082), accentMat);
-      lcdScreen.position.set(0.04, 0.03, 0.02);
-      group.add(lcdScreen);
-
-      const thumbWheel = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 0.06, 16), teOrangeMat);
-      thumbWheel.rotation.x = Math.PI / 2;
-      thumbWheel.position.set(0.18, -0.07, 0.02);
-      group.add(thumbWheel);
-      group.rotation.z = -0.12;
-      break;
-    }
-
-    case 'scale':
-    default: {
-      const pillar = new THREE.Mesh(new THREE.CylinderGeometry(0.038, 0.055, 0.56, 18), darkGripMat);
-      group.add(pillar);
-
-      const topHub = new THREE.Mesh(new THREE.OctahedronGeometry(0.09, 0), teOrangeMat);
-      topHub.position.y = 0.28;
-      group.add(topHub);
-
-      const crossBeam = new THREE.Mesh(new THREE.BoxGeometry(0.76, 0.045, 0.045), chromeMat);
-      crossBeam.position.y = 0.24;
-      crossBeam.rotation.z = 0.08;
-      group.add(crossBeam);
-
-      [-0.33, 0.33].forEach((px, idx) => {
-        const dy = idx === 0 ? -0.03 : 0.03;
-        const chain = new THREE.Mesh(new THREE.CylinderGeometry(0.01, 0.01, 0.26, 8), chromeMat);
-        chain.position.set(px, 0.1 + dy, 0);
-        group.add(chain);
-
-        const pan = new THREE.Mesh(
-          new THREE.CylinderGeometry(0.15, 0.11, 0.045, 20),
-          idx === 0 ? teOrangeMat : accentMat
-        );
-        pan.position.set(px, -0.03 + dy, 0);
-        group.add(pan);
-      });
-      break;
-    }
-  }
-
-  return group;
+  return {
+    root,
+    printMat,
+    highlightPlane
+  };
 }
 
 /**
- * Builds each custom 3D 1986 Shibuya Neon Arcade Cabinet
+ * Builds each custom 3D 1986 Shibuya Neon Arcade Cabinet (with unobstructed recessed CRT bay!)
  */
 function buildArcadeCabinet(game, index) {
   const root = new THREE.Group();
@@ -882,25 +994,35 @@ function buildArcadeCabinet(game, index) {
     metalness: 0.72
   });
 
+  // Lower coin-door base cabinet
   const lowerBox = new THREE.Mesh(new THREE.BoxGeometry(w, 1.32, 1.05), bodyMat);
   lowerBox.position.set(0, 0.66, 0);
   root.add(lowerBox);
 
-  const upperBox = new THREE.Mesh(new THREE.BoxGeometry(w, 1.28, 0.92), bodyMat);
-  upperBox.position.set(0, 1.92, -0.06);
-  root.add(upperBox);
+  // Recessed CRT back housing (front face sits at z = +0.16, well behind tilted CRT screen!)
+  const upperBackBox = new THREE.Mesh(new THREE.BoxGeometry(w - 0.06, 1.28, 0.68), bodyMat);
+  upperBackBox.position.set(0, 1.92, -0.18);
+  root.add(upperBackBox);
 
-  const marqueeHood = new THREE.Mesh(new THREE.BoxGeometry(w + 0.03, 0.42, 1.06), bodyMat);
-  marqueeHood.position.set(0, 2.74, 0.02);
+  // Left & Right Arcade Side Cheeks framing the recessed CRT bay
+  [-w / 2 + 0.035, w / 2 - 0.035].forEach((cx) => {
+    const cheek = new THREE.Mesh(new THREE.BoxGeometry(0.07, 1.28, 0.94), bodyMat);
+    cheek.position.set(cx, 1.92, -0.04);
+    root.add(cheek);
+  });
+
+  // Top illuminated Marquee Hood
+  const marqueeHood = new THREE.Mesh(new THREE.BoxGeometry(w + 0.03, 0.4, 1.02), bodyMat);
+  marqueeHood.position.set(0, 2.75, 0.0);
   root.add(marqueeHood);
 
   [-w / 2 - 0.012, w / 2 + 0.012].forEach((sx) => {
-    const moldingLower = new THREE.Mesh(new THREE.BoxGeometry(0.028, 2.92, 0.045), trimMat);
-    moldingLower.position.set(sx, 1.48, 0.48);
+    const moldingLower = new THREE.Mesh(new THREE.BoxGeometry(0.028, 2.94, 0.045), trimMat);
+    moldingLower.position.set(sx, 1.48, 0.45);
     root.add(moldingLower);
 
-    const moldingTop = new THREE.Mesh(new THREE.BoxGeometry(0.028, 0.045, 1.02), trimMat);
-    moldingTop.position.set(sx, 2.95, 0.02);
+    const moldingTop = new THREE.Mesh(new THREE.BoxGeometry(0.028, 0.045, 1.0), trimMat);
+    moldingTop.position.set(sx, 2.96, 0.0);
     root.add(moldingTop);
   });
 
@@ -909,26 +1031,27 @@ function buildArcadeCabinet(game, index) {
     map: marqueeTex,
     emissiveMap: marqueeTex,
     emissive: new THREE.Color('#ffffff'),
-    emissiveIntensity: 1.2,
+    emissiveIntensity: 1.22,
     roughness: 0.16
   });
   const marqueePlane = new THREE.Mesh(new THREE.PlaneGeometry(w - 0.08, 0.34), marqueeMat);
-  marqueePlane.position.set(0, 2.73, 0.555);
+  marqueePlane.position.set(0, 2.74, 0.525);
   marqueePlane.rotation.x = 0.08;
   root.add(marqueePlane);
 
+  // Unobstructed CRT Screen sitting cleanly inside the side cheeks (z = 0.38, topZ = 0.31 > 0.16!)
   const crtTex = createCrtScreenTexture(game);
   const crtMat = new THREE.MeshStandardMaterial({
     map: crtTex,
     emissiveMap: crtTex,
     emissive: new THREE.Color('#ffffff'),
-    emissiveIntensity: 0.95,
+    emissiveIntensity: 0.98,
     roughness: 0.1,
-    metalness: 0.18
+    metalness: 0.15
   });
-  const screenMesh = new THREE.Mesh(new THREE.PlaneGeometry(w - 0.18, 0.82), crtMat);
-  screenMesh.position.set(0, 1.94, 0.415);
-  screenMesh.rotation.x = -0.22;
+  const screenMesh = new THREE.Mesh(new THREE.PlaneGeometry(w - 0.18, 0.86), crtMat);
+  screenMesh.position.set(0, 1.95, 0.38);
+  screenMesh.rotation.x = -0.17;
   root.add(screenMesh);
 
   const controlDeck = new THREE.Mesh(new THREE.BoxGeometry(w + 0.02, 0.16, 0.48), darkMetalMat);
@@ -977,11 +1100,11 @@ function buildArcadeCabinet(game, index) {
 
   if (game.cabinetStyle === 'velvet-deck') {
     const cardA = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.36, 0.025), trimMat);
-    cardA.position.set(-0.08, 3.14, 0.08);
+    cardA.position.set(-0.08, 3.15, 0.08);
     cardA.rotation.z = 0.22;
     root.add(cardA);
     const cardB = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.36, 0.025), secondaryTrimMat);
-    cardB.position.set(0.09, 3.14, 0.11);
+    cardB.position.set(0.09, 3.15, 0.11);
     cardB.rotation.z = -0.2;
     root.add(cardB);
   } else if (game.cabinetStyle === 'gacha-dome') {
@@ -989,20 +1112,20 @@ function buildArcadeCabinet(game, index) {
       new THREE.SphereGeometry(0.24, 20, 16, 0, Math.PI * 2, 0, Math.PI / 2),
       secondaryTrimMat
     );
-    dome.position.set(0, 2.95, 0.02);
+    dome.position.set(0, 2.96, 0.0);
     root.add(dome);
   } else if (game.cabinetStyle === 'botanical-rts') {
     const stem = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.03, 0.36, 10), trimMat);
-    stem.position.set(0, 3.12, 0.05);
+    stem.position.set(0, 3.13, 0.05);
     root.add(stem);
     const leaf = new THREE.Mesh(new THREE.SphereGeometry(0.13, 14, 10), secondaryTrimMat);
     leaf.scale.set(1.5, 0.35, 0.8);
-    leaf.position.set(0.11, 3.3, 0.05);
+    leaf.position.set(0.11, 3.31, 0.05);
     leaf.rotation.z = 0.35;
     root.add(leaf);
   } else if (game.cabinetStyle === 'neon-slasher') {
     const crown = new THREE.Mesh(new THREE.ConeGeometry(0.22, 0.32, 4), trimMat);
-    crown.position.set(0, 3.11, 0.12);
+    crown.position.set(0, 3.12, 0.12);
     crown.rotation.y = Math.PI / 4;
     root.add(crown);
   }
@@ -1062,8 +1185,8 @@ export function createWorkshopArcade3D({
   onHubLean
 }) {
   const scene = new THREE.Scene();
-  scene.background = new THREE.Color('#0c0e14');
-  scene.fog = new THREE.FogExp2('#0a0b12', 0.028);
+  scene.background = new THREE.Color('#0c0a12');
+  scene.fog = new THREE.FogExp2('#0b0910', 0.022);
 
   const camera = new THREE.PerspectiveCamera(48, 16 / 9, 0.1, 80);
   camera.position.set(0, 2.35, 9.4);
@@ -1074,25 +1197,27 @@ export function createWorkshopArcade3D({
   });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.16;
+  renderer.toneMappingExposure = 1.14;
   container.appendChild(renderer.domElement);
 
   // =========================================================================
-  // Dual-World Lighting: Warm Studio Daylight/Tungsten (Left) vs. Shibuya Neon (Right)
+  // Dual-World Lighting: Warm Sunlit Gallery Daylight (Left) vs. Shibuya Neon (Right)
   // =========================================================================
-  const hemiLight = new THREE.HemisphereLight('#d6d3cb', '#0f071a', 0.68);
+  const hemiLight = new THREE.HemisphereLight('#f5efe4', '#0f071a', 0.72);
   scene.add(hemiLight);
 
-  const workshopSpot = new THREE.SpotLight('#fff5e6', 38, 28, Math.PI * 0.44, 0.38, 1.1);
-  workshopSpot.position.set(-4.8, 7.2, 5.6);
-  workshopSpot.target.position.set(-4.6, 2.2, -1.2);
-  scene.add(workshopSpot);
-  scene.add(workshopSpot.target);
+  // Sunlit museum gallery skylight on Left Atelier (x < 0)
+  const atelierSunlight = new THREE.SpotLight('#fffaf0', 54, 32, Math.PI * 0.48, 0.42, 1.0);
+  atelierSunlight.position.set(-5.2, 8.2, 6.8);
+  atelierSunlight.target.position.set(-4.8, 2.3, -1.2);
+  scene.add(atelierSunlight);
+  scene.add(atelierSunlight.target);
 
-  const teOrangeFill = new THREE.PointLight(HW_ORANGE, 5.5, 13);
-  teOrangeFill.position.set(-2.2, 1.6, 2.2);
-  scene.add(teOrangeFill);
+  const galleryWarmBounce = new THREE.PointLight('#ffeed6', 7.5, 16);
+  galleryWarmBounce.position.set(-3.2, 2.2, 3.0);
+  scene.add(galleryWarmBounce);
 
+  // 1986 Shibuya Neon Lights on Right Hall (x > 0)
   const arcadeMagentaLight = new THREE.PointLight(ARC_PINK, 18, 21);
   arcadeMagentaLight.position.set(4.4, 4.6, 3.8);
   scene.add(arcadeMagentaLight);
@@ -1102,21 +1227,19 @@ export function createWorkshopArcade3D({
   scene.add(arcadeCyanLight);
 
   // =========================================================================
-  // LITERAL VISUAL SPLIT: Architectural Backdrop + Bisected Floor & Threshold Seam
+  // LITERAL DAY-VS-NIGHT SPLIT: Sunlit Gallery Plaster (Left) vs. Shibuya Night (Right)
   // =========================================================================
-  // Left Studio Architectural Backdrop Wall (x < 0)
   const leftBackWall = new THREE.Mesh(
     new THREE.PlaneGeometry(34, 18),
     new THREE.MeshStandardMaterial({
-      color: '#262930',
-      roughness: 0.85,
-      metalness: 0.1
+      color: '#e8e0d2',
+      roughness: 0.9,
+      metalness: 0.04
     })
   );
   leftBackWall.position.set(-17, 7.5, -5.2);
   scene.add(leftBackWall);
 
-  // Right Shibuya Midnight Alley Backdrop Wall (x > 0)
   const rightBackWall = new THREE.Mesh(
     new THREE.PlaneGeometry(34, 18),
     new THREE.MeshStandardMaterial({
@@ -1128,7 +1251,6 @@ export function createWorkshopArcade3D({
   rightBackWall.position.set(17, 7.5, -5.2);
   scene.add(rightBackWall);
 
-  // Vertical Shibuya Neon Accent Tubes in Right Background
   [2.6, 6.8, 11.2].forEach((nx, i) => {
     const tubeColor = i % 2 === 0 ? ARC_PINK : ARC_CYAN;
     const tube = new THREE.Mesh(
@@ -1139,13 +1261,13 @@ export function createWorkshopArcade3D({
     scene.add(tube);
   });
 
-  // Left Floor (x < 0): Matte Industrial Drafting Concrete / Putty Grid
+  // Left Floor (x < 0): Sunlit Warm Travertine / Gallery Parquet
   const leftFloor = new THREE.Mesh(
     new THREE.PlaneGeometry(32, 38),
     new THREE.MeshStandardMaterial({
-      map: createLeftStudioFloorTexture(),
-      roughness: 0.72,
-      metalness: 0.14
+      map: createLeftEditorialFloorTexture(),
+      roughness: 0.65,
+      metalness: 0.08
     })
   );
   leftFloor.rotation.x = -Math.PI / 2;
@@ -1165,14 +1287,14 @@ export function createWorkshopArcade3D({
   rightFloor.position.set(16, 0, 0);
   scene.add(rightFloor);
 
-  // Dual-Sided Threshold Seam at x = 0 (Safety-Orange/Aluminum Left Lip + Neon Plasma Right Lip)
+  // Dual-Sided Threshold Seam at x = 0 (Archival Paper/Vermilion Left + Neon Plasma Right)
   const seamLeftStrip = new THREE.Mesh(
     new THREE.BoxGeometry(0.06, 0.025, 26),
     new THREE.MeshStandardMaterial({
-      color: HW_PUTTY,
-      emissive: HW_ORANGE,
-      emissiveIntensity: 0.55,
-      roughness: 0.3
+      color: ED_VERMILION,
+      emissive: ED_VERMILION,
+      emissiveIntensity: 0.35,
+      roughness: 0.4
     })
   );
   seamLeftStrip.position.set(-0.038, 0.013, 2.0);
@@ -1187,20 +1309,19 @@ export function createWorkshopArcade3D({
   seamRightStrip.position.set(0.038, 0.013, 2.0);
   scene.add(seamRightStrip);
 
-  // Bisected Center Threshold Monolith Pillar at x = 0
   const pillarLeftHalf = new THREE.Mesh(
-    new THREE.BoxGeometry(0.08, 6.4, 0.22),
+    new THREE.BoxGeometry(0.09, 6.4, 0.24),
     new THREE.MeshStandardMaterial({
-      color: HW_PUTTY,
-      roughness: 0.35,
-      metalness: 0.25
+      color: ED_PAPER,
+      roughness: 0.5,
+      metalness: 0.08
     })
   );
-  pillarLeftHalf.position.set(-0.042, 3.2, -2.1);
+  pillarLeftHalf.position.set(-0.045, 3.2, -2.1);
   scene.add(pillarLeftHalf);
 
   const pillarRightHalf = new THREE.Mesh(
-    new THREE.BoxGeometry(0.08, 6.4, 0.22),
+    new THREE.BoxGeometry(0.09, 6.4, 0.24),
     new THREE.MeshStandardMaterial({
       color: '#090312',
       emissive: ARC_PINK,
@@ -1208,170 +1329,140 @@ export function createWorkshopArcade3D({
       roughness: 0.2
     })
   );
-  pillarRightHalf.position.set(0.042, 3.2, -2.1);
+  pillarRightHalf.position.set(0.045, 3.2, -2.1);
   scene.add(pillarRightHalf);
 
   // =========================================================================
-  // LEFT WING: BRAUN / TEENAGE ENGINEERING ANODIZED HARDWARE PEGBOARD (7 TOOLS)
+  // LEFT WING: SWISS EDITORIAL PRINT & DESIGN STUDIO (7 FRAMED PRINT FOLIOS)
   // =========================================================================
-  const workshopGroup = new THREE.Group();
-  workshopGroup.position.set(-4.65, 0, -1.2);
-  workshopGroup.rotation.y = 0.16;
-  scene.add(workshopGroup);
+  const atelierGroup = new THREE.Group();
+  atelierGroup.position.set(-4.7, 0, -1.2);
+  atelierGroup.rotation.y = 0.16;
+  scene.add(atelierGroup);
 
-  const boardW = 7.6;
-  const boardH = 3.68;
-  const boardCenterY = 2.65;
+  const wallW = 7.9;
+  const wallH = 3.86;
+  const wallCenterY = 2.7;
 
-  // Heavy dark gunmetal chassis frame
-  const pegboardFrame = new THREE.Mesh(
-    new THREE.BoxGeometry(boardW + 0.28, boardH + 0.28, 0.15),
+  // Blackened-Walnut / Sumi Architectural Gallery Frame
+  const galleryMolding = new THREE.Mesh(
+    new THREE.BoxGeometry(wallW + 0.26, wallH + 0.26, 0.14),
     new THREE.MeshStandardMaterial({
-      color: HW_INK,
-      metalness: 0.62,
-      roughness: 0.38
+      color: ED_INK,
+      roughness: 0.55,
+      metalness: 0.12
     })
   );
-  pegboardFrame.position.set(0, boardCenterY, -0.06);
-  workshopGroup.add(pegboardFrame);
+  galleryMolding.position.set(0, wallCenterY, -0.06);
+  atelierGroup.add(galleryMolding);
 
-  // Warm anodized putty-aluminum pegboard face (stark contrast against dark arcade!)
-  const pegboardFace = new THREE.Mesh(
-    new THREE.BoxGeometry(boardW, boardH, 0.08),
+  // Warm Cotton-Plaster Museum Exhibition Wall
+  const galleryWallFace = new THREE.Mesh(
+    new THREE.BoxGeometry(wallW, wallH, 0.08),
     new THREE.MeshStandardMaterial({
-      color: '#d5cfc3',
-      metalness: 0.24,
-      roughness: 0.48
+      color: ED_WALL,
+      roughness: 0.82,
+      metalness: 0.04
     })
   );
-  pegboardFace.position.set(0, boardCenterY, 0);
-  workshopGroup.add(pegboardFace);
+  galleryWallFace.position.set(0, wallCenterY, 0);
+  atelierGroup.add(galleryWallFace);
 
-  // 4 Teenage Engineering safety-orange corner mounting bolts
-  const boltGeom = new THREE.CylinderGeometry(0.065, 0.065, 0.1, 6);
-  const boltMat = new THREE.MeshStandardMaterial({
-    color: HW_ORANGE,
-    emissive: HW_ORANGE,
-    emissiveIntensity: 0.3,
-    roughness: 0.3
+  // Two Brushed-Brass Architectural Gallery Hanging Rails
+  const railMat = new THREE.MeshStandardMaterial({
+    color: ED_BRASS,
+    roughness: 0.32,
+    metalness: 0.78
   });
-  [
-    [-boardW / 2 + 0.12, boardCenterY + boardH / 2 - 0.12],
-    [boardW / 2 - 0.12, boardCenterY + boardH / 2 - 0.12],
-    [-boardW / 2 + 0.12, boardCenterY - boardH / 2 + 0.12],
-    [boardW / 2 - 0.12, boardCenterY - boardH / 2 + 0.12]
-  ].forEach(([bx, by]) => {
-    const bolt = new THREE.Mesh(boltGeom, boltMat);
-    bolt.rotation.x = Math.PI / 2;
-    bolt.position.set(bx, by, 0.025);
-    workshopGroup.add(bolt);
+  [4.18, 2.66].forEach((ry) => {
+    const rail = new THREE.Mesh(new THREE.BoxGeometry(wallW - 0.36, 0.032, 0.045), railMat);
+    rail.position.set(0, ry, 0.055);
+    atelierGroup.add(rail);
   });
-
-  const cols = 30;
-  const rows = 14;
-  const holeGeom = new THREE.CircleGeometry(0.022, 8);
-  const holeMat = new THREE.MeshBasicMaterial({ color: '#181b22' });
-  const pegHoles = new THREE.InstancedMesh(holeGeom, holeMat, cols * rows);
-  const dummy = new THREE.Object3D();
-  let hIdx = 0;
-  for (let r = 0; r < rows; r++) {
-    for (let c = 0; c < cols; c++) {
-      const hx = -boardW / 2 + 0.28 + (c * (boardW - 0.56)) / (cols - 1);
-      const hy = boardCenterY - boardH / 2 + 0.26 + (r * (boardH - 0.52)) / (rows - 1);
-      dummy.position.set(hx, hy, 0.043);
-      dummy.updateMatrix();
-      pegHoles.setMatrixAt(hIdx++, dummy.matrix);
-    }
-  }
-  workshopGroup.add(pegHoles);
 
   let currentSignTexts = {
-    signTools: 'TOOLS',
-    signToolsSub: 'TAP ANY TOOL OR WORKBENCH MONITOR',
+    signTools: 'DESIGN STUDIO',
+    signToolsSub: 'TAP ANY FRAMED FOLIO OR PROOF TABLE',
     signGames: 'ARCADE',
     signGamesSub: 'TAP OR SWIPE CABINETS TO PLAY'
   };
 
   const toolsSignMesh = new THREE.Mesh(
-    new THREE.PlaneGeometry(4.2, 1.02),
+    new THREE.PlaneGeometry(4.3, 1.04),
     new THREE.MeshBasicMaterial({
-      map: createWorkshopSignTexture(currentSignTexts.signTools, currentSignTexts.signToolsSub)
+      map: createEditorialSignTexture(currentSignTexts.signTools, currentSignTexts.signToolsSub)
     })
   );
-  toolsSignMesh.position.set(0, 5.08, 0.12);
+  toolsSignMesh.position.set(0, 5.18, 0.12);
   toolsSignMesh.userData = { hitType: 'wing-tools' };
-  workshopGroup.add(toolsSignMesh);
+  atelierGroup.add(toolsSignMesh);
 
-  // Machined Aluminum + Gunmetal Workbench Table below Pegboard
+  // Blackened-Ash & Warm-Linen Editorial Proof Table below the Gallery Wall
   const benchTop = new THREE.Mesh(
-    new THREE.BoxGeometry(boardW + 0.34, 0.15, 1.44),
-    new THREE.MeshStandardMaterial({ color: '#d8d2c5', metalness: 0.32, roughness: 0.42 })
+    new THREE.BoxGeometry(wallW + 0.34, 0.14, 1.46),
+    new THREE.MeshStandardMaterial({ color: '#1b1917', roughness: 0.48, metalness: 0.14 })
   );
   benchTop.position.set(0, 0.68, 0.62);
-  workshopGroup.add(benchTop);
+  atelierGroup.add(benchTop);
 
-  const benchFrontTrim = new THREE.Mesh(
-    new THREE.BoxGeometry(boardW + 0.36, 0.05, 0.04),
-    new THREE.MeshStandardMaterial({ color: HW_ORANGE, roughness: 0.35 })
+  const brassTableEdge = new THREE.Mesh(
+    new THREE.BoxGeometry(wallW + 0.36, 0.035, 0.03),
+    railMat
   );
-  benchFrontTrim.position.set(0, 0.68, 1.33);
-  workshopGroup.add(benchFrontTrim);
+  brassTableEdge.position.set(0, 0.69, 1.34);
+  atelierGroup.add(brassTableEdge);
 
-  const blueprintMat = new THREE.Mesh(
-    new THREE.PlaneGeometry(boardW - 0.4, 1.12),
-    new THREE.MeshBasicMaterial({ map: createBlueprintTexture() })
+  const deskBlotter = new THREE.Mesh(
+    new THREE.PlaneGeometry(wallW - 0.36, 1.14),
+    new THREE.MeshBasicMaterial({ map: createEditorialDeskMatTexture() })
   );
-  blueprintMat.rotation.x = -Math.PI / 2;
-  blueprintMat.position.set(0, 0.76, 0.64);
-  workshopGroup.add(blueprintMat);
+  deskBlotter.rotation.x = -Math.PI / 2;
+  deskBlotter.position.set(0, 0.755, 0.64);
+  atelierGroup.add(deskBlotter);
 
-  // 3D "BEFORE ↔ AFTER" Hardware Monitor resting on the Left Workbench
+  // Left Table Stand: Tilted Before ↔ After Editorial Proof Display
   const monitorGroup = new THREE.Group();
-  monitorGroup.position.set(-2.35, 0.75, 0.66);
+  monitorGroup.position.set(-2.45, 0.75, 0.66);
   monitorGroup.rotation.y = 0.22;
-  workshopGroup.add(monitorGroup);
+  atelierGroup.add(monitorGroup);
 
   const monitorStand = new THREE.Mesh(
-    new THREE.BoxGeometry(0.48, 0.06, 0.36),
-    new THREE.MeshStandardMaterial({ color: HW_INK, metalness: 0.6, roughness: 0.35 })
+    new THREE.BoxGeometry(0.5, 0.05, 0.36),
+    new THREE.MeshStandardMaterial({ color: ED_INK, roughness: 0.45 })
   );
-  monitorStand.position.y = 0.03;
+  monitorStand.position.y = 0.025;
   monitorGroup.add(monitorStand);
 
-  const monitorNeck = new THREE.Mesh(
-    new THREE.BoxGeometry(0.1, 0.28, 0.08),
-    new THREE.MeshStandardMaterial({ color: '#9ca3af', metalness: 0.75, roughness: 0.25 })
-  );
+  const monitorNeck = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.28, 0.07), railMat);
   monitorNeck.position.set(0, 0.16, -0.05);
   monitorGroup.add(monitorNeck);
 
   const monitorBezel = new THREE.Mesh(
-    new THREE.BoxGeometry(1.5, 0.9, 0.07),
+    new THREE.BoxGeometry(1.52, 0.92, 0.06),
     new THREE.MeshStandardMaterial({
-      color: HW_INK,
-      emissive: HW_ORANGE,
-      emissiveIntensity: 0.18,
-      metalness: 0.5,
-      roughness: 0.35
+      color: ED_INK,
+      emissive: ED_VERMILION,
+      emissiveIntensity: 0.12,
+      roughness: 0.42
     })
   );
   monitorBezel.position.set(0, 0.56, 0);
-  monitorBezel.rotation.x = -0.14;
+  monitorBezel.rotation.x = -0.16;
   monitorGroup.add(monitorBezel);
 
-  const monitorScreenTex = createBeforeAfterMonitorTexture();
+  const monitorScreenTex = createBeforeAfterProofTexture();
   const monitorScreen = new THREE.Mesh(
-    new THREE.PlaneGeometry(1.38, 0.78),
+    new THREE.PlaneGeometry(1.4, 0.8),
     new THREE.MeshStandardMaterial({
       map: monitorScreenTex,
       emissiveMap: monitorScreenTex,
-      emissive: new THREE.Color('#ffffff'),
-      emissiveIntensity: 0.88,
-      roughness: 0.18
+      emissive: new THREE.Color('#fffaf0'),
+      emissiveIntensity: 0.75,
+      roughness: 0.25
     })
   );
-  monitorScreen.position.set(0, 0.56, 0.038);
-  monitorScreen.rotation.x = -0.14;
+  monitorScreen.position.set(0, 0.56, 0.035);
+  monitorScreen.rotation.x = -0.16;
   monitorScreen.userData = { hitType: 'workbench-makeover' };
   monitorGroup.add(monitorScreen);
 
@@ -1383,39 +1474,33 @@ export function createWorkshopArcade3D({
   monitorHit.userData = { hitType: 'workbench-makeover' };
   monitorGroup.add(monitorHit);
 
-  // 3D Anodized Field Brief Clipboard on the Right Side of the Workbench
+  // Right Table Stand: Archival Cream Commission Dossier
   const clipboardGroup = new THREE.Group();
-  clipboardGroup.position.set(2.55, 0.76, 0.72);
+  clipboardGroup.position.set(2.6, 0.76, 0.72);
   clipboardGroup.rotation.set(-1.18, -0.18, -0.08);
-  workshopGroup.add(clipboardGroup);
+  atelierGroup.add(clipboardGroup);
 
   const clipBoardBack = new THREE.Mesh(
     new THREE.BoxGeometry(0.68, 0.9, 0.035),
-    new THREE.MeshStandardMaterial({
-      color: HW_INK,
-      roughness: 0.4
-    })
+    new THREE.MeshStandardMaterial({ color: ED_INK, roughness: 0.45 })
   );
   clipboardGroup.add(clipBoardBack);
 
-  const clipSheetTex = createClipboardTexture();
+  const clipSheetTex = createCommissionDossierTexture();
   const clipSheet = new THREE.Mesh(
-    new THREE.PlaneGeometry(0.6, 0.8),
+    new THREE.PlaneGeometry(0.62, 0.82),
     new THREE.MeshStandardMaterial({
       map: clipSheetTex,
       emissiveMap: clipSheetTex,
-      emissive: new THREE.Color('#ffffff'),
-      emissiveIntensity: 0.55,
-      roughness: 0.28
+      emissive: new THREE.Color('#fffaf0'),
+      emissiveIntensity: 0.52,
+      roughness: 0.35
     })
   );
   clipSheet.position.z = 0.022;
   clipboardGroup.add(clipSheet);
 
-  const clipMetal = new THREE.Mesh(
-    new THREE.BoxGeometry(0.26, 0.09, 0.06),
-    new THREE.MeshStandardMaterial({ color: HW_ORANGE, roughness: 0.28 })
-  );
+  const clipMetal = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.07, 0.055), railMat);
   clipMetal.position.set(0, 0.39, 0.03);
   clipboardGroup.add(clipMetal);
 
@@ -1427,69 +1512,34 @@ export function createWorkshopArcade3D({
   clipboardGroup.add(clipboardHit);
 
   const workshopWingHit = new THREE.Mesh(
-    new THREE.BoxGeometry(boardW + 0.6, 5.5, 1.6),
+    new THREE.BoxGeometry(wallW + 0.6, 5.5, 1.6),
     new THREE.MeshBasicMaterial({ visible: false })
   );
   workshopWingHit.position.set(0, 2.75, 0.1);
   workshopWingHit.userData = { hitType: 'wing-tools' };
-  workshopGroup.add(workshopWingHit);
+  atelierGroup.add(workshopWingHit);
 
-  // 7 Hanging Physical 3D Tools on the Anodized Pegboard
+  // 7 Framed Editorial Print Folios (4 upper gallery plates, 3 lower plates)
   const interactiveObjects = [monitorHit, monitorScreen, clipboardHit, toolsSignMesh, workshopWingHit];
   const toolNodes = [];
-  const hookGeom = new THREE.CylinderGeometry(0.016, 0.016, 0.24, 10);
-  const hookMat = new THREE.MeshStandardMaterial({ color: '#1e293b', metalness: 0.85, roughness: 0.25 });
 
   tools.forEach((tool, idx) => {
     const isTopRow = idx < 4;
-    const localX = isTopRow ? (idx - 1.5) * 1.82 : (idx - 5) * 1.98;
-    const localY = isTopRow ? 3.5 : 1.94;
+    const localX = isTopRow ? (idx - 1.5) * 1.84 : (idx - 5) * 1.96;
+    const localY = isTopRow ? 3.46 : 1.92;
 
     const slotGroup = new THREE.Group();
-    slotGroup.position.set(localX, localY, 0.05);
-    workshopGroup.add(slotGroup);
+    slotGroup.position.set(localX, localY, 0.06);
+    atelierGroup.add(slotGroup);
 
-    // Precision square/octagonal calibration reticle instead of generic glow circle
-    const haloRing = new THREE.Mesh(
-      new THREE.RingGeometry(0.41, 0.47, 4),
-      new THREE.MeshBasicMaterial({
-        color: new THREE.Color(HW_ORANGE),
-        transparent: true,
-        opacity: 0.45,
-        side: THREE.DoubleSide
-      })
-    );
-    haloRing.rotation.z = Math.PI / 4;
-    haloRing.position.z = 0.012;
-    slotGroup.add(haloRing);
-
-    [-0.17, 0.17].forEach((hx) => {
-      const hook = new THREE.Mesh(hookGeom, hookMat);
-      hook.rotation.x = Math.PI / 2;
-      hook.position.set(hx, 0.22, 0.11);
-      slotGroup.add(hook);
-    });
-
-    const meshHolder = new THREE.Group();
-    meshHolder.position.set(0, 0.02, 0.22);
-    const toolMesh = buildPhysicalToolMesh(tool);
-    meshHolder.add(toolMesh);
-    slotGroup.add(meshHolder);
-
-    const tagMat = new THREE.MeshBasicMaterial({
-      map: createPegTagTexture(tool, idx),
-      transparent: true,
-      opacity: 1
-    });
-    const tagPlane = new THREE.Mesh(new THREE.PlaneGeometry(1.44, 0.42), tagMat);
-    tagPlane.position.set(0, -0.55, 0.035);
-    slotGroup.add(tagPlane);
+    const folioBuilt = buildEditorialFolioNode(tool, idx);
+    slotGroup.add(folioBuilt.root);
 
     const hitBox = new THREE.Mesh(
-      new THREE.BoxGeometry(1.68, 1.4, 0.7),
+      new THREE.BoxGeometry(1.62, 1.42, 0.55),
       new THREE.MeshBasicMaterial({ visible: false })
     );
-    hitBox.position.set(0, -0.1, 0.22);
+    hitBox.position.set(0, 0, 0.12);
     hitBox.userData = {
       hitType: 'tool',
       index: idx,
@@ -1502,9 +1552,9 @@ export function createWorkshopArcade3D({
       item: tool,
       index: idx,
       slotGroup,
-      meshHolder,
-      haloRing,
-      tagMat,
+      folioRoot: folioBuilt.root,
+      printMat: folioBuilt.printMat,
+      highlightPlane: folioBuilt.highlightPlane,
       currentLift: 0,
       audienceMatch: true
     });
@@ -1550,7 +1600,7 @@ export function createWorkshopArcade3D({
   });
 
   // =========================================================================
-  // Camera-on-Rails State Machine (Hub | Tools Pegboard | Arcade Row | ZoomIn)
+  // Camera-on-Rails State Machine (Hub | Editorial Studio | Arcade Row | ZoomIn)
   // =========================================================================
   let currentMode = 'hub';
   let activeToolIndex = 0;
@@ -1592,18 +1642,18 @@ export function createWorkshopArcade3D({
     if (currentMode === 'tools') {
       const node = toolNodes[activeToolIndex] || toolNodes[0];
       node.slotGroup.getWorldPosition(tmpWorldPos);
-      workshopGroup.getWorldQuaternion(tmpQuat);
+      atelierGroup.getWorldQuaternion(tmpQuat);
       tmpForward.set(0, 0, 1).applyQuaternion(tmpQuat);
 
       if (isZoomedIntoScreen) {
         targetCamPos.copy(tmpWorldPos).addScaledVector(tmpForward, 0.95);
         targetLookAt.copy(tmpWorldPos);
       } else {
-        const dist = isPortrait ? 4.45 : 3.35;
+        const dist = isPortrait ? 4.35 : 3.28;
         targetCamPos.copy(tmpWorldPos).addScaledVector(tmpForward, dist);
-        targetCamPos.y = tmpWorldPos.y - (isPortrait ? 0.24 : 0.08);
+        targetCamPos.y = tmpWorldPos.y - (isPortrait ? 0.34 : 0.22);
         targetLookAt.copy(tmpWorldPos);
-        targetLookAt.y -= isPortrait ? 0.36 : 0.1;
+        targetLookAt.y -= isPortrait ? 0.42 : 0.28;
       }
       return;
     }
@@ -1614,19 +1664,20 @@ export function createWorkshopArcade3D({
         cab.screenMesh.getWorldPosition(tmpWorldPos);
         cab.root.getWorldQuaternion(tmpQuat);
         tmpForward.set(0, 0, 1).applyQuaternion(tmpQuat);
-        targetCamPos.copy(tmpWorldPos).addScaledVector(tmpForward, 0.62);
+        targetCamPos.copy(tmpWorldPos).addScaledVector(tmpForward, 0.65);
         targetLookAt.copy(tmpWorldPos);
       } else {
         cab.root.getWorldPosition(tmpWorldPos);
         cab.root.getWorldQuaternion(tmpQuat);
         tmpForward.set(0, 0, 1).applyQuaternion(tmpQuat);
 
-        const dist = isPortrait ? 4.15 : 3.05;
+        // Framed so Topper + Illuminated Marquee + Full CRT Logo + Joysticks sit cleanly above Inspector!
+        const dist = isPortrait ? 4.75 : 3.78;
         targetCamPos.copy(tmpWorldPos).addScaledVector(tmpForward, dist);
-        targetCamPos.y = isPortrait ? 1.88 : 1.92;
+        targetCamPos.y = isPortrait ? 2.12 : 2.24;
 
         targetLookAt.copy(tmpWorldPos);
-        targetLookAt.y = isPortrait ? 1.42 : 1.82;
+        targetLookAt.y = isPortrait ? 1.56 : 1.92;
       }
     }
   }
@@ -1727,7 +1778,6 @@ export function createWorkshopArcade3D({
     const absX = Math.abs(dx);
     const absY = Math.abs(dy);
 
-    // 1. Horizontal Swipe Gesture
     if (absX > 38 && absX > absY * 1.15 && dt < 900) {
       const dir = dx < 0 ? 1 : -1;
       if (currentMode === 'games') {
@@ -1742,7 +1792,6 @@ export function createWorkshopArcade3D({
       return;
     }
 
-    // 2. Clean Tap / Click (< 14px movement)
     if (absX < 14 && absY < 14) {
       const hit = getRaycastHit(e.clientX, e.clientY);
 
@@ -1863,32 +1912,29 @@ export function createWorkshopArcade3D({
     currentLookAt.z = THREE.MathUtils.lerp(currentLookAt.z, targetLookAt.z, damp);
     camera.lookAt(currentLookAt);
 
-    // Subtle tally pulse on 3D Hardware Monitor
     monitorBezel.material.emissiveIntensity = hoveredMonitor
-      ? 0.72
-      : 0.18 + Math.sin(elapsed * 2.8) * 0.06;
+      ? 0.55
+      : 0.12 + Math.sin(elapsed * 2.4) * 0.04;
 
-    // Animate Hanging 3D Tools on Hardware Pegboard
+    // Animate 7 Framed Editorial Print Folios on Left Gallery Wall
     toolNodes.forEach((node, idx) => {
       const isSelected = currentMode === 'tools' && idx === activeToolIndex;
       const isHovered = idx === hoveredToolIdx;
-      const matchBoost = node.audienceMatch ? 1 : 0.35;
-      const targetLift = isSelected ? 0.34 : isHovered ? 0.16 : node.audienceMatch ? 0 : -0.05;
+      const matchBoost = node.audienceMatch ? 1 : 0.38;
+      const targetLift = isSelected ? 0.26 : isHovered ? 0.12 : node.audienceMatch ? 0 : -0.03;
       node.currentLift = THREE.MathUtils.lerp(node.currentLift, targetLift, damp);
 
-      node.meshHolder.position.z = 0.22 + node.currentLift;
-      node.meshHolder.rotation.y = isSelected
-        ? Math.sin(elapsed * 2.1) * 0.22
-        : Math.sin(elapsed * 0.9 + idx) * 0.04;
-      node.haloRing.material.opacity = isSelected
-        ? 0.95
+      node.folioRoot.position.z = node.currentLift;
+      node.folioRoot.rotation.y = isSelected ? Math.sin(elapsed * 1.4) * 0.035 : 0;
+      node.highlightPlane.material.opacity = isSelected ? 0.95 : isHovered ? 0.55 : 0.0;
+      node.printMat.emissiveIntensity = isSelected
+        ? 0.42
         : isHovered
-          ? 0.7
-          : 0.28 * matchBoost;
-      node.tagMat.opacity = isSelected ? 1 : 0.38 + 0.62 * matchBoost;
+          ? 0.3
+          : 0.18 * matchBoost;
     });
 
-    // Animate 3D Shibuya Neon Arcade Cabinets
+    // Animate 7 1986 Shibuya Neon Arcade Cabinets on Right
     cabinetNodes.forEach((cab, idx) => {
       const isSelected = currentMode === 'games' && idx === activeGameIndex;
       const isHovered = idx === hoveredCabIdx;
@@ -1914,7 +1960,7 @@ export function createWorkshopArcade3D({
 
   function rebuildSigns() {
     const oldToolsTex = toolsSignMesh.material.map;
-    toolsSignMesh.material.map = createWorkshopSignTexture(
+    toolsSignMesh.material.map = createEditorialSignTexture(
       currentSignTexts.signTools,
       currentSignTexts.signToolsSub
     );
@@ -1952,11 +1998,8 @@ export function createWorkshopArcade3D({
     },
     refreshTypographyTextures() {
       rebuildSigns();
-      toolNodes.forEach((node, idx) => {
-        const old = node.tagMat.map;
-        node.tagMat.map = createPegTagTexture(node.item, idx);
-        node.tagMat.needsUpdate = true;
-        old?.dispose();
+      toolNodes.forEach((node) => {
+        node.printMat.map?.userData?.redraw?.();
       });
       cabinetNodes.forEach((cab, idx) => {
         const oldM = cab.marqueeMat.map;
