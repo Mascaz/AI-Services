@@ -11,14 +11,14 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700;800&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,500;0,600;0,700;1,700&family=IBM+Plex+Mono:wght@400;500;600;700&family=Silkscreen:wght@400;700&family=Syne:wght@700;800&family=VT323&display=swap"
     rel="stylesheet"
   />
   <link rel="stylesheet" href="./src/styles.css" />
 </head>
-<body data-mode="hub">
+<body data-mode="hub" data-hub-lean="center">
   <!-- =====================================================================
-       CLEAN FLOATING TOP NAVIGATION BAR + AUDIENCE LENS + DISCREET FLAG
+       DUAL-IDENTITY TOP CHROME BAR (MORPHS BETWEEN SPLIT / HARDWARE / ARCADE)
        ===================================================================== -->
   <header class="top-lab-bar" aria-label="Site Navigation">
     <div class="lab-brand-group">
@@ -52,7 +52,7 @@
         &#10022; <span id="navStartLabel" class="hide-xs">Build With Me</span>
       </button>
       <button type="button" id="openQuickIndexBtn" class="lab-ActionPill" title="Plain-text quick launcher (All Projects)">
-        &#128196; <span id="navAllLabel" class="hide-md">All</span>
+        &#9638; <span id="navAllLabel" class="hide-md">All</span>
       </button>
       <button type="button" id="sfxToggleBtn" class="lab-ActionPill icon-only-pill" aria-label="Toggle tactile UI sound effects" title="Toggle UI Sound">
         &#128266;
@@ -82,15 +82,36 @@
   </header>
 
   <!-- =====================================================================
-       3D MAKER'S PEGBOARD (LEFT) & PLAYABLE NEON ARCADE (RIGHT)
-       Procedural Three.js Camera-on-Rails Simulation (Tap & Swipe Only)
+       3D HARDWARE LAB PEGBOARD (LEFT) & 1986 SHIBUYA CRT ARCADE (RIGHT)
        ===================================================================== -->
-  <main id="protoWorkshopView" class="proto-view proto-workshop" aria-label="3D Tool Pegboard and Playable Neon Arcade">
+  <main id="protoWorkshopView" class="proto-view proto-workshop" aria-label="3D Hardware Tool Lab and Playable CRT Arcade">
     <div id="threeCanvasHost" class="three-canvas-host" aria-hidden="true"></div>
 
-    <!-- Center Split Hub Overlay (Shown when mode === 'hub') -->
+    <!-- Ambient World Screen Overlays (Hardware vignette in Tools / CRT scanlines in Games) -->
+    <div class="world-screen-fx" aria-hidden="true"></div>
+
+    <!-- Center Literal Split Hub Overlay (Shown when mode === 'hub') -->
     <div id="p1HubOverlay" class="p1-hub-overlay">
+      <!-- Literal Viewport Threshold Split Layer -->
+      <div class="hub-split-backdrop" aria-hidden="true">
+        <div class="hub-half hub-half-left">
+          <div class="hw-ruler-rail"></div>
+          <div class="hw-corner-stamp">FIELD LAB // REV.04 &bull; 07 UNITS</div>
+        </div>
+        <div class="hub-half hub-half-right">
+          <div class="arcade-scan-veil"></div>
+          <div class="arcade-corner-stamp">1UP // SHIBUYA HALL &bull; FREE PLAY</div>
+        </div>
+        <div class="hub-seam-divider">
+          <div class="hub-seam-node">L // R</div>
+        </div>
+      </div>
+
       <div class="p1-hub-headline">
+        <div class="headline-split-caps" aria-hidden="true">
+          <span class="cap-hw">&#9632; SYS.01 // PRECISION LAB</span>
+          <span class="cap-arc">INSERT COIN // 1986 CRT &#9733;</span>
+        </div>
         <span id="hubEyebrow" class="eyebrow-chip">WEBSITES &bull; PRODUCT PHOTOS &amp; COPY &bull; CUSTOM AI &amp; GAMES</span>
         <h1 id="hubTitle">Practical Tools on the Left. Pure Craft on the Right.</h1>
         <p id="hubSub">
@@ -99,13 +120,24 @@
       </div>
 
       <div class="p1-hub-split-cta">
+        <!-- LEFT: Tactile Braun / Teenage Engineering Hardware Key-Plate -->
         <button type="button" id="p1GoToolsBtn" class="world-entry-card entry-tools">
+          <span class="card-hw-topline" aria-hidden="true">
+            <span class="hw-led-dot"></span>
+            <span class="hw-serial">MOD 01&ndash;07 // ALUMINUM BENCH</span>
+            <span class="hw-screw">+</span>
+          </span>
           <span id="leftDirLabel" class="entry-dir">&larr; LEFT WALL</span>
           <strong id="leftTitleLabel">Business &amp; Creator Tools</strong>
           <span id="leftSubLabel" class="entry-sub">7 Live Tools + Before/After Workbench</span>
         </button>
 
+        <!-- RIGHT: 1986 Shibuya Angled CRT Neon Cabinet Bezel -->
         <button type="button" id="p1GoGamesBtn" class="world-entry-card entry-games">
+          <span class="card-arc-topline" aria-hidden="true">
+            <span class="arc-credit-blink">CREDIT 01</span>
+            <span class="arc-hz-tag">60HZ RGB // 1UP</span>
+          </span>
           <span id="rightDirLabel" class="entry-dir">RIGHT HALL &rarr;</span>
           <strong id="rightTitleLabel">The Playable Arcade</strong>
           <span id="rightSubLabel" class="entry-sub">7 Custom Cabinets &bull; Tap or Swipe</span>
@@ -113,7 +145,7 @@
       </div>
     </div>
 
-    <!-- Wing Navigation Breadcrumb Bar (Shown when in 'tools' or 'games') -->
+    <!-- Wing Navigation Breadcrumb + "Dimensional Bleed" Portal Switch (Shown in 'tools' or 'games') -->
     <div id="p1WingNav" class="p1-wing-nav" hidden>
       <button type="button" id="p1BackHubBtn" class="glass-nav-pill">
         &larr; Center Split
@@ -123,9 +155,17 @@
       </button>
     </div>
 
-    <!-- Bottom Tactile Inspector / Service Spark Deck (Shown when in 'tools' or 'games') -->
+    <!-- Bottom Tactile Inspector (Morphs from Machined Spec Plate <-> Angled CRT Control Deck) -->
     <section id="p1InspectorBar" class="p1-inspector-bar" aria-live="polite" hidden>
       <div class="inspector-card" id="p1InspectorCard">
+        <div class="inspector-chassis-bar" aria-hidden="true">
+          <span class="chassis-status-group">
+            <span class="chassis-led"></span>
+            <span id="p1DeckUnitCode">UNIT 01 / 07 // READY</span>
+          </span>
+          <span id="p1DeckWorldStamp" class="chassis-world-stamp">FIELD HARDWARE SPEC</span>
+        </div>
+
         <div class="inspector-top-row">
           <button type="button" id="p1PrevBtn" class="rail-step-btn" aria-label="Previous item">&#9664;</button>
 
@@ -173,8 +213,7 @@
   </main>
 
   <!-- =====================================================================
-       UNIFIED ZERO-LAG PLAYABLE STAGE (CRT ARCADE BEZEL / WORKBENCH SCREEN)
-       Mounts iframe ONLY on launch & resets to about:blank on close
+       UNIFIED ZERO-LAG PLAYABLE STAGE (HARDWARE TEST BENCH <-> 1986 CRT CABINET)
        ===================================================================== -->
   <dialog id="playStageDialog" class="play-stage-dialog" aria-labelledby="stageTitle">
     <div id="playStageShell" class="play-stage-shell" data-stage-theme="game">
@@ -326,9 +365,9 @@
   </dialog>
 
   <!-- =====================================================================
-       MODAL: PLAIN-TEXT QUICK LAUNCHER ("ALL PROJECTS / TLDR")
+       MODAL: PLAIN-TEXT QUICK LAUNCHER ("ALL PROJECTS / DUAL-COLUMN SPLIT")
        ===================================================================== -->
-  <dialog id="quickIndexDialog" class="info-modal-dialog" closedby="any" aria-labelledby="quickIndexTitle">
+  <dialog id="quickIndexDialog" class="info-modal-dialog quick-index-dialog" closedby="any" aria-labelledby="quickIndexTitle">
     <div class="info-modal-card">
       <header class="info-modal-header">
         <div>

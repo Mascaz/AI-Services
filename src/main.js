@@ -1,6 +1,13 @@
 import { CONTACT_CONFIG, TOOLS_ITEMS, GAMES_ITEMS } from './data.js';
 import { LANGUAGES, t } from './i18n.js';
-import { toggleSfx, playMicroClick, playLaunchSound } from './audio.js';
+import {
+  toggleSfx,
+  playHoverTick,
+  playMicroClick,
+  playWorldTransition,
+  playLaunchSound,
+  playStageClose
+} from './audio.js';
 
 // ============================================================================
 // State
@@ -68,6 +75,8 @@ const p1CrossSwitchBtn = document.getElementById('p1CrossSwitchBtn');
 
 const p1InspectorBar = document.getElementById('p1InspectorBar');
 const p1InspectorCard = document.getElementById('p1InspectorCard');
+const p1DeckUnitCode = document.getElementById('p1DeckUnitCode');
+const p1DeckWorldStamp = document.getElementById('p1DeckWorldStamp');
 const p1PrevBtn = document.getElementById('p1PrevBtn');
 const p1NextBtn = document.getElementById('p1NextBtn');
 const p1ItemIcon = document.getElementById('p1ItemIcon');
@@ -256,7 +265,7 @@ function renderLangGrid() {
     btn.className = `lang-option-btn ${lang.code === currentLang ? 'active' : ''}`;
     btn.innerHTML = `<span>${lang.flag}</span><span>${lang.name}</span>`;
     btn.addEventListener('click', () => {
-      playMicroClick('tool');
+      playMicroClick(currentMode === 'games' ? 'arcade' : 'tool');
       langPopover.hidden = true;
       langFlagBtn.setAttribute('aria-expanded', 'false');
       setLanguage(lang.code);
@@ -271,7 +280,7 @@ langFlagBtn.addEventListener('click', (e) => {
   langPopover.hidden = nextHidden;
   langFlagBtn.setAttribute('aria-expanded', String(!nextHidden));
   if (!nextHidden) {
-    playMicroClick('tool');
+    playMicroClick(currentMode === 'games' ? 'arcade' : 'tool');
     renderLangGrid();
   }
 });
@@ -324,7 +333,7 @@ function scheduleSpeculativePrefetch(item) {
 // ============================================================================
 function setAudienceFilter(nextFilter) {
   audienceFilter = nextFilter;
-  playMicroClick('tool');
+  playMicroClick(currentMode === 'games' ? 'arcade' : 'tool');
 
   [audAllBtn, audBizBtn, audCreatorBtn].forEach((btn) => {
     btn.classList.toggle('active', btn.dataset.audience === audienceFilter);
@@ -338,7 +347,6 @@ function setAudienceFilter(nextFilter) {
     scene3D.setAudienceFilter(audienceFilter);
   }
 
-  // If currently inspecting an item that doesn't match the selected lens, jump to first match
   if (audienceFilter !== 'all') {
     if (currentMode === 'tools' && !TOOLS_ITEMS[selectedToolIdx].audiences.includes(audienceFilter)) {
       const firstMatch = TOOLS_ITEMS.findIndex((it) => it.audiences.includes(audienceFilter));
@@ -360,8 +368,10 @@ function setAudienceFilter(nextFilter) {
 });
 
 // ============================================================================
-// 3. 3D Pegboard Wall & Neon Arcade Initialization
+// 3. 3D Hardware Pegboard (Left) & 1986 Shibuya Arcade (Right) Initialization
 // ============================================================================
+let prevLean = 'center';
+
 import('./workshopArcade3D.js').then(({ createWorkshopArcade3D }) => {
   scene3D = createWorkshopArcade3D({
     container: threeCanvasHost,
@@ -394,30 +404,76 @@ import('./workshopArcade3D.js').then(({ createWorkshopArcade3D }) => {
     },
     onOpenBrief() {
       openProjectBriefModal();
+    },
+    onHoverItem(kind) {
+      playHoverTick(kind, kind === 'tool' ? -0.18 : 0.18);
+    },
+    onHubLean(lean, pointerX = 0) {
+      if (currentMode !== 'hub') return;
+      // Gently breathe the literal split seam toward whichever world you're curious about
+      const splitPct = Math.max(46, Math.min(54, 50 - pointerX * 3.6));
+      document.documentElement.style.setProperty('--split-x', `${splitPct.toFixed(2)}%`);
+      document.body.dataset.hubLean = lean;
+
+      if (lean !== prevLean) {
+        prevLean = lean;
+        if (lean === 'left') playHoverTick('tool', -0.28);
+        else if (lean === 'right') playHoverTick('arcade', 0.28);
+      }
     }
   });
 
   scene3D.setAudienceFilter(audienceFilter);
-  if (currentLang !== 'en') {
-    scene3D.setSignsText({
-      signTools: t(currentLang, 'signTools'),
-      signToolsSub: t(currentLang, 'signToolsSub'),
-      signGames: t(currentLang, 'signGames'),
-      signGamesSub: t(currentLang, 'signGamesSub')
-    });
-  }
+  scene3D.setSignsText({
+    signTools: t(currentLang, 'signTools'),
+    signToolsSub: t(currentLang, 'signToolsSub'),
+    signGames: t(currentLang, 'signGames'),
+    signGamesSub: t(currentLang, 'signGamesSub')
+  });
   scene3D.setState({
     mode: currentMode,
     toolIndex: selectedToolIdx,
     gameIndex: selectedGameIdx,
     zoomed: Boolean(playStageDialog.open)
   });
+
+  // Once custom Google Fonts finish loading, re-bake 3D Canvas2D signs/tags/marquees
+  if (document.fonts?.ready) {
+    document.fonts.ready.then(() => {
+      scene3D?.refreshTypographyTextures?.();
+    });
+  }
+});
+
+// World-specific hover audio cues on key 2D UI triggers (including Portal Bleed buttons!)
+[p1GoToolsBtn, navToolsBtn].forEach((el) => {
+  el?.addEventListener('pointerenter', () => playHoverTick('tool', -0.22));
+});
+[p1GoGamesBtn, navGamesBtn].forEach((el) => {
+  el?.addEventListener('pointerenter', () => playHoverTick('arcade', 0.22));
+});
+p1CrossSwitchBtn?.addEventListener('pointerenter', () => {
+  // When inside Tools, the portal button previews Arcade sound; inside Arcade, it previews Hardware sound!
+  const previewOtherWorld = currentMode === 'tools' ? 'arcade' : 'tool';
+  playHoverTick(previewOtherWorld, previewOtherWorld === 'arcade' ? 0.24 : -0.24);
 });
 
 function setMode(targetMode) {
+  const changed = currentMode !== targetMode;
   currentMode = targetMode;
   document.body.dataset.mode = targetMode;
-  playMicroClick(targetMode === 'games' ? 'arcade' : 'tool');
+
+  if (targetMode === 'hub') {
+    document.documentElement.style.setProperty('--split-x', '50%');
+    document.body.dataset.hubLean = 'center';
+    prevLean = 'center';
+  }
+
+  if (changed) {
+    playWorldTransition(targetMode);
+  } else {
+    playMicroClick(targetMode === 'games' ? 'arcade' : 'tool');
+  }
   renderHud();
 }
 
@@ -454,6 +510,19 @@ function renderHud() {
   p1CrossSwitchBtn.className = `glass-nav-pill ${isGames ? 'accent-tools-pill' : 'accent-cross-pill'}`;
 
   p1InspectorCard.style.setProperty('--active-accent', rawItem.accent);
+
+  // World-specific top chassis telemetry bar
+  if (p1DeckUnitCode && p1DeckWorldStamp) {
+    const numStr = `0${activeIdx + 1} / 0${list.length}`;
+    if (isGames) {
+      p1DeckUnitCode.textContent = `CAB ${numStr} // 1UP FREE PLAY`;
+      p1DeckWorldStamp.textContent = 'SHIBUYA 1986 • 60HZ CRT';
+    } else {
+      p1DeckUnitCode.textContent = `MOD ${numStr} // ${(rawItem.physicalLabel || 'BENCH UNIT').toUpperCase()}`;
+      p1DeckWorldStamp.textContent = 'FIELD HARDWARE SPEC';
+    }
+  }
+
   p1ItemIcon.src = rawItem.iconUrl;
   p1ItemIcon.alt = `${item.name} icon`;
   p1ItemBadge.textContent = item.badge;
@@ -475,7 +544,7 @@ function renderHud() {
   }
 
   const actionText = isGames ? t(currentLang, 'playLive') : t(currentLang, 'tryLive');
-  p1LaunchBtn.innerHTML = isGames ? `&#129689; ${actionText}` : `&#9654; ${actionText}`;
+  p1LaunchBtn.innerHTML = isGames ? `&#9733; ${actionText}` : `&#9654; ${actionText}`;
 
   p1SwipeHint.textContent = isGames ? t(currentLang, 'swipeGames') : t(currentLang, 'swipeTools');
 
@@ -491,6 +560,9 @@ function renderHud() {
     dot.className = `rail-dot-btn ${idx === activeIdx ? 'active' : ''} ${!matchesFilter ? 'dimmed-dot' : ''}`;
     dot.title = entry.name;
     dot.setAttribute('aria-label', `Select ${entry.name}`);
+    dot.addEventListener('pointerenter', () => {
+      playHoverTick(isGames ? 'arcade' : 'tool');
+    });
     dot.addEventListener('click', () => {
       if (isGames) selectedGameIdx = idx;
       else selectedToolIdx = idx;
@@ -560,7 +632,7 @@ p1InfoBtn.addEventListener('click', () => {
 });
 
 // ============================================================================
-// 4. Zero-Lag Playable Stage (Lazy Iframe + 3D Auto-Pause)
+// 4. Zero-Lag Playable Stage (Hardware Bench <-> 1986 CRT Monitor Housing)
 // ============================================================================
 function setStageTab(tabName) {
   const isLive = tabName === 'live';
@@ -589,18 +661,20 @@ function openPlayableStage(rawItem, kind = 'game', initialTab = 'live') {
   playLaunchSound(kind);
 
   playStageShell.dataset.stageTheme = kind;
+  stageSpecsPanel.dataset.specsTheme = kind;
   closeStageLabel.textContent = kind === 'game' ? t(currentLang, 'navGames') : t(currentLang, 'navTools');
   stageIcon.src = rawItem.iconUrl;
   stageIcon.alt = item.name;
   stageTitle.textContent = item.name;
   stageExternalLink.href = rawItem.playUrl;
   stageTelemetryTag.textContent = rawItem.category;
-  stageLoadingText.textContent = `${item.name}…`;
+  stageLoadingText.textContent =
+    kind === 'game' ? `BOOTING 60HZ ROM // ${item.name.toUpperCase()}…` : `INITIALIZING BENCH // ${item.name.toUpperCase()}…`;
 
   stageSpecsContent.innerHTML = `
     <div class="arch-card" style="padding:20px">
       <div class="arch-step">${rawItem.category}</div>
-      <h3 style="font-size:22px;margin-top:6px">${item.name}</h3>
+      <h3 style="font-size:22px;margin-top:6px;text-transform:uppercase">${item.name}</h3>
       <span class="arch-metric-pill">${rawItem.bundleSizeLabel}</span>
       <p style="font-size:14px;line-height:1.65;margin-top:8px">${rawItem.description}</p>
       <div class="idea-spark-box" style="margin-top:14px">
@@ -649,11 +723,13 @@ liveProjectIframe.addEventListener('load', () => {
 });
 
 function closePlayableStage() {
+  const closingKind = activeStageKind;
   clearTimeout(freezeTimer);
   liveProjectIframe.src = 'about:blank';
   activeStageItem = null;
 
   if (playStageDialog.open) {
+    playStageClose(closingKind);
     playStageDialog.close();
   }
 
@@ -673,8 +749,14 @@ playStageDialog.addEventListener('close', () => {
   if (activeStageItem) closePlayableStage();
 });
 
-stageTabLive.addEventListener('click', () => setStageTab('live'));
-stageTabSpecs.addEventListener('click', () => setStageTab('specs'));
+stageTabLive.addEventListener('click', () => {
+  playMicroClick(activeStageKind === 'game' ? 'arcade' : 'tool');
+  setStageTab('live');
+});
+stageTabSpecs.addEventListener('click', () => {
+  playMicroClick(activeStageKind === 'game' ? 'arcade' : 'tool');
+  setStageTab('specs');
+});
 
 stageFullscreenBtn.addEventListener('click', () => {
   if (!document.fullscreenElement) {
@@ -728,7 +810,7 @@ function updateBriefPreview() {
 }
 
 function openProjectBriefModal(inspiredByItem = null) {
-  playMicroClick('tool');
+  playMicroClick(currentMode === 'games' ? 'arcade' : 'tool');
 
   if (audienceFilter === 'creator') briefWho = 'whoCreator';
   else if (audienceFilter === 'business') briefWho = 'whoBiz';
@@ -753,7 +835,7 @@ openBriefBtn.addEventListener('click', () => openProjectBriefModal(null));
 [whoBizChip, whoCreatorChip, whoOtherChip].forEach((chip) => {
   chip.addEventListener('click', () => {
     briefWho = chip.dataset.who;
-    playMicroClick('tool');
+    playMicroClick(currentMode === 'games' ? 'arcade' : 'tool');
     syncBriefChipStates();
     updateBriefPreview();
   });
@@ -767,7 +849,7 @@ openBriefBtn.addEventListener('click', () => openProjectBriefModal(null));
     } else {
       selectedNeeds.add(key);
     }
-    playMicroClick('tool');
+    playMicroClick(currentMode === 'games' ? 'arcade' : 'tool');
     syncBriefChipStates();
     updateBriefPreview();
   });
@@ -775,7 +857,6 @@ openBriefBtn.addEventListener('click', () => openProjectBriefModal(null));
 
 briefNoteInput.addEventListener('input', updateBriefPreview);
 
-// Instagram Direct Message: Copy brief to clipboard + open ig.me/m/<handle>
 sendIgBtn.addEventListener('click', async () => {
   const text = buildBriefText();
   try {
@@ -795,12 +876,12 @@ sendIgBtn.addEventListener('click', async () => {
 });
 
 // ============================================================================
-// 6. Plain-Text Quick Launcher Modal ("All Projects")
+// 6. Dual-Column Split Quick Launcher Modal ("All Projects")
 // ============================================================================
 function renderQuickIndexModal() {
-  const renderCol = (items, kind, heading, color) => `
-    <div>
-      <h3 style="font-size:16px;color:${color};margin-bottom:6px">${heading}</h3>
+  const renderCol = (items, kind, heading, colClass, accentColor, fontVar) => `
+    <div class="${colClass}">
+      <h3 style="font-family:${fontVar};font-size:15px;text-transform:uppercase;color:${accentColor};margin-bottom:8px">${heading}</h3>
       ${items
         .map((raw, idx) => {
           const it = localizeItem(raw);
@@ -808,10 +889,10 @@ function renderQuickIndexModal() {
             <button type="button" class="tldr-row-btn" data-quick-kind="${kind}" data-quick-idx="${idx}">
               <img src="${raw.iconUrl}" alt="${it.name}" width="38" height="38" loading="lazy" />
               <div style="flex:1;min-width:0">
-                <div style="font-weight:800;font-size:13.5px">${it.name}</div>
-                <div style="font-size:11.5px;color:#94a3b8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${it.badge} &bull; ${raw.category}</div>
+                <div style="font-weight:700;font-size:13px;text-transform:uppercase">${it.name}</div>
+                <div style="font-family:var(--font-hw-mono);font-size:10.5px;opacity:0.78;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${it.badge} &bull; ${raw.category}</div>
               </div>
-              <span style="font-family:var(--font-mono);font-size:12px;color:${color}">&#9654;</span>
+              <span style="font-family:var(--font-hw-mono);font-size:12px;color:${accentColor}">&#9654;</span>
             </button>
           `;
         })
@@ -821,23 +902,26 @@ function renderQuickIndexModal() {
 
   quickIndexBody.innerHTML = `
     <div class="tldr-columns">
-      ${renderCol(TOOLS_ITEMS, 'tool', `← ${t(currentLang, 'leftTitle')} (7)`, '#38bdf8')}
-      ${renderCol(GAMES_ITEMS, 'game', `${t(currentLang, 'rightTitle')} (7) →`, '#ff2a85')}
+      ${renderCol(TOOLS_ITEMS, 'tool', `← ${t(currentLang, 'leftTitle')} [07]`, 'tldr-col-tools', '#ff5500', 'var(--font-hw-sans)')}
+      ${renderCol(GAMES_ITEMS, 'game', `${t(currentLang, 'rightTitle')} [07] →`, 'tldr-col-games', '#00f0ff', 'var(--font-arc-pixel)')}
     </div>
-    <div style="padding-top:12px;border-top:1px solid rgba(148,163,184,0.16);display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;font-size:12.5px">
+    <div style="padding-top:12px;border-top:1px solid rgba(255,255,255,0.16);display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;font-family:var(--font-hw-mono);font-size:12px;color:#e2e8f0">
       <div style="display:flex;gap:14px;flex-wrap:wrap">
-        <a href="${CONTACT_CONFIG.portfolioUrl}" target="_blank" rel="noopener" style="color:#bae6fd">Full Portfolio (mascaz.github.io) &#8599;</a>
-        <a href="https://www.instagram.com/${CONTACT_CONFIG.instagramHandle}/" target="_blank" rel="noopener" style="color:#bae6fd">@${CONTACT_CONFIG.instagramHandle} &#8599;</a>
+        <a href="${CONTACT_CONFIG.portfolioUrl}" target="_blank" rel="noopener" style="color:#ff5500;font-weight:700">mascaz.github.io &#8599;</a>
+        <a href="https://www.instagram.com/${CONTACT_CONFIG.instagramHandle}/" target="_blank" rel="noopener" style="color:#00f0ff;font-weight:700">@${CONTACT_CONFIG.instagramHandle} &#8599;</a>
       </div>
-      <button type="button" id="quickStartProjectBtn" class="build-similar-btn" style="flex:0 0 auto">
+      <button type="button" id="quickStartProjectBtn" class="send-channel-btn send-ig-btn" style="padding:8px 14px">
         ${t(currentLang, 'buildSimilar')}
       </button>
     </div>
   `;
 
   quickIndexBody.querySelectorAll('[data-quick-kind]').forEach((btn) => {
+    const kind = btn.dataset.quickKind;
+    btn.addEventListener('pointerenter', () => {
+      playHoverTick(kind === 'game' ? 'arcade' : 'tool');
+    });
     btn.addEventListener('click', () => {
-      const kind = btn.dataset.quickKind;
       const idx = Number(btn.dataset.quickIdx);
       quickIndexDialog.close();
       if (kind === 'tool') {
@@ -859,6 +943,7 @@ function renderQuickIndexModal() {
 }
 
 openQuickIndexBtn.addEventListener('click', () => {
+  playMicroClick(currentMode === 'games' ? 'arcade' : 'tool');
   renderQuickIndexModal();
   quickIndexDialog.showModal();
 });
