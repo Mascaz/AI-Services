@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Maxwell — Tools &amp; Games | Interactive Dual-World Prototypes</title>
+  <title>Maxwell — AI Services, Custom Tools &amp; Interactive Experiences</title>
   <meta
     name="description"
-    content="Dual-world interactive showcase by Maxwell Montes Diaz — Left: 3D Maker's Pegboard of AI & Software Tools. Right: Press-and-Swipe 3D Neon Arcade of Playable Games."
+    content="Custom AI tools, website upgrades, product visual studios, and playable interactive experiences for content creators and small businesses — by Maxwell Montes Diaz."
   />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -16,54 +16,27 @@
   />
   <link rel="stylesheet" href="./src/styles.css" />
 </head>
-<body data-proto="workshop" data-mode="hub">
+<body data-mode="hub">
   <!-- =====================================================================
-       GLOBAL FLOATING PROTOTYPE LAB & PERFORMANCE BAR
+       CLEAN FLOATING TOP NAVIGATION BAR
        ===================================================================== -->
-  <header class="top-lab-bar" aria-label="Prototype Switcher and Fast-Load Controls">
+  <header class="top-lab-bar" aria-label="Site Navigation">
     <div class="lab-brand-group">
-      <button type="button" id="brandHomeBtn" class="brand-home-btn" title="Return to Center Split Hub">
+      <button type="button" id="brandHomeBtn" class="brand-home-btn" title="Return to Center Split View">
         <span class="brand-split-dot" aria-hidden="true"></span>
-        <span class="brand-text">MAXWELL <span class="brand-slash">//</span> TOOLS &amp; GAMES</span>
+        <span class="brand-text">MAXWELL <span class="brand-slash">//</span> AI SERVICES</span>
       </button>
     </div>
 
-    <nav class="proto-switcher" role="tablist" aria-label="Choose Website Concept Prototype">
-      <button
-        type="button"
-        role="tab"
-        aria-selected="true"
-        class="proto-tab active"
-        data-proto-btn="workshop"
-      >
-        <span class="proto-num">01</span> 3D Pegboard &amp; Arcade
-      </button>
-      <button
-        type="button"
-        role="tab"
-        aria-selected="false"
-        class="proto-tab"
-        data-proto-btn="split"
-      >
-        <span class="proto-num">02</span> Kinetic Split Curtain
-      </button>
-      <button
-        type="button"
-        role="tab"
-        aria-selected="false"
-        class="proto-tab"
-        data-proto-btn="artifacts"
-      >
-        <span class="proto-num">03</span> Cyberdeck vs. Mini-Arcade
-      </button>
-    </nav>
-
     <div class="lab-actions-group">
-      <button type="button" id="openSpeedLabBtn" class="lab-ActionPill speed-pill" title="View Fast-Load Architecture & Concept Ideas">
-        &#9889; <span id="bootMetricBadge">Fast-Load Lab</span>
+      <button type="button" id="navToolsBtn" class="lab-ActionPill pill-tools-quick">
+        &larr; <span class="hide-xs">Tool Wall</span><span class="show-xs">Tools</span>
+      </button>
+      <button type="button" id="navGamesBtn" class="lab-ActionPill pill-games-quick">
+        <span class="hide-xs">Neon Arcade</span><span class="show-xs">Games</span> &rarr;
       </button>
       <button type="button" id="openQuickIndexBtn" class="lab-ActionPill" title="Plain-text quick launcher (TLDR)">
-        &#128196; <span class="hide-xs">TLDR Index</span>
+        &#128196; <span class="hide-xs">All Projects</span>
       </button>
       <button type="button" id="sfxToggleBtn" class="lab-ActionPill icon-only-pill" aria-label="Toggle tactile UI sound effects" title="Toggle UI Micro-SFX">
         &#128266;
@@ -72,31 +45,31 @@
   </header>
 
   <!-- =====================================================================
-       PROTOTYPE 01: 3D MAKER'S PEGBOARD (LEFT) & NEON ARCADE (RIGHT)
+       3D MAKER'S PEGBOARD (LEFT) & NEON ARCADE (RIGHT)
        Procedural Three.js Camera-on-Rails Simulation (Tap & Swipe Only)
        ===================================================================== -->
-  <main id="protoWorkshopView" class="proto-view proto-workshop" aria-label="Prototype 1: 3D Pegboard and Neon Arcade">
+  <main id="protoWorkshopView" class="proto-view proto-workshop" aria-label="3D Tool Pegboard and Playable Neon Arcade">
     <div id="threeCanvasHost" class="three-canvas-host" aria-hidden="true"></div>
 
     <!-- Center Split Hub Overlay (Shown when mode === 'hub') -->
     <div id="p1HubOverlay" class="p1-hub-overlay">
       <div class="p1-hub-headline">
-        <span class="eyebrow-chip">RAIL-GUIDED 3D SIMULATION &bull; TAP OR SWIPE</span>
-        <h1>Pick a Side of the Room</h1>
-        <p>No WASD or camera controls needed &mdash; simply tap a wall, click an arcade machine, or swipe.</p>
+        <span class="eyebrow-chip">CUSTOM AI TOOLS &bull; WEBSITES &bull; INTERACTIVE EXPERIENCES</span>
+        <h1>Practical Tools on the Left. Pure Craft on the Right.</h1>
+        <p>Tap the pegboard wall to test live business &amp; creator tools, or step into the arcade to see what’s possible.</p>
       </div>
 
       <div class="p1-hub-split-cta">
         <button type="button" id="p1GoToolsBtn" class="world-entry-card entry-tools">
           <span class="entry-dir">&larr; LEFT WALL</span>
-          <strong>The Tool Pegboard</strong>
-          <span class="entry-sub">6 Hanging 3D AI &amp; Software Tools</span>
+          <strong>Business &amp; Creator Tools</strong>
+          <span class="entry-sub">6 Hanging 3D Tools &bull; Tap to Test Live</span>
         </button>
 
         <button type="button" id="p1GoGamesBtn" class="world-entry-card entry-games">
           <span class="entry-dir">RIGHT HALL &rarr;</span>
-          <strong>The Neon Arcade</strong>
-          <span class="entry-sub">6 Playable Cabinets &bull; Swipe &amp; Play</span>
+          <strong>The Playable Arcade</strong>
+          <span class="entry-sub">6 Custom Cabinets &bull; Tap or Swipe</span>
         </button>
       </div>
     </div>
@@ -122,8 +95,8 @@
             <div class="inspector-titles">
               <div class="inspector-badges">
                 <span id="p1ItemBadge" class="mini-badge">Playable</span>
-                <span id="p1ItemLoadBadge" class="mini-badge badge-load">0 KB Initial</span>
-                <span id="p1PrefetchIndicator" class="prefetch-dot" hidden>&#10003; Cached</span>
+                <span id="p1ItemLoadBadge" class="mini-badge badge-load">Instant</span>
+                <span id="p1PrefetchIndicator" class="prefetch-dot" hidden>&#10003; Ready</span>
               </div>
               <h2 id="p1ItemTitle">Project Title</h2>
             </div>
@@ -139,7 +112,7 @@
             &#9654; Launch Live
           </button>
           <button type="button" id="p1InfoBtn" class="secondary-specs-btn">
-            Specs &amp; Tech
+            Details
           </button>
         </div>
 
@@ -150,160 +123,6 @@
       </div>
     </section>
   </main>
-
-  <!-- =====================================================================
-       PROTOTYPE 02: KINETIC SPLIT-DIMENSION CURTAIN + CSS-3D COVERFLOW
-       Zero-WebGL (<15ms boot) Elastic Split + Hanging Plaques + 3D Cabinets
-       ===================================================================== -->
-  <section id="protoSplitView" class="proto-view proto-split" aria-label="Prototype 2: Kinetic Split Curtain" hidden>
-    <!-- Split Curtain Hub -->
-    <div id="p2SplitHub" class="p2-split-hub">
-      <!-- Left Curtain: Precision Titanium Tool Lab -->
-      <div class="curtain-half curtain-tools" id="p2EnterTools" role="button" tabindex="0" aria-label="Enter Left Tools Pegboard">
-        <div class="curtain-grid-bg" aria-hidden="true"></div>
-        <div class="curtain-content">
-          <span class="curtain-tag">LEFT // PRECISION PEGBOARD</span>
-          <h2>TOOLS</h2>
-          <p>Interactive WebGL shaders, local WASM privacy AI, bilingual pipelines &amp; quant simulators hanging ready to grab.</p>
-          <span class="curtain-cta-pill">&larr; Open Tool Wall (6)</span>
-        </div>
-      </div>
-
-      <!-- Center Glowing Seam Badge -->
-      <div class="curtain-center-orb" aria-hidden="true">
-        <span>VS</span>
-      </div>
-
-      <!-- Right Curtain: After-Hours Neon Arcade -->
-      <div class="curtain-half curtain-games" id="p2EnterGames" role="button" tabindex="0" aria-label="Enter Right Playable Games Arcade">
-        <div class="curtain-crt-bg" aria-hidden="true"></div>
-        <div class="curtain-content">
-          <span class="curtain-tag">RIGHT // AFTER-HOURS VAULT</span>
-          <h2>GAMES</h2>
-          <p>Step up to the CSS-3D arcade row. Swipe between glowing cabinets and play instantly inside the CRT.</p>
-          <span class="curtain-cta-pill">Enter Arcade Row (6) &rarr;</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Prototype 2 Left Interior: Swinging CSS Pegboard Wall -->
-    <div id="p2ToolsWall" class="p2-interior p2-tools-wall" hidden>
-      <div class="interior-SubHeader">
-        <button type="button" class="glass-nav-pill" data-p2-nav="hub">&larr; Split Curtain</button>
-        <div class="interior-title-block">
-          <span class="eyebrow-chip">LEFT WING // PERFORATED STEEL PEGBOARD</span>
-          <h2>Grab a Tool Off the Wall</h2>
-        </div>
-        <button type="button" class="glass-nav-pill accent-cross-pill" data-p2-nav="games">Arcade Row &rarr;</button>
-      </div>
-
-      <div id="p2PegboardGrid" class="p2-pegboard-grid" role="list"></div>
-    </div>
-
-    <!-- Prototype 2 Right Interior: Swipeable CSS-3D Arcade Coverflow -->
-    <div id="p2ArcadeCoverflow" class="p2-interior p2-arcade-coverflow" hidden>
-      <div class="interior-SubHeader">
-        <button type="button" class="glass-nav-pill" data-p2-nav="hub">&larr; Split Curtain</button>
-        <div class="interior-title-block">
-          <span class="eyebrow-chip">RIGHT WING // CSS-3D ARCADE CAROUSEL</span>
-          <h2>Tap or Swipe Cabinets to Play</h2>
-        </div>
-        <button type="button" class="glass-nav-pill accent-tools-pill" data-p2-nav="tools">&larr; Tool Wall</button>
-      </div>
-
-      <div id="p2CoverflowStage" class="p2-coverflow-stage">
-        <button type="button" id="p2CabPrev" class="coverflow-arrow arrow-left" aria-label="Previous cabinet">&#9664;</button>
-        <div id="p2CoverflowTrack" class="p2-coverflow-track"></div>
-        <button type="button" id="p2CabNext" class="coverflow-arrow arrow-right" aria-label="Next cabinet">&#9654;</button>
-      </div>
-
-      <div id="p2ActiveGameFooter" class="p2-active-game-footer"></div>
-    </div>
-  </section>
-
-  <!-- =====================================================================
-       PROTOTYPE 03: DUAL DESK ARTIFACTS (SPIRITUAL SIBLING TO MASCAZ.GITHUB.IO)
-       Left: Modular Field Cyberdeck | Right: Translucent Bartop Mini-Arcade
-       ===================================================================== -->
-  <section id="protoArtifactsView" class="proto-view proto-artifacts" aria-label="Prototype 3: Dual Hardware Artifacts" hidden>
-    <!-- Studio Hardware Selector Hub -->
-    <div id="p3HardwareHub" class="p3-hardware-hub">
-      <div class="p3-hub-header">
-        <span class="eyebrow-chip">HARDWARE TOTEM CONCEPT &bull; INSPIRED BY MASCAZ.GITHUB.IO</span>
-        <h2>Tools on the Left. Games on the Right.</h2>
-        <p>Tap either desk machine to zoom seamlessly into its live operating interface.</p>
-      </div>
-
-      <div class="p3-artifacts-stage">
-        <!-- LEFT ARTIFACT: Anodized Field Cyberdeck & Tool Rack -->
-        <button type="button" id="p3SelectCyberdeck" class="artifact-card artifact-cyberdeck" aria-label="Zoom into Modular Tool Cyberdeck">
-          <div class="cyberdeck-chassis">
-            <div class="cyberdeck-handle"></div>
-            <div class="cyberdeck-bezel">
-              <div class="cyberdeck-led-strip">
-                <span class="led-amber"></span>
-                <span class="led-cyan"></span>
-                <span class="cyberdeck-model-tag">FIELD-KIT // MK-VI TOOLS</span>
-              </div>
-              <div class="cyberdeck-screen" id="p3CyberdeckScreen">
-                <div class="mini-blueprint-grid">
-                  <span></span><span></span><span></span>
-                  <span></span><span></span><span></span>
-                </div>
-                <div class="mini-screen-label">&larr; 6 INTERACTIVE TOOLS</div>
-              </div>
-            </div>
-            <div class="cyberdeck-switches">
-              <span></span><span></span><span></span><span></span>
-            </div>
-          </div>
-          <span class="artifact-caption"><strong>Left:</strong> Modular AI &amp; Dev Cyberdeck</span>
-        </button>
-
-        <!-- RIGHT ARTIFACT: Translucent Neon Bartop Mini-Arcade -->
-        <button type="button" id="p3SelectBartop" class="artifact-card artifact-bartop" aria-label="Zoom into Bartop Mini-Arcade">
-          <div class="bartop-chassis">
-            <div class="bartop-marquee">NEON ARCADE // 6 IN 1</div>
-            <div class="bartop-crt-bezel">
-              <div class="bartop-crt-screen" id="p3BartopScreen">
-                <div class="mini-arcade-attract">
-                  <div class="attract-pixel-orb"></div>
-                  <span>INSERT COIN &bull; PLAY</span>
-                </div>
-              </div>
-            </div>
-            <div class="bartop-control-deck">
-              <div class="bartop-joystick">
-                <span class="stick-ball"></span>
-                <span class="stick-shaft"></span>
-              </div>
-              <div class="bartop-buttons">
-                <span></span><span></span><span></span><span></span>
-              </div>
-            </div>
-            <div class="bartop-coin-door">
-              <span class="coin-slot-glow">25&cent;</span>
-            </div>
-          </div>
-          <span class="artifact-caption"><strong>Right:</strong> Playable Bartop Arcade</span>
-        </button>
-      </div>
-    </div>
-
-    <!-- Prototype 3 Zoomed OS Workspace (Cyberdeck OS or Bartop Jukebox OS) -->
-    <div id="p3ZoomedOs" class="p3-zoomed-os" hidden>
-      <div class="interior-SubHeader">
-        <button type="button" id="p3ZoomOutBtn" class="glass-nav-pill">&#8689; Zoom Out to Desk</button>
-        <div class="interior-title-block">
-          <span id="p3OsEyebrow" class="eyebrow-chip">MODULE RACK</span>
-          <h2 id="p3OsHeading">Cyberdeck Tools</h2>
-        </div>
-        <button type="button" id="p3FlipDeviceBtn" class="glass-nav-pill accent-cross-pill">Switch to Bartop Arcade &rarr;</button>
-      </div>
-
-      <div id="p3OsBody" class="p3-os-body"></div>
-    </div>
-  </section>
 
   <!-- =====================================================================
        UNIFIED ZERO-LAG PLAYABLE STAGE (CRT ARCADE BEZEL / WORKBENCH SCREEN)
@@ -320,7 +139,7 @@
             <img id="stageIcon" src="" alt="" width="28" height="28" class="stage-mini-icon" />
             <div>
               <h2 id="stageTitle" class="stage-title">Project</h2>
-              <span id="stageTelemetryTag" class="stage-telemetry-tag">3D Room Paused (0% BG GPU)</span>
+              <span id="stageTelemetryTag" class="stage-telemetry-tag">Live Interactive Demo</span>
             </div>
           </div>
         </div>
@@ -331,7 +150,7 @@
               &#9654; Live Build
             </button>
             <button type="button" role="tab" id="stageTabSpecs" class="stage-tab" aria-selected="false">
-              &#128295; Specs &amp; Load Info
+              &#128295; Details
             </button>
           </div>
           <button type="button" id="stageFullscreenBtn" class="stage-util-btn" title="Toggle Fullscreen">
@@ -348,7 +167,7 @@
         <div id="stageLivePanel" class="stage-panel stage-live-panel">
           <div id="stageLoadingCurtain" class="stage-loading-curtain">
             <div class="crt-power-line"></div>
-            <p id="stageLoadingText">Booting on-demand micro-bundle&hellip;</p>
+            <p id="stageLoadingText">Launching interactive build&hellip;</p>
           </div>
           <iframe
             id="liveProjectIframe"
@@ -367,35 +186,14 @@
   </dialog>
 
   <!-- =====================================================================
-       MODAL: FAST-LOAD ARCHITECTURE & "WOAH" WEBSITE CONCEPTS LAB
-       ===================================================================== -->
-  <dialog id="speedLabDialog" class="info-modal-dialog" closedby="any" aria-labelledby="speedLabTitle">
-    <div class="info-modal-card">
-      <header class="info-modal-header">
-        <div>
-          <span class="eyebrow-chip">&#9889; PERFORMANCE &amp; ARCHITECTURE BLUEPRINT</span>
-          <h2 id="speedLabTitle">Playable Games Without Slow Load Times</h2>
-        </div>
-        <form method="dialog">
-          <button type="submit" class="modal-close-btn" aria-label="Close modal">&#10005; Close</button>
-        </form>
-      </header>
-
-      <div class="live-metrics-strip" id="liveMetricsStrip"></div>
-
-      <div class="info-modal-body" id="speedLabBody"></div>
-    </div>
-  </dialog>
-
-  <!-- =====================================================================
-       MODAL: PLAIN-TEXT QUICK LAUNCHER ("TLDR INDEX")
+       MODAL: PLAIN-TEXT QUICK LAUNCHER ("ALL PROJECTS / TLDR")
        ===================================================================== -->
   <dialog id="quickIndexDialog" class="info-modal-dialog" closedby="any" aria-labelledby="quickIndexTitle">
     <div class="info-modal-card">
       <header class="info-modal-header">
         <div>
-          <span class="eyebrow-chip">FAST ACCESS // ALL SAMPLE TOOLS &amp; GAMES</span>
-          <h2 id="quickIndexTitle">Direct Project Launcher (TLDR)</h2>
+          <span class="eyebrow-chip">FAST ACCESS // ALL TOOLS &amp; PLAYABLE GAMES</span>
+          <h2 id="quickIndexTitle">Direct Project Launcher</h2>
         </div>
         <form method="dialog">
           <button type="submit" class="modal-close-btn" aria-label="Close quick index">&#10005; Close</button>
