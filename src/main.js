@@ -20,6 +20,11 @@ let itemTranslationsMap = null; // Lazy-loaded on demand for non-English languag
 let selectedToolIdx = 0;
 let selectedGameIdx = 0;
 
+// Mobile-only (<= 720px) concise copy & collapsible sheet state
+const mobileViewportMq = window.matchMedia('(max-width: 720px)');
+let isIdeaExpanded = false;
+let isInspectorMinimized = false;
+
 // Project Brief Builder state
 let briefWho = 'whoBiz';
 let selectedNeeds = new Set(['needWeb']);
@@ -77,14 +82,21 @@ const p1InspectorBar = document.getElementById('p1InspectorBar');
 const p1InspectorCard = document.getElementById('p1InspectorCard');
 const p1DeckUnitCode = document.getElementById('p1DeckUnitCode');
 const p1DeckWorldStamp = document.getElementById('p1DeckWorldStamp');
+const p1PeekToggleBtn = document.getElementById('p1PeekToggleBtn');
+const p1PeekToggleLabel = document.getElementById('p1PeekToggleLabel');
 const p1PrevBtn = document.getElementById('p1PrevBtn');
 const p1NextBtn = document.getElementById('p1NextBtn');
+const p1InspectorIdentity = document.getElementById('p1InspectorIdentity');
 const p1ItemIcon = document.getElementById('p1ItemIcon');
 const p1ItemBadge = document.getElementById('p1ItemBadge');
 const p1ItemLoadBadge = document.getElementById('p1ItemLoadBadge');
 const p1PrefetchIndicator = document.getElementById('p1PrefetchIndicator');
 const p1ItemTitle = document.getElementById('p1ItemTitle');
+const p1MiniLaunchBtn = document.getElementById('p1MiniLaunchBtn');
 const p1ItemSummary = document.getElementById('p1ItemSummary');
+const p1IdeaToggleBtn = document.getElementById('p1IdeaToggleBtn');
+const p1IdeaToggleLabel = document.getElementById('p1IdeaToggleLabel');
+const p1IdeaBox = document.getElementById('p1IdeaBox');
 const p1IdeaPrefix = document.getElementById('p1IdeaPrefix');
 const p1IdeaText = document.getElementById('p1IdeaText');
 const p1LaunchBtn = document.getElementById('p1LaunchBtn');
@@ -191,6 +203,7 @@ function localizeItem(item) {
     name: tr.name || item.name,
     badge: tr.badge || item.badge,
     tldr: tr.tldr || item.tldr,
+    mobileTldr: tr.mobileTldr || item.mobileTldr || tr.tldr || item.tldr,
     ideaBiz: tr.ideaBiz || item.ideaBiz,
     ideaCreator: tr.ideaCreator || item.ideaCreator
   };
@@ -239,6 +252,8 @@ async function setLanguage(langCode) {
 }
 
 function applyStaticTranslations() {
+  const isMobile = mobileViewportMq.matches;
+
   audAllBtn.textContent = t(currentLang, 'filterAll');
   audBizBtn.textContent = t(currentLang, 'filterBiz');
   audCreatorBtn.textContent = t(currentLang, 'filterCreator');
@@ -250,7 +265,7 @@ function applyStaticTranslations() {
 
   hubEyebrow.textContent = t(currentLang, 'eyebrow');
   hubTitle.textContent = t(currentLang, 'hubTitle');
-  hubSub.textContent = t(currentLang, 'hubSub');
+  hubSub.textContent = isMobile ? t(currentLang, 'mobileHubSub') : t(currentLang, 'hubSub');
 
   leftDirLabel.textContent = t(currentLang, 'leftDir');
   leftTitleLabel.textContent = t(currentLang, 'leftTitle');
@@ -261,8 +276,13 @@ function applyStaticTranslations() {
   rightSubLabel.textContent = t(currentLang, 'rightSub');
 
   p1BackHubBtn.textContent = t(currentLang, 'backCenter');
-  p1BuildSimilarBtn.textContent = t(currentLang, 'buildSimilar');
+  p1BuildSimilarBtn.textContent = isMobile
+    ? t(currentLang, 'mobileBuildSimilar')
+    : t(currentLang, 'buildSimilar');
   p1InfoBtn.textContent = t(currentLang, 'details');
+  if (p1IdeaToggleLabel) {
+    p1IdeaToggleLabel.textContent = t(currentLang, 'ideaChip');
+  }
   stageBuildLabel.textContent = t(currentLang, 'buildSimilar').replace('✦ ', '');
   stageTabSpecs.textContent = t(currentLang, 'details');
 
@@ -437,6 +457,12 @@ import('./workshopArcade3D.js').then(({ createWorkshopArcade3D }) => {
     onOpenBrief() {
       openProjectBriefModal();
     },
+    onTapEmptySpace() {
+      if (!mobileViewportMq.matches || currentMode === 'hub') return;
+      isInspectorMinimized = !isInspectorMinimized;
+      playMicroClick(currentMode === 'games' ? 'arcade' : 'tool');
+      renderHud();
+    },
     onHoverItem(kind) {
       playHoverTick(kind, kind === 'tool' ? -0.18 : 0.18);
     },
@@ -466,7 +492,8 @@ import('./workshopArcade3D.js').then(({ createWorkshopArcade3D }) => {
     mode: currentMode,
     toolIndex: selectedToolIdx,
     gameIndex: selectedGameIdx,
-    zoomed: Boolean(playStageDialog.open)
+    zoomed: Boolean(playStageDialog.open),
+    peek: Boolean(mobileViewportMq.matches && isInspectorMinimized)
   });
 
   // Once custom Google Fonts finish loading, re-bake 3D Canvas2D signs/tags/marquees
@@ -499,6 +526,7 @@ function setMode(targetMode) {
     document.documentElement.style.setProperty('--split-x', '50%');
     document.body.dataset.hubLean = 'center';
     prevLean = 'center';
+    isInspectorMinimized = false;
   }
 
   if (changed) {
@@ -511,6 +539,9 @@ function setMode(targetMode) {
 
 function renderHud() {
   const isHub = currentMode === 'hub';
+  const isMobile = mobileViewportMq.matches;
+  const peekActive = Boolean(isMobile && isInspectorMinimized && !isHub);
+
   p1HubOverlay.hidden = !isHub;
   p1WingNav.hidden = isHub;
   p1InspectorBar.hidden = isHub;
@@ -518,12 +549,27 @@ function renderHud() {
   navToolsBtn.classList.toggle('active-mode-pill', currentMode === 'tools');
   navGamesBtn.classList.toggle('active-mode-pill', currentMode === 'games');
 
+  p1InspectorCard.classList.toggle('is-minimized', peekActive);
+  p1InspectorCard.classList.toggle('is-idea-open', Boolean(isMobile && isIdeaExpanded));
+  if (p1PeekToggleBtn) {
+    p1PeekToggleBtn.setAttribute('aria-expanded', String(!peekActive));
+  }
+  if (p1PeekToggleLabel) {
+    p1PeekToggleLabel.textContent = peekActive
+      ? t(currentLang, 'expandCard')
+      : t(currentLang, 'peek3d');
+  }
+  if (p1IdeaToggleBtn) {
+    p1IdeaToggleBtn.setAttribute('aria-expanded', String(Boolean(isMobile && isIdeaExpanded)));
+  }
+
   if (scene3D) {
     scene3D.setState({
       mode: currentMode,
       toolIndex: selectedToolIdx,
       gameIndex: selectedGameIdx,
-      zoomed: Boolean(playStageDialog.open)
+      zoomed: Boolean(playStageDialog.open),
+      peek: peekActive
     });
   }
 
@@ -561,7 +607,7 @@ function renderHud() {
   p1ItemBadge.textContent = item.badge;
   p1ItemLoadBadge.textContent = rawItem.bundleSizeLabel;
   p1ItemTitle.textContent = item.name;
-  p1ItemSummary.textContent = item.tldr;
+  p1ItemSummary.textContent = isMobile ? item.mobileTldr || item.tldr : item.tldr;
 
   // Audience-tailored "What I Could Build For You" spark callout
   if (audienceFilter === 'business') {
@@ -578,6 +624,10 @@ function renderHud() {
 
   const actionText = isGames ? t(currentLang, 'playLive') : t(currentLang, 'tryLive');
   p1LaunchBtn.innerHTML = `&#9654; ${actionText}`;
+  if (p1MiniLaunchBtn) {
+    const miniText = isGames ? t(currentLang, 'miniPlay') : t(currentLang, 'miniLaunch');
+    p1MiniLaunchBtn.innerHTML = `&#9654; ${miniText}`;
+  }
 
   p1SwipeHint.textContent = isGames ? t(currentLang, 'swipeGames') : t(currentLang, 'swipeTools');
 
@@ -649,6 +699,45 @@ p1LaunchBtn.addEventListener('click', () => {
     openPlayableStage(TOOLS_ITEMS[selectedToolIdx], 'tool', 'live');
   }
 });
+
+p1MiniLaunchBtn?.addEventListener('click', (e) => {
+  e.stopPropagation();
+  if (currentMode === 'games') {
+    openPlayableStage(GAMES_ITEMS[selectedGameIdx], 'game', 'live');
+  } else {
+    openPlayableStage(TOOLS_ITEMS[selectedToolIdx], 'tool', 'live');
+  }
+});
+
+p1PeekToggleBtn?.addEventListener('click', (e) => {
+  e.stopPropagation();
+  isInspectorMinimized = !isInspectorMinimized;
+  playMicroClick(currentMode === 'games' ? 'arcade' : 'tool');
+  renderHud();
+});
+
+p1InspectorIdentity?.addEventListener('click', () => {
+  if (!mobileViewportMq.matches || !isInspectorMinimized) return;
+  isInspectorMinimized = false;
+  playMicroClick(currentMode === 'games' ? 'arcade' : 'tool');
+  renderHud();
+});
+
+p1IdeaToggleBtn?.addEventListener('click', () => {
+  isIdeaExpanded = !isIdeaExpanded;
+  playMicroClick(currentMode === 'games' ? 'arcade' : 'tool');
+  renderHud();
+});
+
+const handleMobileViewportChange = () => {
+  applyStaticTranslations();
+  renderHud();
+};
+if (mobileViewportMq.addEventListener) {
+  mobileViewportMq.addEventListener('change', handleMobileViewportChange);
+} else {
+  mobileViewportMq.addListener(handleMobileViewportChange);
+}
 
 p1BuildSimilarBtn.addEventListener('click', () => {
   const activeItem =
@@ -726,7 +815,8 @@ function openPlayableStage(rawItem, kind = 'game', initialTab = 'live') {
       mode: currentMode === 'hub' ? (kind === 'game' ? 'games' : 'tools') : currentMode,
       toolIndex: selectedToolIdx,
       gameIndex: selectedGameIdx,
-      zoomed: true
+      zoomed: true,
+      peek: Boolean(mobileViewportMq.matches && isInspectorMinimized)
     });
     clearTimeout(freezeTimer);
     freezeTimer = setTimeout(() => {
@@ -773,7 +863,8 @@ function closePlayableStage() {
       mode: currentMode,
       toolIndex: selectedToolIdx,
       gameIndex: selectedGameIdx,
-      zoomed: false
+      zoomed: false,
+      peek: Boolean(mobileViewportMq.matches && isInspectorMinimized && currentMode !== 'hub')
     });
   }
 }

@@ -158,18 +158,28 @@
     <!-- Bottom Tactile Inspector (Morphs from Monograph Spec Plate <-> Console & Cartridge Deck) -->
     <section id="p1InspectorBar" class="p1-inspector-bar" aria-live="polite" hidden>
       <div class="inspector-card" id="p1InspectorCard">
-        <div class="inspector-chassis-bar" aria-hidden="true">
-          <span class="chassis-status-group">
+        <div class="inspector-chassis-bar">
+          <span class="chassis-status-group" aria-hidden="true">
             <span class="chassis-led"></span>
             <span id="p1DeckUnitCode">BENCH 01 / 07 &mdash; PROOFING PRESS &bull; SPLIT SLIDER</span>
           </span>
-          <span id="p1DeckWorldStamp" class="chassis-world-stamp">DESIGN WORKSHOP</span>
+          <span id="p1DeckWorldStamp" class="chassis-world-stamp" aria-hidden="true">DESIGN WORKSHOP</span>
+          <button
+            type="button"
+            id="p1PeekToggleBtn"
+            class="inspector-peek-btn"
+            aria-expanded="true"
+            aria-controls="p1InspectorCard"
+          >
+            <span id="p1PeekToggleLabel">Peek 3D</span>
+            <span id="p1PeekChevron" aria-hidden="true">&#9662;</span>
+          </button>
         </div>
 
         <div class="inspector-top-row">
           <button type="button" id="p1PrevBtn" class="rail-step-btn" aria-label="Previous item">&#9664;</button>
 
-          <div class="inspector-identity">
+          <div class="inspector-identity" id="p1InspectorIdentity">
             <img id="p1ItemIcon" src="" alt="" width="46" height="46" class="inspector-icon" />
             <div class="inspector-titles">
               <div class="inspector-badges">
@@ -181,10 +191,26 @@
             </div>
           </div>
 
+          <button type="button" id="p1MiniLaunchBtn" class="peek-mini-launch-btn">
+            &#9654; Try
+          </button>
+
           <button type="button" id="p1NextBtn" class="rail-step-btn" aria-label="Next item">&#9654;</button>
         </div>
 
         <p id="p1ItemSummary" class="inspector-summary"></p>
+
+        <!-- Mobile-only tap-to-toggle chip for #p1IdeaBox (display:none above 720px) -->
+        <button
+          type="button"
+          id="p1IdeaToggleBtn"
+          class="idea-toggle-chip"
+          aria-expanded="false"
+          aria-controls="p1IdeaBox"
+        >
+          <span id="p1IdeaToggleLabel">&#128161; Custom Idea</span>
+          <span class="idea-toggle-chevron" aria-hidden="true">&#9662;</span>
+        </button>
 
         <!-- "What I Could Build Like This For You" Spark Callout -->
         <div id="p1IdeaBox" class="idea-spark-box">

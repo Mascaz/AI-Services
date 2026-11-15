@@ -2141,11 +2141,11 @@ function buildWorkshopToolStation(tool, index) {
 
   let camFocus = {
     distDesktop: 2.66,
-    distPortrait: 3.62,
+    distPortrait: 4.02,
     camYDesktop: 1.63,
-    camYPortrait: 1.54,
+    camYPortrait: 1.62,
     lookYDesktop: 1.13,
-    lookYPortrait: 0.9,
+    lookYPortrait: 0.92,
     offsetX: 0
   };
 
@@ -2676,11 +2676,11 @@ function buildWorkshopToolStation(tool, index) {
     // =======================================================================
     camFocus = {
       distDesktop: 2.74,
-      distPortrait: 3.74,
+      distPortrait: 4.14,
       camYDesktop: 1.65,
-      camYPortrait: 1.56,
+      camYPortrait: 1.66,
       lookYDesktop: 1.17,
-      lookYPortrait: 0.94,
+      lookYPortrait: 0.96,
       offsetX: 0
     };
 
@@ -3758,11 +3758,11 @@ function buildGarageGameStation(game, index) {
   // Default camera framing for workbench stations (tabletop y = 0.96, hardware y = 0.96..1.95)
   let camFocus = {
     distDesktop: 2.58,
-    distPortrait: 3.68,
+    distPortrait: 4.04,
     camYDesktop: 1.58,
-    camYPortrait: 1.54,
+    camYPortrait: 1.62,
     lookYDesktop: 1.24,
-    lookYPortrait: 1.12,
+    lookYPortrait: 0.92,
     offsetX: 0
   };
 
@@ -3772,12 +3772,13 @@ function buildGarageGameStation(game, index) {
     // =======================================================================
     camFocus = {
       distDesktop: 3.64,
-      distPortrait: 4.78,
+      distPortrait: 4.86,
       camYDesktop: 1.96,
-      camYPortrait: 1.88,
+      camYPortrait: 1.86,
       lookYDesktop: 1.55,
-      lookYPortrait: 1.38,
-      offsetX: 0.16
+      lookYPortrait: 1.06,
+      offsetX: 0.16,
+      offsetXPortrait: 0.2
     };
 
     const cabX = -0.18;
@@ -4336,7 +4337,7 @@ function buildGarageGameStation(game, index) {
       // =====================================================================
       camFocus.camYDesktop = 1.66;
       camFocus.distDesktop = 2.72;
-      camFocus.distPortrait = 3.88;
+      camFocus.distPortrait = 4.14;
 
       const pcMon = buildDisplayMonitor(game, {
         width: 0.8,
@@ -4487,7 +4488,7 @@ function buildGarageGameStation(game, index) {
       // STATION 06: AI-PIKMIN — Garage TV + 4-Port Top-Loading Cube Console + Open Lid Mini-Disc + Keep Case
       // =====================================================================
       camFocus.distDesktop = 2.66;
-      camFocus.distPortrait = 3.82;
+      camFocus.distPortrait = 4.14;
 
       const tv = buildDisplayMonitor(game, {
         width: 0.84,
@@ -4642,7 +4643,7 @@ function buildGarageGameStation(game, index) {
       // STATION 07: WILD PEAK 3D — Garage TV + 64-Bit Top-Loading Console + Plugged-In ROM Cart + Landscape Box
       // =====================================================================
       camFocus.distDesktop = 2.68;
-      camFocus.distPortrait = 3.84;
+      camFocus.distPortrait = 4.14;
 
       const tv64 = buildDisplayMonitor(game, {
         width: 0.85,
@@ -5042,6 +5043,7 @@ export function createWorkshopArcade3D({
   onLaunchTool,
   onLaunchGame,
   onOpenBrief,
+  onTapEmptySpace,
   onHoverItem,
   onHubLean
 }) {
@@ -5310,6 +5312,7 @@ export function createWorkshopArcade3D({
   let activeToolIndex = 0;
   let activeGameIndex = 0;
   let isZoomedIntoScreen = false;
+  let isPeekMode = false;
   let isPaused = false;
   let isDisposed = false;
 
@@ -5330,17 +5333,18 @@ export function createWorkshopArcade3D({
     const h = container.clientHeight || window.innerHeight;
     const aspect = w / Math.max(h, 1);
     const isPortrait = aspect < 0.92;
+    const portraitAspectScale = isPortrait ? Math.max(1, 0.5 / Math.max(aspect, 0.38)) : 1;
 
-    const desiredFov = isPortrait ? 58 : 46;
+    const desiredFov = isPortrait ? 60 : 46;
     if (camera.fov !== desiredFov) {
       camera.fov = desiredFov;
       camera.updateProjectionMatrix();
     }
 
     if (currentMode === 'hub') {
-      const zDist = isPortrait ? 13.6 : aspect < 1.35 ? 10.8 : 9.0;
-      targetCamPos.set(0.0, isPortrait ? 2.68 : 2.38, zDist);
-      targetLookAt.set(0.0, isPortrait ? 1.95 : 2.15, -1.05);
+      const zDist = isPortrait ? 13.8 * portraitAspectScale : aspect < 1.35 ? 10.8 : 9.0;
+      targetCamPos.set(0.0, isPortrait ? 2.52 : 2.38, zDist);
+      targetLookAt.set(0.0, isPortrait ? 1.78 : 2.15, -1.05);
       return;
     }
 
@@ -5359,8 +5363,11 @@ export function createWorkshopArcade3D({
         tmpRight.set(1, 0, 0).applyQuaternion(tmpQuat);
 
         const cf = station.camFocus;
-        const dist = isPortrait ? cf.distPortrait : cf.distDesktop;
-        const shiftX = cf.offsetX || 0;
+        const peekDistScale = isPortrait && isPeekMode ? 0.93 : 1;
+        const dist = isPortrait
+          ? cf.distPortrait * portraitAspectScale * peekDistScale
+          : cf.distDesktop;
+        const shiftX = isPortrait ? (cf.offsetXPortrait ?? cf.offsetX ?? 0) : cf.offsetX || 0;
 
         targetCamPos
           .copy(tmpWorldPos)
@@ -5369,7 +5376,9 @@ export function createWorkshopArcade3D({
         targetCamPos.y = isPortrait ? cf.camYPortrait : cf.camYDesktop;
 
         targetLookAt.copy(tmpWorldPos).addScaledVector(tmpRight, shiftX);
-        targetLookAt.y = isPortrait ? cf.lookYPortrait : cf.lookYDesktop;
+        targetLookAt.y = isPortrait
+          ? cf.lookYPortrait + (isPeekMode ? 0.18 : 0)
+          : cf.lookYDesktop;
       }
       return;
     }
@@ -5389,15 +5398,20 @@ export function createWorkshopArcade3D({
         tmpRight.set(1, 0, 0).applyQuaternion(tmpQuat);
 
         const cf = cab.camFocus;
-        const dist = isPortrait ? cf.distPortrait : cf.distDesktop;
-        const shiftX = cf.offsetX || 0;
+        const peekDistScale = isPortrait && isPeekMode ? 0.93 : 1;
+        const dist = isPortrait
+          ? cf.distPortrait * portraitAspectScale * peekDistScale
+          : cf.distDesktop;
+        const shiftX = isPortrait ? (cf.offsetXPortrait ?? cf.offsetX ?? 0) : cf.offsetX || 0;
 
         // Framed so hardware + live screen logo + slotted medium + 3D box sit cleanly above Inspector!
         targetCamPos.copy(tmpWorldPos).addScaledVector(tmpRight, shiftX).addScaledVector(tmpForward, dist);
         targetCamPos.y = isPortrait ? cf.camYPortrait : cf.camYDesktop;
 
         targetLookAt.copy(tmpWorldPos).addScaledVector(tmpRight, shiftX);
-        targetLookAt.y = isPortrait ? cf.lookYPortrait : cf.lookYDesktop;
+        targetLookAt.y = isPortrait
+          ? cf.lookYPortrait + (isPeekMode ? 0.18 : 0)
+          : cf.lookYDesktop;
       }
     }
   }
@@ -5557,6 +5571,8 @@ export function createWorkshopArcade3D({
           hit?.hitType === 'wing-games'
         ) {
           onSelectMode('games', hit.index ?? activeGameIndex);
+        } else {
+          onTapEmptySpace?.();
         }
         return;
       }
@@ -5576,6 +5592,8 @@ export function createWorkshopArcade3D({
           hit?.hitType === 'wing-tools'
         ) {
           onSelectMode('tools', hit.index ?? activeToolIndex);
+        } else {
+          onTapEmptySpace?.();
         }
       }
     }
@@ -5706,11 +5724,12 @@ export function createWorkshopArcade3D({
   }
 
   return {
-    setState({ mode, toolIndex, gameIndex, zoomed }) {
+    setState({ mode, toolIndex, gameIndex, zoomed, peek }) {
       currentMode = mode;
       if (typeof toolIndex === 'number') activeToolIndex = toolIndex;
       if (typeof gameIndex === 'number') activeGameIndex = gameIndex;
       if (typeof zoomed === 'boolean') isZoomedIntoScreen = zoomed;
+      if (typeof peek === 'boolean') isPeekMode = peek;
       recomputeCameraTargets();
     },
     setAudienceFilter(filter) {

@@ -38,6 +38,7 @@ export const TOOLS_ITEMS = [
     playUrl: './games/website-makeover/index.html',
     playLabel: 'Compare Before & After',
     tldr: 'Drag the live split slider to watch a plain Shopify template become an editorial luxury store, or an old 2014 brochure site turn into a modern bilingual clinic.',
+    mobileTldr: 'Drag the split slider: plain templates become high-trust flagship sites.',
     ideaBiz:
       'Turn an outdated website or default Shopify theme into a fast, high-trust storefront with instant WhatsApp/booking conversion.',
     ideaCreator:
@@ -65,6 +66,7 @@ export const TOOLS_ITEMS = [
     playUrl: './games/product-to-launch/index.html',
     playLabel: 'Try Product AI Lab',
     tldr: 'Upload any product photo (or pick a sample) to generate studio lighting scenes, bilingual Shopify descriptions, viral hooks, and competitor price/review-gap analysis.',
+    mobileTldr: 'One phone photo → studio lighting, EN/ES copy & competitor price comps.',
     ideaBiz:
       'A private tool trained on your brand style: snap a phone photo of new inventory and get clean catalog images, SEO copy, and pricing comps in 15 seconds.',
     ideaCreator:
@@ -92,6 +94,7 @@ export const TOOLS_ITEMS = [
     playUrl: './games/ai-airbrush/index.html',
     playLabel: 'Launch Photo Relighter',
     tldr: 'Fix flat phone lighting without booking a reshoot: drag a 3D studio light orb around portraits or products and retouch details privately in your browser.',
+    mobileTldr: 'Drag a 3D studio light orb to fix flat photos in-browser.',
     ideaBiz:
       'Give your team a 1-click browser retoucher so staff portraits, menu items, and catalog shots look consistently studio-lit.',
     ideaCreator:
@@ -119,6 +122,7 @@ export const TOOLS_ITEMS = [
     playUrl: './games/fototecateca/index.html',
     playLabel: 'Open Video Ad Booth',
     tldr: 'Turn a product, founder, or mascot photo into a 3-scene storyboarded commercial across 5 broadcast styles with guided director controls.',
+    mobileTldr: 'Turn any product photo into a 3-scene commercial across 5 styles.',
     ideaBiz:
       'Generate scroll-stopping 90s infomercials, luxury spots, or local promo ads for new product launches without hiring a video crew.',
     ideaCreator:
@@ -146,6 +150,7 @@ export const TOOLS_ITEMS = [
     playUrl: './games/creator-video-pipeline/index.html',
     playLabel: 'Watch Live Pipeline',
     tldr: 'Feed in a short topic or product spec and automatically render a 1080p MP4 complete with EN/ES neural voiceovers, synced captions, and camera motion.',
+    mobileTldr: 'Script to 1080p MP4 with EN/ES voiceover, captions & motion.',
     ideaBiz:
       'Automatically turn every new Shopify product or FAQ into narrated Reels, TikToks, and bilingual product explainer videos.',
     ideaCreator:
@@ -173,6 +178,7 @@ export const TOOLS_ITEMS = [
     playUrl: './games/dropshipping-made-easy/index.html',
     playLabel: 'Open Margin & Copy Tool',
     tldr: 'Validate product margins before spending on ads: live CPA/ROAS profit calculator, supplier vetting checklist, and bilingual (EN/ES) store copy.',
+    mobileTldr: 'Live CPA/ROAS profit simulator, niche validator & bilingual ad copy.',
     ideaBiz:
       'Add interactive pricing, quote, or ROI calculators to your website—or use custom research dashboards to vet new SKUs before ordering inventory.',
     ideaCreator:
@@ -200,6 +206,7 @@ export const TOOLS_ITEMS = [
     playUrl: './games/game-localization/index.html',
     playLabel: 'Test Translator Bench',
     tldr: 'Translate websites, catalogs, and scripts into Spanish or 15+ languages while preserving brand voice, UI button lengths, and formatting tags.',
+    mobileTldr: 'Translate sites & stores into 15+ languages without breaking UI layouts.',
     ideaBiz:
       'Unlock cross-border & bilingual customers cleanly—your entire store, booking form, and catalog localized without broken layouts.',
     ideaCreator:
@@ -234,6 +241,7 @@ export const GAMES_ITEMS = [
     playUrl: './games/desired/index.html',
     playLabel: 'Tap & Swipe Deck',
     tldr: 'Swipe through 25 tactile scenario cards to reveal your archetype—then download a crisp 9:16 Story Card designed to go viral on Instagram & TikTok.',
+    mobileTldr: 'Swipe 25 scenario cards & export a viral 9:16 IG/TikTok Story.',
     ideaBiz:
       'A 60-second “Find Your Perfect Routine / Shade / Gift” swipe quiz that recommends your exact products and captures warm leads.',
     ideaCreator:
@@ -265,6 +273,7 @@ export const GAMES_ITEMS = [
     playUrl: 'https://mascaz.github.io/games/cat-capsules/index.html',
     playLabel: 'Slot Cart • Drop Cats',
     tldr: 'Drop and merge glossy cat capsules with reactive eye-tracking, squish physics, and unlockable themes—showing how irresistible branded mini-games feel.',
+    mobileTldr: 'Drop & merge squishy cat capsules with live cursor eye-tracking physics.',
     ideaBiz:
       'Replace ignored “Spin-the-Wheel” discount popups with a 30-second physics drop featuring your actual products to unlock VIP perks.',
     ideaCreator:
@@ -296,6 +305,7 @@ export const GAMES_ITEMS = [
     playUrl: './games/sumten/index.html',
     playLabel: 'Slot 20KB Cart • Play',
     tldr: 'Drag boxes over numbers summing to 10 against a 120s clock—weighing just 20 KB total, it loads faster than a single JPEG banner.',
+    mobileTldr: 'Fast daily sum-to-10 puzzle—just 20 KB total, lighter than a JPEG.',
     ideaBiz:
       'Embed a Wordle-style daily 90-second puzzle in your loyalty app or newsletter to bring customers back every morning.',
     ideaCreator:
@@ -327,6 +337,7 @@ export const GAMES_ITEMS = [
     playUrl: 'https://mascaz.github.io/games/world-strikers/index.html',
     playLabel: 'Step Up • Kick Off',
     tldr: 'High-voltage arcade cage soccer with electric fence shocks, item chaos, and slow-motion Super Shots across mobile touch, controller, and keyboard.',
+    mobileTldr: '20,000V cage arcade soccer with slow-mo Super Shots & touch controls.',
     ideaBiz:
       'Launch a limited-time sports or holiday event game with your brand on the stadium boards and coupon rewards for winners.',
     ideaCreator:
@@ -358,6 +369,7 @@ export const GAMES_ITEMS = [
     playUrl: './games/redial/index.html',
     playLabel: 'Spin CD-ROM • Play',
     tldr: 'Fast top-down action with procedural rooms, animal mask perks, screen shake, and a synthwave jukebox—built to show off high-polish game feel.',
+    mobileTldr: 'Neon top-down action roguelike with procedural rooms & synthwave jukebox.',
     ideaBiz:
       'When your brand wants an unforgettable interactive launch microsite instead of another static landing page.',
     ideaCreator:
@@ -389,6 +401,7 @@ export const GAMES_ITEMS = [
     playUrl: './games/ai-pikmin/index.html',
     playLabel: 'Load Mini-Disc • Play',
     tldr: 'Command elemental squads across 5 sectors and boss arenas—including live 1–4 player multiplayer in the browser with zero server bills.',
+    mobileTldr: 'Command elemental squads with serverless 1–4 player browser co-op.',
     ideaBiz:
       'Proof of full-stack engineering: if real-time multiplayer AI runs smoothly in 312 KB, your custom business tool is in safe hands.',
     ideaCreator:
@@ -420,6 +433,7 @@ export const GAMES_ITEMS = [
     playUrl: './games/wild-peak/index.html?v=2',
     playLabel: 'Plug In Cart • Enter 3D',
     tldr: 'An entire 3D mountain world generated from pure code—just like this 3D game room—proving 3D websites can feel magical without slow downloads.',
+    mobileTldr: 'Procedural low-poly 3D mountain world built from pure shader code.',
     ideaBiz:
       'Interactive 3D product showcases, virtual showrooms, or spatial menus that load fast on mobile phones.',
     ideaCreator:
